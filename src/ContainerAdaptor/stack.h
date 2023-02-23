@@ -5,9 +5,8 @@
 #ifndef CPP2_S21_CONTAINERS_0_STACK_H
 #define CPP2_S21_CONTAINERS_0_STACK_H
 
-#include "ContainerAdaptor.h"
-
-class stack : private ContainerAdaptor {
+template <class T1>
+class Stack {
 
 };
 

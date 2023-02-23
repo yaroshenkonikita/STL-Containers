@@ -5,9 +5,8 @@
 #ifndef CPP2_S21_CONTAINERS_0_SET_H
 #define CPP2_S21_CONTAINERS_0_SET_H
 
-#include "SetContainer.h"
-
-class Set : public SetContainer {
+template <class T1>
+class Set {
 
 };
 

@@ -5,9 +5,8 @@
 #ifndef CPP2_S21_CONTAINERS_0_DEQUE_H
 #define CPP2_S21_CONTAINERS_0_DEQUE_H
 
-#include "SequenceContainer.h"
-
-class deque : public SequenceContainer {
+template <class T1>
+class Array {
 
 };
 

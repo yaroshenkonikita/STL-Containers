@@ -5,9 +5,8 @@
 #ifndef CPP2_S21_CONTAINERS_0_MAP_H
 #define CPP2_S21_CONTAINERS_0_MAP_H
 
-#include "AssociativeContainer.h"
-
-class map : public AssociativeContainer {
+template <class T1>
+class Map {
 
 };
 

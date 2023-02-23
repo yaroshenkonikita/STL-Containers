@@ -5,9 +5,8 @@
 #ifndef CPP2_S21_CONTAINERS_0_QUEUE_H
 #define CPP2_S21_CONTAINERS_0_QUEUE_H
 
-#include "ContainerAdaptor.h"
-
-class queue : private ContainerAdaptor {
+template <class T1>
+class Queue {
 
 };
 

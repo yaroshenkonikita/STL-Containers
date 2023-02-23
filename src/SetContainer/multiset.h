@@ -5,9 +5,8 @@
 #ifndef CPP2_S21_CONTAINERS_0_MULTISET_H
 #define CPP2_S21_CONTAINERS_0_MULTISET_H
 
-#include "SetContainer.h"
-
-class multiset : public SetContainer {
+template <class T1>
+class Multiset {
 
 };
 

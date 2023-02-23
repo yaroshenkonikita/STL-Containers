@@ -5,9 +5,8 @@
 #ifndef CPP2_S21_CONTAINERS_0_VECTOR_H
 #define CPP2_S21_CONTAINERS_0_VECTOR_H
 
-#include "SequenceContainer.h"
-
-class vector : public SequenceContainer {
+template <class T1>
+class Vector {
 
 };
 

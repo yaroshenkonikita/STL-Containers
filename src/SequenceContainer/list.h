@@ -5,9 +5,8 @@
 #ifndef CPP2_S21_CONTAINERS_0_LIST_H
 #define CPP2_S21_CONTAINERS_0_LIST_H
 
-#include "SequenceContainer.h"
-
-class list : public SequenceContainer {
+template <class T1>
+class List {
 
 };
 
