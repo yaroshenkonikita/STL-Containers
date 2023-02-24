@@ -6,7 +6,7 @@
 #define CPP2_S21_CONTAINERS_0_SRC_S21_CONTAINERSPLUS_H
 
 #include "./StdContainer/s21_array.h"
-#include "./SetContainer/s21_multiset.h"
+#include "./SortedContainer/SetContainer/s21_multiset.h"
 
 
 #endif //CPP2_S21_CONTAINERS_0_SRC_S21_CONTAINERSPLUS_H
