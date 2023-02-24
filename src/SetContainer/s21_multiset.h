@@ -5,7 +5,7 @@
 #ifndef CPP2_S21_CONTAINERS_0_SRC_S21_MULTISET_H
 #define CPP2_S21_CONTAINERS_0_SRC_S21_MULTISET_H
 
-template <class T1>
+template<typename T>
 class Multiset {
 
 };
