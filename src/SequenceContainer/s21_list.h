@@ -2,6 +2,7 @@
 #define CPP2_S21_CONTAINERS_0_SRC_S21_LIST_H
 
 #include <cmath>
+#include <list>
 #include <iostream>
 
 template <typename T>
@@ -13,6 +14,10 @@ class List {
   using iterator = T;
   using const_iterator = T;
   using size_type = T;
+
+  void push_front(T value);
+  void pop_front();
+  void reverse();
 
  private:
   value_type value;
