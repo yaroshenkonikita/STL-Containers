@@ -5,21 +5,50 @@
 #include <list>
 #include <iostream>
 
-template <typename T>
+template <typename L>
 class List {
  public:
-  using value_type = T;
-  using reference = T;
-  using const_reference = T;
-  using iterator = T;
-  using const_iterator = T;
-  using size_type = T;
+  using value_type = L;
+  using reference = L;
+  using const_reference = L;
+  using iterator = L;
+  using const_iterator = L;
+  using size_type = L;
 
-  void push_front(T value_type) {
+  List() {
 
   }
-  void pop_front();
-  void reverse();
+  List(size_type n) {
+
+  }
+  List(std::initializer_list<value_type> const& items) {
+
+  }
+  List(const List& l) {
+
+  }
+  List(List&& l) {
+
+  }
+  ~List() {
+
+  }
+
+  List& operator=(List &&l) {
+    
+  }
+
+  void push_front(L value_type) {
+
+  }
+  
+  void pop_front() {
+    
+  }
+  
+  void reverse() {
+    
+  }
 
  private:
   value_type value;
