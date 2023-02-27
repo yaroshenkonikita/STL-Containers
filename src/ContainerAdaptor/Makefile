@@ -14,3 +14,6 @@ test: tests_stack.cc $(SOURCENAME).h
 
 clean:
 	@-rm -rf *.o *.a *gcda *gcno *info report test
+
+leaks:
+	leaks -atExit -- ./test

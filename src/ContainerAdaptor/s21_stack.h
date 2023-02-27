@@ -7,6 +7,7 @@
 #ifndef CPP2_S21_CONTAINERS_0_SRC_S21_STACK_H
 #define CPP2_S21_CONTAINERS_0_SRC_S21_STACK_H
 
+#include "utility"
 #include <cstddef>
 #include <initializer_list>
 #include <iostream>
@@ -23,22 +24,24 @@ private:
     node *next;
   };
   node *upper_element;
-  //  unsigned int size_;
-  //  value_type value_;
-  //  value_type *pointer_prev;
 
 public:
   // Stack Member functions
   Stack() : upper_element(nullptr) {
     std::cout << "Вызвался конструктор" << this;
   };
+  Stack(std::initializer_list<value_type> const &items) {
 
-  //  Stack(std::initializer_list<value_type> const &items) {}
-  //  Stack(const Stack &s);
+  }
+  //  Stack(const Stack &s) {
+  //    while (!s.empty()) {
+  //    }
+  //  }
   //  Stack(Stack &&s);
   ~Stack() {
     std::cout << "Вызвался деструктор" << this;
-    while (!empty()) pop();
+    while (!empty())
+      pop();
   }
   //  operator=(Stack &&s);
 
@@ -52,7 +55,12 @@ public:
 
   // Stack Capacity
   bool empty() { return upper_element == nullptr; }
-  //  size_type size();
+
+//  size_type size() {
+//    size_type result = 0;
+//    while (!empty()) {
+//    }
+//  }
 
   // Stack Modifiers
   void push(const_reference value) {
@@ -70,11 +78,6 @@ public:
     delete[] del_node;
   }
   //  void swap(Stack &other);
-private:
-  //  void init_stack() {
-  //    node_ first;
-  //    first.pointer_prev = NULL;
-  //  }
 };
 
 #endif // CPP2_S21_CONTAINERS_0_SRC_S21_STACK_H
