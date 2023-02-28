@@ -18,24 +18,29 @@ class List {
   List() {
 
   }
+
   List(size_type n) {
 
   }
+
   List(std::initializer_list<value_type> const& items) {
 
   }
+
   List(const List& l) {
 
   }
+
   List(List&& l) {
 
   }
+
   ~List() {
 
   }
 
   List& operator=(List &&l) {
-    
+
   }
 
   void push_front(L value_type) {
