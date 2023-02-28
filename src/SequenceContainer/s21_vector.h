@@ -18,20 +18,20 @@ class vector {
   using allocator_type = Allocator;
   using pointer = value_type *;
   //  ------------------------------Functions------------------------------
-  //  default constructor
+  //  Дефолтный конструктор
   vector() : arr_(nullptr), size_(0), capacity_(0) {}
-  //  parameterized constructor
+  //  Параметризованный конструктор
   vector(size_type n) : arr_(nullptr), size_(n), capacity_(n) {
     arr_ = new value_type[size_];
     for (size_t i = 0; i < size_; i++) {
       arr_[i] = value_type();
     }
   }
-  //  initializer list constructor
+  //  Конструктор списка инициализаторов
   vector(std::initializer_list<value_type> const &items) : vector(items.size()) {
     std::copy(items.begin(), items.end(), arr_);
   }
-  //  copy constructor
+  //  Конструктор копирования
   vector(const vector &v) : vector(v.capacity_) {
     for (size_type i = 0; i < v.size_; ++i) {
       arr_[i] = v.arr_[i];
@@ -39,20 +39,20 @@ class vector {
     size_ = v.size_;
     capacity_ = v.capacity_;
   }
-  //  move constructor
-  vector(vector &&v) noexcept : arr_(v.arr_), size_(v.size_), capacity_(v.capacity_) {
+  //  Конструктор перемещения
+  vector(vector &&v) noexcept: arr_(v.arr_), size_(v.size_), capacity_(v.capacity_) {
     v.arr_ = nullptr;
     v.size_ = 0;
     v.capacity_ = 0;
   }
-  //  destructor
+  //  Деструктор
   ~vector() {
     delete[] arr_;
     arr_ = nullptr;
     size_ = 0;
     capacity_ = 0;
   }
-  //  overload operator for moving object
+  //  Перегрузка оператора для перемещения объекта
   vector &operator=(vector &&v) noexcept {
     if (this != &v) {
       arr_ = v.arr_;
