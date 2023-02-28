@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include <algorithm>
-// #include <iostream>
 
 TEST(Multiset, default_constructor) {
     s21::multiset<int> basic;
