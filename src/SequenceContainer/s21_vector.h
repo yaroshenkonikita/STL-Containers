@@ -24,7 +24,15 @@ class vector {
   vector(const vector &v) {}
   vector(vector &&v) {}
   ~vector() {}
-  vector &operator=(vector &&v) {}
+  vector &operator=(vector &&v) noexcept {
+    if (this != &v) {
+      this->arr_ = v.arr_;
+      this->capacity_ = v.capacity_;
+      this->size_ = v.size_;
+      v.arr_ = nullptr;
+    }
+    return *this;
+  }
 //  ------------------------------Element access------------------------------
 //  Возвращает ссылку на элемент в указанном месте pos с проверкой границ
   reference at(size_type pos) {
