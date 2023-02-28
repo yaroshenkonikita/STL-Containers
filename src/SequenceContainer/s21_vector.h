@@ -5,7 +5,7 @@
 #include <iostream>
 
 namespace s21 {
-template<typename V>
+template<typename V, class Allocator = std::allocator<V>>
 class vector {
  public:
   using value_type = V;
@@ -49,10 +49,10 @@ class vector {
   void swap(vector<value_type> &other) {}
 
  private:
-  size_type size;
-  size_type capacity;
-  pointer arr;
-  allocator_type allocator;
+  size_type size_;
+  size_type capacity_;
+  pointer arr_;
+  allocator_type allocator_;
 };
 }
 
