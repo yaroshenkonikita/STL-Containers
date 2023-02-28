@@ -2,145 +2,162 @@
 
 #include <algorithm>
 
-TEST(Map, default_constructor) {
+TEST(Map, default_constructor_instructor_insert) {
     std::map<int, int> basic;
     basic.insert({5, 5});
     basic.insert({20, 2});
     basic.insert({2, 20});
     int s[3] = {20, 5, 2};
-    int *a = s;
+    int *a = s, *b = a + 2;
     for (auto &item : basic) {
         EXPECT_EQ(item.second, *a++);
+        EXPECT_EQ(item.first, *b--);
     }
 }
 
-// TEST(Map, initializator_constructor_int) {
-//     std::map<int, int> basic = {6, 4, 2, 8, 0, -228};
-//     int s[6] = {-228, 0, 2, 4, 6, 8};
-//     int *a = s;
-//     for (auto &item : basic) {
-//         EXPECT_EQ(item, *a++);
-//     }
-// }
+TEST(Map, initializator_constructor_int) {
+    std::map<int, int> basic = {{6, 7}, {4, 4}, {2, 2}, {8, 8}, {0, 2}, {-228, 5}};
+    int s1[6] = {-228, 0, 2, 4, 6, 8};
+    int s2[6] = {5, 2, 2, 4, 7, 8};
+    int *a = s1, *b = s2;
+    for (auto &item : basic) {
+        EXPECT_EQ(item.first, *a++);
+        EXPECT_EQ(item.second, *b++);
+    }
+}
 
-// TEST(Map, initializator_constructor_double) {
-//     std::map<double, double> basic = {999, 6, 3, 2, 90, 0, -1};
-//     double s[7] = {-1, 0, 2, 3, 6, 90, 999};
-//     double *a = s;
-//     for (auto &item : basic) {
-//         EXPECT_DOUBLE_EQ(item, *a++);
-//     }
-// }
+TEST(Map, initializator_constructor_double) {
+    std::map<double, double> basic = {{999, 222}, {6, 6}, {3, 3}, {2, 4}, {90, -8}, {0, -29}, {-1, -1}};
+    double s1[7] = {-1, 0, 2, 3, 6, 90, 999};
+    double s2[7] = {-1, -29, 4, 3, 6, -8, 222};
+    double *a = s1, *b = s2;
+    for (auto &item : basic) {
+        EXPECT_DOUBLE_EQ(item.first, *a++);
+        EXPECT_DOUBLE_EQ(item.second, *b++);
+    }
+}
 
-// TEST(Map, initializator_constructor_char) {
-//     std::map<char, char> basic = {'c', 'd', 'a', 'b'};
-//     char s[4] = {'a', 'b', 'c', 'd'};
-//     char *a = s;
-//     for (auto &item : basic) {
-//         EXPECT_TRUE(item == *a++);
-//     }
-// }
+TEST(Map, initializator_constructor_char) {
+    std::map<char, char> basic = {{'c', 'c'}, {'d', 'v'}, {'a', 'b'}, {'b', 'n'}};
+    char s1[4] = {'a', 'b', 'c', 'd'};
+    char s2[4] = {'b', 'n', 'c', 'v'};
+    char *a = s1, *b = s2;
+    for (auto &item : basic) {
+        EXPECT_EQ(item.first, *a++);
+        EXPECT_EQ(item.second, *b++);
+    }
+}
 
-// TEST(Map, copy_constructor_int) {
-//     std::map<int, int> basic = {6, 4, 2, 8, 0, -228};
-//     std::map<int, int> copy{basic};
-//     int s[6] = {-228, 0, 2, 4, 6, 8};
-//     int *a = s;
-//     for (auto &item : copy) {
-//         EXPECT_EQ(item, *a++);
-//     }
-//     EXPECT_EQ(basic.size(), copy.size());
-// }
+TEST(Map, copy_constructor_int) {
+    std::map<int, int> basic = {{6, 7}, {4, 4}, {2, 2}, {8, 8}, {0, 2}, {-228, 5}};
+    std::map<int, int> copy{basic};
+    int s1[6] = {-228, 0, 2, 4, 6, 8};
+    int s2[6] = {5, 2, 2, 4, 7, 8};
+    int *a = s1, *b = s2;
+    for (auto &item : copy) {
+        EXPECT_EQ(item.first, *a++);
+        EXPECT_EQ(item.second, *b++);
+    }
+    EXPECT_EQ(basic.size(), copy.size());
+}
 
-// TEST(Map, move_constructor_int) {
-//     std::map<int, int> basic = {6, 4, 2, 8, 0, -228};
-//     std::map<int, int> move{std::move(basic)};
-//     int s[6] = {-228, 0, 2, 4, 6, 8};
-//     int *a = s;
-//     for (auto &item : move) {
-//         EXPECT_EQ(item, *a++);
-//     }
-//     EXPECT_EQ(basic.size(), 0);
-//     EXPECT_EQ(move.size(), 6);
-// }
+TEST(Map, move_constructor_int) {
+    std::map<int, int> basic = {{6, 7}, {4, 4}, {2, 2}, {8, 8}, {0, 2}, {-228, 5}};
+    std::map<int, int> move{std::move(basic)};
+    int s1[6] = {-228, 0, 2, 4, 6, 8};
+    int s2[6] = {5, 2, 2, 4, 7, 8};
+    int *a = s1, *b = s2;
+    for (auto &item : move) {
+        EXPECT_EQ(item.first, *a++);
+        EXPECT_EQ(item.second, *b++);
+    }
+    EXPECT_EQ(basic.size(), 0);
+    EXPECT_EQ(move.size(), 6);
+}
 
-// TEST(Map, move_operator_int) {
-//     std::map<int, int> basic = {6, 4, 2, 8, 0, -228};
-//     std::map<int, int> move = std::move(basic);
-//     int s[6] = {-228, 0, 2, 4, 6, 8};
-//     int *a = s;
-//     for (auto &item : move) {
-//         EXPECT_EQ(item, *a++);
-//     }
-//     EXPECT_EQ(basic.size(), 0);
-//     EXPECT_EQ(move.size(), 6);
-// }
+TEST(Map, move_operator_int) {
+    std::map<int, int> basic = {{6, 7}, {4, 4}, {2, 2}, {8, 8}, {0, 2}, {-228, 5}};
+    std::map<int, int> move = std::move(basic);
+    int s1[6] = {-228, 0, 2, 4, 6, 8};
+    int s2[6] = {5, 2, 2, 4, 7, 8};
+    int *a = s1, *b = s2;
+    for (auto &item : move) {
+        EXPECT_EQ(item.first, *a++);
+        EXPECT_EQ(item.second, *b++);
+    }
+    EXPECT_EQ(basic.size(), 0);
+    EXPECT_EQ(move.size(), 6);
+}
 
-// TEST(Map, iterator_begin_end) {
-//     std::map<int, int> basic = {6, 4, 2, 8, 0, -228};
-//     auto iter = basic.begin();
-//     auto iter_end = basic.end();
-//     int s[6] = {-228, 0, 2, 4, 6, 8};
-//     int *a = s;
-//     while (iter != iter_end) {
-//         EXPECT_EQ(*iter++, *a++);
-//     }
-//     EXPECT_EQ(basic.size(), 6);
-// }
+TEST(Map, iterator_begin_end) {
+    std::map<int, int> basic = {{6, 7}, {4, 4}, {2, 2}, {8, 8}, {0, 2}, {-228, 5}};
+    auto iter = basic.begin();
+    auto iter_end = basic.end();
+    int s1[6] = {-228, 0, 2, 4, 6, 8};
+    int s2[6] = {5, 2, 2, 4, 7, 8};
+    int *a = s1, *b = s2, size = 0;
+    while (iter != iter_end) {
+        EXPECT_EQ((*iter).first, *a++);
+        EXPECT_EQ((*iter++).second, *b++);
+        ++size;
+    }
+    EXPECT_EQ(size, 6);
+}
 
-// TEST(Map, empty_size) {
-//     std::map<int, int> basic;
-//     EXPECT_TRUE(basic.empty());
-//     EXPECT_EQ(basic.size(), 0);
-//     basic.insert(4);
-//     EXPECT_EQ(basic.size(), 1);
-//     EXPECT_FALSE(basic.empty());
-// }
+TEST(Map, empty_size) {
+    std::map<int, int> basic;
+    EXPECT_TRUE(basic.empty());
+    EXPECT_EQ(basic.size(), 0);
+    basic.insert({4, 4});
+    EXPECT_EQ(basic.size(), 1);
+    EXPECT_FALSE(basic.empty());
+}
 
-// TEST(Map, empty_erase) {
-//     std::map<int, int> basic;
-//     EXPECT_TRUE(basic.empty());
-//     basic.insert(4);
-//     EXPECT_FALSE(basic.empty());
-//     basic.erase(4);
-//     EXPECT_TRUE(basic.empty());
-// }
+TEST(Map, empty_erase) {
+    std::map<int, int> basic;
+    EXPECT_TRUE(basic.empty());
+    basic.insert({4, 4});
+    EXPECT_FALSE(basic.empty());
+    basic.erase(4);
+    EXPECT_TRUE(basic.empty());
+}
 
-// TEST(Map, insert) {
-//     std::map<int, int> basic;
-//     std::pair pair = basic.insert(5);
-//     EXPECT_EQ(*pair.first, 5);
-//     EXPECT_TRUE(pair.second);
-//     std::pair pair2 = basic.insert(5);
-//     EXPECT_EQ(*pair2.first, 5);
-//     EXPECT_FALSE(pair2.second);
-//     basic.insert(20);
-//     basic.insert(2);
-//     int s[3] = {2, 5, 20};
-//     int *a = s;
-//     for (auto &item : basic) {
-//         EXPECT_EQ(item, *a++);
-//     }
-// }
+TEST(Map, insert) {
+    std::map<int, int> basic;
+    std::pair pair = basic.insert({5, 5});
+    EXPECT_EQ((*pair.first).first, 5);
+    EXPECT_TRUE(pair.second);
+    std::pair pair2 = basic.insert({5, 5});
+    EXPECT_EQ((*pair2.first).first, 5);
+    EXPECT_FALSE(pair2.second);
+    basic.insert({20, 20});
+    basic.insert({2, 2});
+    int s[3] = {2, 5, 20};
+    int *a = s;
+    for (auto &item : basic) {
+        EXPECT_EQ(item.first, *a++);
+    }
+}
 
-// TEST(Map, empty_clear) {
-//     std::map<int, int> basic;
-//     EXPECT_TRUE(basic.empty());
-//     basic.insert(4);
-//     EXPECT_FALSE(basic.empty());
-//     basic.clear();
-//     EXPECT_TRUE(basic.empty());
-// }
+TEST(Map, empty_clear) {
+    std::map<int, int> basic;
+    EXPECT_TRUE(basic.empty());
+    basic.insert({4, 5});
+    EXPECT_FALSE(basic.empty());
+    basic.clear();
+    EXPECT_TRUE(basic.empty());
+}
 
-// TEST(Map, size_clear) {
-//     std::map<int, int> basic{1, 2, 3, 4, 5, 6};
-//     EXPECT_EQ(basic.size(), 6);
-//     basic.insert(4);
-//     basic.insert(7);
-//     EXPECT_EQ(basic.size(), 7);
-//     basic.clear();
-//     EXPECT_EQ(basic.size(), 0);
-// }
+TEST(Map, size_clear) {
+    std::map<int, int> basic{{1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}, {6, 6}};
+    EXPECT_EQ(basic.size(), 6);
+    basic.insert({4, 4});
+    EXPECT_EQ(basic.size(), 6);
+    basic.insert({7, 7});
+    EXPECT_EQ(basic.size(), 7);
+    basic.clear();
+    EXPECT_EQ(basic.size(), 0);
+}
 
 // TEST(Map, max_size) {
 //     std::map<double, double> basic1{1, 2, 3};
