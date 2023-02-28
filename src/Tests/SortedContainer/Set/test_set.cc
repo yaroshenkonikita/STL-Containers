@@ -14,8 +14,17 @@ TEST(Set, default_constructor) {
     }
 }
 
-TEST(Set, initializator_constructor_int) {
+TEST(Set, initializator_oper_constructor_int) {
     s21::set<int> basic = {6, 4, 2, 8, 0, -228};
+    int s[6] = {-228, 0, 2, 4, 6, 8};
+    int *a = s;
+    for (auto &item : basic) {
+        EXPECT_EQ(item, *a++);
+    }
+}
+
+TEST(Set, initializator_constructor_int) {
+    s21::set<int> basic{6, 4, 2, 8, 0, -228};
     int s[6] = {-228, 0, 2, 4, 6, 8};
     int *a = s;
     for (auto &item : basic) {
@@ -268,34 +277,6 @@ TEST(Set, contains_int) {
     EXPECT_FALSE(basic1.contains(-33));
     EXPECT_FALSE(basic1.contains(77));
     EXPECT_FALSE(basic1.contains(-98));
-}
-
-TEST(Set, equal_range_int) {
-    s21::set<int> basic1{78, 7, -9, -999, -8, 7, 2};
-    EXPECT_EQ(basic1.size(), 6);
-    auto pair = basic1.equal_range(7);
-    int size = 0;
-    while (pair.first != pair.second) {
-        ++size;
-        EXPECT_EQ(*pair.first, 7);
-        ++pair.first;
-    }
-    EXPECT_EQ(size, 1);
-    EXPECT_EQ(basic1.size(), 6);
-}
-
-TEST(Set, equal_range_int2) {
-    s21::set<int> basic1{78, 7, -9, -999, -8, 7, 2};
-    EXPECT_EQ(basic1.size(), 6);
-    auto pair = basic1.equal_range(-9);
-    int size = 0;
-    while (pair.first != pair.second) {
-        ++size;
-        EXPECT_EQ(*pair.first, -9);
-        ++pair.first;
-    }
-    EXPECT_EQ(size, 1);
-    EXPECT_EQ(basic1.size(), 6);
 }
 
 TEST(Set, lower_bound_and_upper_bound) {

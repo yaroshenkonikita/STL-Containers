@@ -14,8 +14,17 @@ TEST(Multiset, default_constructor) {
     }
 }
 
-TEST(Multiset, initializator_constructor_int) {
+TEST(Multiset, initializator_oper_constructor_int) {
     s21::multiset<int> basic = {6, 4, 2, 8, 0, -228};
+    int s[6] = {-228, 0, 2, 4, 6, 8};
+    int *a = s;
+    for (auto &item : basic) {
+        EXPECT_EQ(item, *a++);
+    }
+}
+
+TEST(Multiset, initializator_constructor_int) {
+    s21::multiset<int> basic{6, 4, 2, 8, 0, -228};
     int s[6] = {-228, 0, 2, 4, 6, 8};
     int *a = s;
     for (auto &item : basic) {
