@@ -129,12 +129,12 @@ class vector {
     ++size_;
     return begin() + index;
   }
-  void erase(iterator pos) {
-
-  }
-  void push_back(const_reference value) {
-
-  }
+//  void erase(iterator pos) {
+//
+//  }
+//  void push_back(const_reference value) {
+//
+//  }
   //  Удаляет последний элемент контейнера
   void pop_back() { allocator_.destroy(arr_ + --size_); }
   //  Меняет содержимое и вместимость контейнера с другими
