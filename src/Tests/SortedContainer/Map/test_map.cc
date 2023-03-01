@@ -159,162 +159,260 @@ TEST(Map, size_clear) {
     EXPECT_EQ(basic.size(), 0);
 }
 
-// TEST(Map, max_size) {
-//     std::map<double, double> basic1{1, 2, 3};
-//     std::map<__int128> basic2{1, 2, 3, 4};
-//     std::map<char, char> basic3;
-//     // EXPECT_EQ(basic1.max_size(), 230584300921369395); // std 17
-//     // EXPECT_EQ(basic2.max_size(), 192153584101141162);
-//     // EXPECT_EQ(basic3.max_size(), 230584300921369395);
-//     EXPECT_EQ(basic1.max_size(), 461168601842738790); // std 20
-//     EXPECT_EQ(basic2.max_size(), 384307168202282325);
-//     EXPECT_EQ(basic3.max_size(), 461168601842738790);
-// }
+TEST(Map, max_size) {
+    std::map<double, double> basic1{{1, 1}, {2, 2}, {3, 3}};
+    std::map<__int128, __int128> basic2{{1, 1}, {2, 2}, {3, 3}, {4, 4}};
+    std::map<char, char> basic3;
+    // EXPECT_EQ(basic1.max_size(), 192153584101141162); // std 17
+    // EXPECT_EQ(basic2.max_size(), 144115188075855871);
+    // EXPECT_EQ(basic3.max_size(), 230584300921369395);
+    EXPECT_EQ(basic1.max_size(), 384307168202282325); // std 20
+    EXPECT_EQ(basic2.max_size(), 288230376151711743);
+    EXPECT_EQ(basic3.max_size(), 461168601842738790);
+}
 
-// TEST(Map, swap_int) {
-//     std::map<int, int> basic1{1, 2, 3};
-//     std::map<int, int> basic2{1, 2, 3, 4};
-//     EXPECT_EQ(basic1.size(), 3);
-//     EXPECT_EQ(basic2.size(), 4);
-//     int s1[3] = {1, 2, 3};
-//     int s2[4] = {1, 2, 3, 4};
-//     int *a = s1;
-//     for (auto &item : basic1) {
-//         EXPECT_EQ(item, *a++);
-//     }
-//     a = s2;
-//     for (auto &item : basic2) {
-//         EXPECT_EQ(item, *a++);
-//     }
-//     basic1.swap(basic2);
-//     EXPECT_EQ(basic1.size(), 4);
-//     EXPECT_EQ(basic2.size(), 3);
-//     a = s1;
-//     for (auto &item : basic2) {
-//         EXPECT_EQ(item, *a++);
-//     }
-//     a = s2;
-//     for (auto &item : basic1) {
-//         EXPECT_EQ(item, *a++);
-//     }
-// }
-// TEST(Map, swap_double) {
-//     std::map<double, double> basic1{78, 23, -9};
-//     std::map<double, double> basic2{55, 22, -8, -0.5};
-//     EXPECT_EQ(basic1.size(), 3);
-//     EXPECT_EQ(basic2.size(), 4);
-//     double s1[3] = {-9, 23, 78};
-//     double s2[4] = {-8, -0.5, 22, 55};
-//     double *a = s1;
-//     for (auto &item : basic1) {
-//         EXPECT_DOUBLE_EQ(item, *a++);
-//     }
-//     a = s2;
-//     for (auto &item : basic2) {
-//         EXPECT_DOUBLE_EQ(item, *a++);
-//     }
-//     basic1.swap(basic2);
-//     EXPECT_EQ(basic1.size(), 4);
-//     EXPECT_EQ(basic2.size(), 3);
-//     a = s1;
-//     for (auto &item : basic2) {
-//         EXPECT_DOUBLE_EQ(item, *a++);
-//     }
-//     a = s2;
-//     for (auto &item : basic1) {
-//         EXPECT_DOUBLE_EQ(item, *a++);
-//     }
-// }
+TEST(Map, swap_int) {
+    std::map<int, int> basic1{{1, 1}, {2, 2}, {3, 3}};
+    std::map<int, int> basic2{{1, 1}, {2, 2}, {3, 3}, {4, 4}};
+    EXPECT_EQ(basic1.size(), 3);
+    EXPECT_EQ(basic2.size(), 4);
+    int s1[3] = {1, 2, 3};
+    int s2[4] = {1, 2, 3, 4};
+    int *a = s1;
+    for (auto &item : basic1) {
+        EXPECT_EQ(item.first, *a);
+        EXPECT_EQ(item.second, *a++);
+    }
+    a = s2;
+    for (auto &item : basic2) {
+        EXPECT_EQ(item.first, *a);
+        EXPECT_EQ(item.second, *a++);
+    }
+    basic1.swap(basic2);
+    EXPECT_EQ(basic1.size(), 4);
+    EXPECT_EQ(basic2.size(), 3);
+    a = s1;
+    for (auto &item : basic2) {
+        EXPECT_EQ(item.first, *a);
+        EXPECT_EQ(item.second, *a++);
+    }
+    a = s2;
+    for (auto &item : basic1) {
+        EXPECT_EQ(item.first, *a);
+        EXPECT_EQ(item.second, *a++);
+    }
+}
 
-// TEST(Map, merge_double) {
-//     std::map<double, double> basic1{78, 23, -9, -8, -0.5};
-//     std::map<double, double> basic2{55, 22, -8, -0.5};
-//     EXPECT_EQ(basic1.size(), 5);
-//     EXPECT_EQ(basic2.size(), 4);
-//     basic1.merge(basic2);
-//     double s1[7] = {-9, -8, -0.5, 22, 23, 55, 78};
-//     double *a = s1;
-//     for (auto &item : basic1) {
-//         EXPECT_DOUBLE_EQ(item, *a++);
-//     }
-//     EXPECT_EQ(basic1.size(), 7);
-//     EXPECT_EQ(basic2.size(), 2);
-// }
+TEST(Map, swap_double) {
+    std::map<double, double> basic1{{78, 78}, {23, 23}, {-9, -9}};
+    std::map<double, double> basic2{{55, 55}, {22, 22}, {-8, -8}, {-0.5, -0.5}};
+    EXPECT_EQ(basic1.size(), 3);
+    EXPECT_EQ(basic2.size(), 4);
+    double s1[3] = {-9, 23, 78};
+    double s2[4] = {-8, -0.5, 22, 55};
+    double *a = s1;
+    for (auto &item : basic1) {
+        EXPECT_DOUBLE_EQ(item.first, *a);
+        EXPECT_DOUBLE_EQ(item.second, *a++);
+    }
+    a = s2;
+    for (auto &item : basic2) {
+        EXPECT_DOUBLE_EQ(item.first, *a);
+        EXPECT_DOUBLE_EQ(item.second, *a++);
+    }
+    basic1.swap(basic2);
+    EXPECT_EQ(basic1.size(), 4);
+    EXPECT_EQ(basic2.size(), 3);
+    a = s1;
+    for (auto &item : basic2) {
+        EXPECT_DOUBLE_EQ(item.first, *a);
+        EXPECT_DOUBLE_EQ(item.second, *a++);
+    }
+    a = s2;
+    for (auto &item : basic1) {
+        EXPECT_DOUBLE_EQ(item.first, *a);
+        EXPECT_DOUBLE_EQ(item.second, *a++);
+    }
+}
 
-// TEST(Map, merge_char) {
-//     std::map<char, char> basic1{78, 23, -9, -8};
-//     std::map<char, char> basic2{55, 22, -8, 0};
-//     EXPECT_EQ(basic1.size(), 4);
-//     EXPECT_EQ(basic2.size(), 4);
-//     basic1.merge(basic2);
-//     char s1[7] = {-9, -8, 0, 22, 23, 55, 78};
-//     char *a = s1;
-//     for (auto &item : basic1) {
-//         EXPECT_EQ(item, *a++);
-//     }
-//     EXPECT_EQ(basic1.size(), 7);
-//     EXPECT_EQ(basic2.size(), 1);
-// }
+TEST(Map, merge_double) {
+    std::map<double, double> basic1{{78, 78}, {23, 23}, {-9, -9}, {-8, -8}, {-0.5, -0.5}};
+    std::map<double, double> basic2{{55, 55}, {22, 22}, {-8, -8}, {-0.5, -0.5}};
+    EXPECT_EQ(basic1.size(), 5);
+    EXPECT_EQ(basic2.size(), 4);
+    basic1.merge(basic2);
+    double s1[7] = {-9, -8, -0.5, 22, 23, 55, 78};
+    double *a = s1;
+    for (auto &item : basic1) {
+        EXPECT_DOUBLE_EQ(item.first, *a);
+        EXPECT_DOUBLE_EQ(item.second, *a++);
+    }
+    EXPECT_EQ(basic1.size(), 7);
+    EXPECT_EQ(basic2.size(), 2);
+}
 
-// TEST(Map, iterator_find) {
-//     std::map<double, double> basic1{78, 23, -9, 22, 22, 22, 23};
-//     EXPECT_EQ(basic1.size(), 4);
-//     auto iter_22 = basic1.find(22);
-//     EXPECT_DOUBLE_EQ(*iter_22, 22);
-//     EXPECT_DOUBLE_EQ(*++iter_22, 23);
-//     EXPECT_DOUBLE_EQ(*++iter_22, 78);
-// }
+TEST(Map, merge_char) {
+    std::map<char, char> basic1{{78, 78}, {23, 23}, {-9, -9}, {-8, -8}};
+    std::map<char, char> basic2{{55, 55}, {22, 22}, {-8, -8}, {0, 0}};
+    EXPECT_EQ(basic1.size(), 4);
+    EXPECT_EQ(basic2.size(), 4);
+    basic1.merge(basic2);
+    char s1[7] = {-9, -8, 0, 22, 23, 55, 78};
+    char *a = s1;
+    for (auto &item : basic1) {
+        EXPECT_EQ(item.first, *a);
+        EXPECT_EQ(item.second, *a++);
+    }
+    EXPECT_EQ(basic1.size(), 7);
+    EXPECT_EQ(basic2.size(), 1);
+}
 
-// TEST(Map, iterator_find2) {
-//     std::map<double, double> basic1{78, 7.75, -9, -999, -8, 0.5, 2.88};
-//     EXPECT_EQ(basic1.size(), 7);
-//     auto iter_22 = basic1.find(-9);
-//     EXPECT_DOUBLE_EQ(*iter_22, -9);
-//     EXPECT_DOUBLE_EQ(*++iter_22, -8);
-//     EXPECT_DOUBLE_EQ(*++iter_22, 0.5);
-//     EXPECT_DOUBLE_EQ(*++iter_22, 2.88);
-//     EXPECT_DOUBLE_EQ(*++iter_22, 7.75);
-// }
+TEST(Map, iterator_find) {
+    std::map<double, double> basic1{{78, 78}, {23, 23}, {-9, -9}, {22, 22}, {22, 22}, {22, 22}, {23, 23}};
+    EXPECT_EQ(basic1.size(), 4);
+    auto iter_22 = basic1.find(22);
+    EXPECT_DOUBLE_EQ((*iter_22).first, 22);
+    EXPECT_DOUBLE_EQ((*++iter_22).first, 23);
+    EXPECT_DOUBLE_EQ((*++iter_22).first, 78);
+}
 
-// TEST(Map, contains_int) {
-//     std::map<int, int> basic1{78, 7, -9, -999, -8, 0, 2};
-//     EXPECT_EQ(basic1.size(), 7);
-//     EXPECT_TRUE(basic1.contains(-9));
-//     EXPECT_TRUE(basic1.contains(-999));
-//     EXPECT_TRUE(basic1.contains(0));
-//     EXPECT_FALSE(basic1.contains(-33));
-//     EXPECT_FALSE(basic1.contains(77));
-//     EXPECT_FALSE(basic1.contains(-98));
-// }
+TEST(Map, iterator_find2) {
+    std::map<double, double> basic1{{78, 78}, {7.75, 7.75}, {-9, -9}, {-999, -999}, {-8, -8}, {0.5, 0.5}, {2.88, 2.88}};
+    EXPECT_EQ(basic1.size(), 7);
+    auto iter_22 = basic1.find(-9);
+    EXPECT_DOUBLE_EQ((*iter_22).first, -9);
+    EXPECT_DOUBLE_EQ((*++iter_22).first, -8);
+    EXPECT_DOUBLE_EQ((*++iter_22).first, 0.5);
+    EXPECT_DOUBLE_EQ((*++iter_22).first, 2.88);
+    EXPECT_DOUBLE_EQ((*++iter_22).first, 7.75);
+}
 
-// TEST(Map, lower_bound_and_upper_bound) {
-//     std::map<int, int> basic1{782, 7, -9, -999, -8, 7, 2, 32};
-//     EXPECT_EQ(basic1.size(), 7);
-//     std::pair pair = {basic1.lower_bound(-9), basic1.upper_bound(32)};
-//     char s1[5] = {-9, -8, 2, 7, 32};
-//     char *a = s1;
-//     int size = 0;
-//     while (pair.first != pair.second) {
-//         ++size;
-//         EXPECT_EQ(*pair.first, *a++);
-//         ++pair.first;
-//     }
-//     EXPECT_EQ(size, 5);
-//     EXPECT_EQ(basic1.size(), 7);
-// }
+TEST(Map, contains_int) {
+    std::map<int, int> basic1{{78, 78}, {7, 7}, {-9, -9}, {-999, -999}, {-8, -8}, {0, 0}, {2, 2}};
+    EXPECT_EQ(basic1.size(), 7);
+    EXPECT_TRUE(basic1.contains(-9));
+    EXPECT_TRUE(basic1.contains(-999));
+    EXPECT_TRUE(basic1.contains(0));
+    EXPECT_FALSE(basic1.contains(-33));
+    EXPECT_FALSE(basic1.contains(77));
+    EXPECT_FALSE(basic1.contains(-98));
+}
 
-// TEST(Map, lower_bound_and_upper_bound2) {
-//     std::map<int, int> basic1{782, 7, -9, -999, -8, 7, 2, 32};
-//     EXPECT_EQ(basic1.size(), 7);
-//     std::pair pair = {basic1.lower_bound(-9), basic1.upper_bound(6)};
-//     char s1[3] = {-9, -8, 2};
-//     char *a = s1;
-//     int size = 0;
-//     while (pair.first != pair.second) {
-//         ++size;
-//         EXPECT_EQ(*pair.first, *a++);
-//         ++pair.first;
-//     }
-//     EXPECT_EQ(size, 3);
-//     EXPECT_EQ(basic1.size(), 7);
-// }
+TEST(Map, lower_bound_and_upper_bound) {
+    std::map<int, int> basic1{{782, 782}, {7, 7}, {-9, -9}, {-999, -999}, {-8, -8}, {2, 2}, {32, 32}};
+    EXPECT_EQ(basic1.size(), 7);
+    std::pair pair = {basic1.lower_bound(-9), basic1.upper_bound(32)};
+    char s1[5] = {-9, -8, 2, 7, 32};
+    char *a = s1;
+    int size = 0;
+    while (pair.first != pair.second) {
+        ++size;
+        EXPECT_EQ((*pair.first).first, *a);
+        EXPECT_EQ((*pair.first).second, *a++);
+        ++pair.first;
+    }
+    EXPECT_EQ(size, 5);
+    EXPECT_EQ(basic1.size(), 7);
+}
+
+TEST(Map, lower_bound_and_upper_bound_and_bad_list) {
+    std::map<int, int> basic1{{782, 782}, {7, 7}, {-9, -9}, {-999, -999}, {-8, -8}, {7, 7}, {2, 2}, {32, 32}};
+    EXPECT_EQ(basic1.size(), 7);
+    std::pair pair = {basic1.lower_bound(-9), basic1.upper_bound(6)};
+    char s1[3] = {-9, -8, 2};
+    char *a = s1;
+    int size = 0;
+    while (pair.first != pair.second) {
+        ++size;
+        EXPECT_EQ((*pair.first).first, *a);
+        EXPECT_EQ((*pair.first).second, *a++);
+        ++pair.first;
+    }
+    EXPECT_EQ(size, 3);
+    EXPECT_EQ(basic1.size(), 7);
+}
+
+TEST(Map, at_oper_and_bad_list) {
+    std::map<int, int> basic1{{782, 7}, {7, 782}, {-9, -999}, {-999, -9}, {-8, 7}, {7, -8}, {2, 32}, {32, 2}};
+    EXPECT_EQ(basic1.size(), 7);
+    EXPECT_EQ(basic1.at(-8), 7);
+    EXPECT_EQ(basic1.at(7), 782);
+    EXPECT_EQ(basic1.at(2), 32);
+    EXPECT_EQ(basic1[782], 7);
+    EXPECT_EQ(basic1[-9], -999);
+    EXPECT_EQ(basic1[32], 2);
+}
+
+TEST(Map, oper_insert) {
+    std::map<int, int> basic1{{782, 7}, {7, 782}, {-9, -999}, {-999, -9}, {-8, 7}, {7, -8}, {2, 32}, {32, 2}};
+    EXPECT_EQ(basic1.size(), 7);
+    EXPECT_EQ(basic1[4] = 5, 5);
+    EXPECT_EQ(basic1[4], 5);
+    EXPECT_EQ(basic1.size(), 8);
+}
+
+TEST(Map, at_except) {
+    std::map<int, int> basic1{{782, 7}, {7, 782}, {-9, -999}, {-999, -9}, {-8, 7}, {7, -8}, {2, 32}, {32, 2}};
+    EXPECT_EQ(basic1.size(), 7);
+    EXPECT_ANY_THROW(basic1.at(4));
+    EXPECT_ANY_THROW(basic1.at(0));
+    EXPECT_ANY_THROW(basic1.at(5));
+    EXPECT_EQ(basic1.size(), 7);
+}
+
+TEST(Map, insert_parametrs) {
+    std::map<int, int> basic1{{782, 7}, {7, 782}, {-9, -999}, {-999, -9}, {-8, 7}, {7, -8}, {2, 32}, {32, 2}};
+    EXPECT_EQ(basic1.size(), 7);
+    auto pair1 = basic1.insert({8, 0}); // без {}
+    EXPECT_TRUE(pair1.second);
+    EXPECT_EQ((*pair1.first).first, 8);
+    EXPECT_EQ((*pair1.first).second, 0);
+    EXPECT_EQ(basic1.size(), 8);
+}
+
+TEST(Map, insert_parametrs_no) {
+    std::map<int, int> basic1{{782, 7}, {7, 782}, {-9, -999}, {-999, -9}, {-8, 7}, {7, -8}, {2, 32}, {32, 2}};
+    EXPECT_EQ(basic1.size(), 7);
+    auto pair1 = basic1.insert({7, 200}); // без {}
+    EXPECT_FALSE(pair1.second);
+    EXPECT_EQ((*pair1.first).first, 7);
+    EXPECT_EQ((*pair1.first).second, 782);
+    EXPECT_EQ(basic1.size(), 7);
+}
+
+TEST(Map, insert_or_assign_false) {
+    std::map<int, int> basic1{{782, 7}, {7, 782}, {-9, -999}, {-999, -9}, {-8, 7}, {7, -8}, {2, 32}, {32, 2}};
+    EXPECT_EQ(basic1.size(), 7);
+    auto pair1 = basic1.insert_or_assign(7, 200);
+    EXPECT_FALSE(pair1.second);
+    EXPECT_EQ((*pair1.first).first, 7);
+    EXPECT_EQ((*pair1.first).second, 200);
+    EXPECT_EQ(basic1.size(), 7);
+}
+
+TEST(Map, insert_or_assign_true) {
+    std::map<int, int> basic1{{782, 7}, {7, 782}, {-9, -999}, {-999, -9}, {-8, 7}, {7, -8}, {2, 32}, {32, 2}};
+    EXPECT_EQ(basic1.size(), 7);
+    auto pair1 = basic1.insert_or_assign(8, 200);
+    EXPECT_TRUE(pair1.second);
+    EXPECT_EQ((*pair1.first).first, 8);
+    EXPECT_EQ((*pair1.first).second, 200);
+    EXPECT_EQ(basic1.size(), 8);
+}
+
+TEST(Map, insert_or_assign_true_check) {
+    std::map<int, int> basic1{{782, 7}, {7, 782}, {-9, -999}, {-999, -9}, {-8, 7}, {7, -8}, {2, 32}, {32, 2}};
+    EXPECT_EQ(basic1.size(), 7);
+    auto pair1 = basic1.insert_or_assign(8, 200);
+    EXPECT_TRUE(pair1.second);
+    EXPECT_EQ((*pair1.first).first, 8);
+    EXPECT_EQ((*pair1.first).second, 200);
+    EXPECT_EQ(basic1.size(), 8);
+    int s1[8] = {-999, -9, -8, 2, 7, 8, 32, 782};
+    int s2[8] = {-9, -999, 7, 32, 782, 200, 2, 7};
+    int *a = s1, *b = s2;
+    for (auto &item : basic1) {
+        EXPECT_DOUBLE_EQ(item.first, *a++);
+        EXPECT_DOUBLE_EQ(item.second, *b++);
+    }
+}
