@@ -68,5 +68,14 @@ template <typename T> list<T>::list() {
   tail = nullptr;
 }
 
-template <typename T> list<T>::~list() = default;
+template <typename T> list<T>::~list() {
+  node* current = head;
+  while(current != nullptr) {
+    node* previous = current;
+    current = current->next;
+    delete previous;
+  }
+  head = tail = nullptr;
+  size = 0;
+}
 #endif // CPP2_S21_CONTAINERS_0_SRC_S21_LIST_H
