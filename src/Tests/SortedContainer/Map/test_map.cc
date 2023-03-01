@@ -365,7 +365,7 @@ TEST(Map, at_except) {
 TEST(Map, insert_parametrs) {
     s21::map<int, int> basic1{{782, 7}, {7, 782}, {-9, -999}, {-999, -9}, {-8, 7}, {7, -8}, {2, 32}, {32, 2}};
     EXPECT_EQ(basic1.size(), 7);
-    auto pair1 = basic1.insert({8, 0}); // без {}
+    auto pair1 = basic1.insert(8, 0); // без {}
     EXPECT_TRUE(pair1.second);
     EXPECT_EQ((*pair1.first).first, 8);
     EXPECT_EQ((*pair1.first).second, 0);
@@ -375,7 +375,7 @@ TEST(Map, insert_parametrs) {
 TEST(Map, insert_parametrs_no) {
     s21::map<int, int> basic1{{782, 7}, {7, 782}, {-9, -999}, {-999, -9}, {-8, 7}, {7, -8}, {2, 32}, {32, 2}};
     EXPECT_EQ(basic1.size(), 7);
-    auto pair1 = basic1.insert({7, 200}); // без {}
+    auto pair1 = basic1.insert(7, 200); // без {}
     EXPECT_FALSE(pair1.second);
     EXPECT_EQ((*pair1.first).first, 7);
     EXPECT_EQ((*pair1.first).second, 782);
