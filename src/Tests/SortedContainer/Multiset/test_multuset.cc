@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include "./../../../s21_containersplus.h"
+
 TEST(Multiset, default_constructor) {
     s21::multiset<int> basic;
     basic.insert(5);

@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include "./../../../s21_containers.h"
+
 TEST(Set, default_constructor) {
     s21::set<int> basic;
     basic.insert(5);

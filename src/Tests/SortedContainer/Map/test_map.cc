@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include "./../../../s21_containers.h"
+
 TEST(Map, default_constructor_instructor_insert) {
     s21::map<int, int> basic;
     basic.insert({5, 5});
