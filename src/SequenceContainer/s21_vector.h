@@ -12,8 +12,8 @@ class vector {
   using value_type = V;
   using reference = value_type &;
   using const_reference = const value_type &;
-  using iterator = VectorIterator<value_type>;
-  using const_iterator = ConstVectorIterator<value_type>;
+  using iterator = V *;
+  using const_iterator = const V *;
   using size_type = size_t;
   using allocator_type = Allocator;
   using pointer = value_type *;
@@ -55,10 +55,13 @@ class vector {
   //  Перегрузка оператора для перемещения объекта
   vector &operator=(vector &&v) noexcept {
     if (this != &v) {
+      delete[] arr_;
       arr_ = v.arr_;
       capacity_ = v.capacity_;
       size_ = v.size_;
       v.arr_ = nullptr;
+      v.capacity_ = 0;
+      v.size_ = 0;
     }
     return *this;
   }
@@ -79,8 +82,9 @@ class vector {
   //  Возвращает указатель на базовый массив
   pointer data() noexcept { return arr_; }
   //  ------------------------------Iterators------------------------------
-  iterator begin() noexcept {}
-  iterator end() noexcept {}
+  iterator begin() noexcept { return arr_; }
+  iterator end() noexcept { return arr_ + size_; }
+//  iterator end() noexcept { return arr_ + size_; }
   //  ------------------------------Capacity------------------------------
   //  Проверяет, нет ли в контейнере элементов
   bool empty() const noexcept { return size_ == 0; }
@@ -107,17 +111,51 @@ class vector {
   //  Запрашивает удаление неиспользуемой емкости
   void shrink_to_fit() { if (size_ != capacity_) reserve(size_); }
   //  ------------------------------Modifiers------------------------------
-  void clear() noexcept {}
-  iterator insert(iterator iter, const_reference value) {}
-  void erase(iterator pos) {}
-  void push_back(const_reference value) {}
-  void pop_back() {}
-  void swap(vector<value_type> &other) {}
+  //  Удаляет все элементы из контейнера
+  void clear() noexcept {
+    for (size_type i = 0; i < size_; ++i) {
+      allocator_.destroy(arr_ + i);
+    }
+    size_ = 0;
+  }
+  //  Вставляет элементы в указанное место в контейнере
+  iterator insert(iterator pos, const_reference value) {
+    size_type index = pos - begin();
+    if (index > size_) {
+      throw std::length_error("Out of memory");
+    }
+    std::copy(begin() + index, end(), begin() + index + 1);
+    *(arr_ + index) = value;
+    ++size_;
+    return begin() + index;
+  }
+  void erase(iterator pos) {
+
+  }
+  void push_back(const_reference value) {
+
+  }
+  //  Удаляет последний элемент контейнера
+  void pop_back() { allocator_.destroy(arr_ + --size_); }
+  //  Меняет содержимое и вместимость контейнера с другими
+  void swap(vector<value_type> &other) {
+    std::swap(arr_, other.arr_);
+    std::swap(size_, other.size_);
+    std::swap(capacity_, other.capacity_);
+  }
+  //  ------------------------------Iterators operators------------------------------
+////  reference operator++() noexcept { return arr_ + sizeof(value_type); }
+//  reference operator++() noexcept { return arr_ + 1; }
+////  reference operator--() noexcept { return arr_ - sizeof(value_type); }
+//  reference operator--() noexcept { return arr_ - 1; }
+//  bool operator==(iterator it) noexcept { return arr_ == it; }
+//  bool operator!=(iterator it) noexcept { return arr_ != it; }
+//  reference operator*() const noexcept { return arr_; }
 
  private:
   pointer arr_;
-  size_type size_{};
-  size_type capacity_{};
+  size_type size_;
+  size_type capacity_;
   allocator_type allocator_;
 };
 }
