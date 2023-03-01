@@ -155,12 +155,12 @@ TEST(Set, max_size) {
     s21::set<double> basic1{1, 2, 3};
     s21::set<__int128> basic2{1, 2, 3, 4};
     s21::set<char> basic3;
-    // EXPECT_EQ(basic1.max_size(), 230584300921369395); // std 17
-    // EXPECT_EQ(basic2.max_size(), 192153584101141162);
-    // EXPECT_EQ(basic3.max_size(), 230584300921369395);
-    EXPECT_EQ(basic1.max_size(), 461168601842738790); // std 20
-    EXPECT_EQ(basic2.max_size(), 384307168202282325);
-    EXPECT_EQ(basic3.max_size(), 461168601842738790);
+    EXPECT_EQ(basic1.max_size(), 230584300921369395); // std 17
+    EXPECT_EQ(basic2.max_size(), 192153584101141162);
+    EXPECT_EQ(basic3.max_size(), 230584300921369395);
+    // EXPECT_EQ(basic1.max_size(), 461168601842738790); // std 20
+    // EXPECT_EQ(basic2.max_size(), 384307168202282325);
+    // EXPECT_EQ(basic3.max_size(), 461168601842738790);
 }
 
 TEST(Set, swap_int) {
