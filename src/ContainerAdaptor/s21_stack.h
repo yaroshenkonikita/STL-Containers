@@ -10,7 +10,9 @@
 #include "utility"
 #include <cstddef>
 #include <initializer_list>
+#include <iosfwd>
 #include <iostream>
+#include <stack>
 
 template <typename T> class Stack {
   using value_type = T;
@@ -29,21 +31,46 @@ public:
   // Stack Member functions
   Stack() : upper_element(nullptr) {
     std::cout << "Вызвался конструктор" << this;
-  };
-  Stack(std::initializer_list<value_type> const &items) {
-
   }
-  //  Stack(const Stack &s) {
-  //    while (!s.empty()) {
-  //    }
-  //  }
-  //  Stack(Stack &&s);
+
+  Stack(std::initializer_list<value_type> const &items) {
+    upper_element = nullptr;
+    for (value_type element : items) {
+      push(element);
+    }
+  }
+  Stack(const Stack<value_type> &other) {
+    //    size_type
+    node *new_node = other.upper_element;
+    std::initializer_list<value_type> list;
+    while (!other.empty()) {
+      list.append({other.upper_element->value});
+      other.upper_element = other.upper_element->next;
+    }
+    other.upper_element = new_node;
+    new_node = nullptr;
+    delete[] new_node;
+    Stack({list});
+  }
+
+  Stack(Stack &&other) noexcept {
+    upper_element = other.upper_element;
+    other.upper_element = nullptr;
+  }
+
   ~Stack() {
     std::cout << "Вызвался деструктор" << this;
     while (!empty())
       pop();
   }
-  //  operator=(Stack &&s);
+  Stack &operator=(Stack &&other) noexcept {
+    if (this != &other) {
+      ~Stack();
+      upper_element = other.upper_element;
+      other.upper_element = nullptr;
+    }
+    return *this;
+  }
 
   // Stack Element access
   const_reference top() {
@@ -54,13 +81,20 @@ public:
   }
 
   // Stack Capacity
-  bool empty() { return upper_element == nullptr; }
+  bool empty() const { return upper_element == nullptr; }
 
-//  size_type size() {
-//    size_type result = 0;
-//    while (!empty()) {
-//    }
-//  }
+  size_type size() {
+    node *new_node = upper_element;
+    size_type result = 0;
+    while (!empty()) {
+      upper_element = upper_element->next;
+      result++;
+    }
+    upper_element = new_node;
+    new_node = nullptr;
+    delete[] new_node;
+    return result;
+  }
 
   // Stack Modifiers
   void push(const_reference value) {
@@ -69,6 +103,7 @@ public:
     new_node->next = upper_element;
     upper_element = new_node;
   }
+
   void pop() {
     if (empty()) {
       throw std::length_error("stack is empty");
