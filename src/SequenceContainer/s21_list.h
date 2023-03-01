@@ -13,6 +13,7 @@ public:
   list();
   ~list();
   void push_back(const T &);
+  void push_front(const T &);
 
 public: // switch private!
   class node {
@@ -31,6 +32,20 @@ public: // switch private!
   node *tail;
   int size;
 };
+
+template <typename T> void list<T>::push_front(const T &data) {
+  node *current = new node(data);
+  current->next = head;
+  current->prev = nullptr;
+  if (head != nullptr) {
+    head->prev = current;
+  }
+  head = current;
+  size++;
+  if (tail == nullptr) {
+    tail = current;
+  }
+}
 
 template <typename T> void list<T>::push_back(const T &data) {
   node *current = new node(data);
