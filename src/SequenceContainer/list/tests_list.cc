@@ -9,6 +9,48 @@ TEST(list_test, def_constructor) {
   EXPECT_TRUE(basic.empty());
 }
 
+TEST(list_test, parametr_constructor) {
+  list<int> basic(12);
+  EXPECT_EQ(basic.front(), int());
+  EXPECT_EQ(basic.back(), int());
+  EXPECT_EQ(basic.size(), 12);
+  EXPECT_FALSE(basic.empty());
+}
+
+TEST(list_test, parametr_constructor2) {
+  list<std::string> basic(12);
+  EXPECT_EQ(basic.front(), std::string());
+  EXPECT_EQ(basic.back(), std::string());
+  EXPECT_EQ(basic.size(), 12);
+  EXPECT_FALSE(basic.empty());
+}
+
+TEST(list_test, initializer_list_constructor) {
+  list<int> basic({1,2,3,4,5});
+  EXPECT_EQ(basic.front(), 5);
+  EXPECT_EQ(basic.back(), 1);
+  EXPECT_EQ(basic.size(), 5);
+  EXPECT_FALSE(basic.empty());
+}
+
+TEST(list_test, initializer_list_constructor2) {
+  list<std::string> basic({"hello", "world"});
+  EXPECT_TRUE(basic.size() == 2);
+  EXPECT_EQ(basic.back(),"hello");
+  EXPECT_EQ(basic.front(),"world");
+}
+
+TEST(list_test, initializer_list_constructor3) {
+  std::string element = "hello";
+  std::string element2 = "world";
+  std::string element3 = "!!!";
+  std::string element4 = "&";
+  list<std::string> basic({element, element2,element3,element4});
+  EXPECT_TRUE(basic.size() == 4);
+  EXPECT_EQ(basic.back(),element);
+  EXPECT_EQ(basic.front(),element4);
+}
+
 TEST(list_test, push_back) {
   list<int> basic;
   basic.push_back(1);
@@ -33,7 +75,6 @@ TEST(list_test, push_back3) {
   basic.push_back(element);
   basic.push_back(element2);
   EXPECT_TRUE(basic.getSize() == 2);
-//  EXPECT_EQ(basic.back(),element);
   EXPECT_EQ(basic.back(),element2);
   EXPECT_EQ(basic.front(),element);
 }
@@ -76,7 +117,6 @@ TEST(list_test, push_front3) {
   basic.push_front(element);
   basic.push_front(element2);
   EXPECT_TRUE(basic.getSize() == 2);
-  //  EXPECT_EQ(basic.back(),element);
   EXPECT_EQ(basic.back(),element);
   EXPECT_EQ(basic.front(),element2);
 }

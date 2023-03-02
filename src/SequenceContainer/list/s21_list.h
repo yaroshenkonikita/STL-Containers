@@ -5,8 +5,10 @@
 #ifndef CPP2_S21_CONTAINERS_0_SRC_S21_LIST_H
 #define CPP2_S21_CONTAINERS_0_SRC_S21_LIST_H
 
+#include "initializer_list"
 #include "iostream"
 #include "list"
+#include "utility"
 
 template <typename T> class list {
   using value_type = T;
@@ -17,8 +19,16 @@ template <typename T> class list {
   //  using const_iterator = ListConstIterator<T>;
 
 public:
+  /*__________________________________________________________________*/
+  /* CONSTRUCTORS AND DESTRUCTOR */
+  /*__________________________________________________________________*/
   list();
+  explicit list(size_type size); // explicit ???
+  list(std::initializer_list<value_type> const &items);
+  list(const list<value_type> &other);
+  list(list<value_type> &&other) noexcept;
   ~list();
+  /*__________________________________________________________________*/
   void push_back(const_reference data);
   void push_front(const_reference data);
   int getSize() { return size_list; }
@@ -31,16 +41,17 @@ public:
     return tail->data;
   }
   size_type size() { return (size_type)size_list; }
-  bool empty() { return size_list == 0;}
+  bool empty() { return size_list == 0; }
 
 private: // switch private!
   class node {
   public:
     node *next;
     node *prev;
-    T data;
+    value_type data;
 
-    explicit node(T data = T(), node *next = nullptr, node *prev = nullptr) {
+    explicit node(value_type data = value_type(), node *next = nullptr,
+                  node *prev = nullptr) { // explicit ???
       this->data = data;
       this->next = next;
       this->prev = prev;
@@ -48,7 +59,7 @@ private: // switch private!
   };
   node *head;
   node *tail;
-  int size_list;
+  size_type size_list;
 
   void length_error() {
     if (head == nullptr) {
@@ -91,6 +102,32 @@ template <typename value_type> list<value_type>::list() {
   size_list = 0;
   head = nullptr;
   tail = nullptr;
+}
+
+template <typename value_type> list<value_type>::list(size_type size) {
+  head = nullptr;
+  tail = nullptr;
+  size_list = 0;
+  for (size_type i = 0; i < size; i++) {
+    push_front(value_type());
+  }
+}
+
+template <typename value_type>
+list<value_type>::list(std::initializer_list<value_type> const &items) {
+  head = nullptr;
+  tail = nullptr;
+  size_list = 0;
+  for (value_type element : items) {
+    push_front(element);
+  }
+}
+
+template <typename value_type>
+list<value_type>::list(list<value_type> &&other) noexcept {
+  size_list = std::exchange(other.size_list, 0);
+  head = std::exchange(other.head, nullptr);
+  tail = std::exchange(other.tail, nullptr);
 }
 
 template <typename value_type> list<value_type>::~list() {
