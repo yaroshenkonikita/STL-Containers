@@ -130,6 +130,11 @@ list<value_type>::list(list<value_type> &&other) noexcept {
   tail = std::exchange(other.tail, nullptr);
 }
 
+template <typename value_type>
+list<value_type>::list(const list<value_type> &other) {
+
+}
+
 template <typename value_type> list<value_type>::~list() {
   node *current = head;
   while (current != nullptr) {
