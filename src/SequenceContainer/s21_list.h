@@ -9,20 +9,38 @@
 #include "list"
 
 template <typename T> class list {
+  using value_type = T;
+  using reference = T &;
+  using const_reference = const T &;
+  using size_type = size_t;
+  //  using iterator = ListIterator<T>;
+  //  using const_iterator = ListConstIterator<T>;
+
 public:
   list();
   ~list();
-  void push_back(const T &);
-  void push_front(const T &);
+  void push_back(const_reference data);
+  void push_front(const_reference data);
+  int getSize() { return size_list; }
+  const_reference front() {
+    length_error();
+    return head->data;
+  }
+  const_reference back() {
+    length_error();
+    return tail->data;
+  }
+  size_type size() { return (size_type)size_list; }
+  bool empty() { return size_list == 0;}
 
-public: // switch private!
+private: // switch private!
   class node {
   public:
     node *next;
     node *prev;
     T data;
 
-    node(T data = T(), node *next = nullptr, node *prev = nullptr) {
+    explicit node(T data = T(), node *next = nullptr, node *prev = nullptr) {
       this->data = data;
       this->next = next;
       this->prev = prev;
@@ -30,10 +48,17 @@ public: // switch private!
   };
   node *head;
   node *tail;
-  int size;
+  int size_list;
+
+  void length_error() {
+    if (head == nullptr) {
+      throw std::length_error("list is empty");
+    }
+  }
 };
 
-template <typename T> void list<T>::push_front(const T &data) {
+template <typename value_type>
+void list<value_type>::push_front(const_reference data) {
   node *current = new node(data);
   current->next = head;
   current->prev = nullptr;
@@ -41,17 +66,17 @@ template <typename T> void list<T>::push_front(const T &data) {
     head->prev = current;
   }
   head = current;
-  size++;
+  size_list++;
   if (tail == nullptr) {
     tail = current;
   }
 }
 
-template <typename T> void list<T>::push_back(const T &data) {
+template <typename value_type>
+void list<value_type>::push_back(const_reference data) {
   node *current = new node(data);
-  if (tail == nullptr && head == nullptr) {
-    tail = current;
-    head = tail;
+  if (head == nullptr) {
+    head = current;
   }
   if (tail != nullptr) {
     tail->next = current;
@@ -59,23 +84,23 @@ template <typename T> void list<T>::push_back(const T &data) {
   current->next = nullptr;
   current->prev = tail;
   tail = current;
-  size++;
+  size_list++;
 }
 
-template <typename T> list<T>::list() {
-  size = 0;
+template <typename value_type> list<value_type>::list() {
+  size_list = 0;
   head = nullptr;
   tail = nullptr;
 }
 
-template <typename T> list<T>::~list() {
-  node* current = head;
-  while(current != nullptr) {
-    node* previous = current;
+template <typename value_type> list<value_type>::~list() {
+  node *current = head;
+  while (current != nullptr) {
+    node *previous = current;
     current = current->next;
     delete previous;
   }
   head = tail = nullptr;
-  size = 0;
+  size_list = 0;
 }
 #endif // CPP2_S21_CONTAINERS_0_SRC_S21_LIST_H
