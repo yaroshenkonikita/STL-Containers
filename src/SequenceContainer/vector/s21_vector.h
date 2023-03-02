@@ -84,7 +84,6 @@ class vector {
   //  ------------------------------Iterators------------------------------
   iterator begin() noexcept { return arr_; }
   iterator end() noexcept { return arr_ + size_; }
-//  iterator end() noexcept { return arr_ + size_; }
   //  ------------------------------Capacity------------------------------
   //  Проверяет, нет ли в контейнере элементов
   bool empty() const noexcept { return size_ == 0; }
@@ -97,14 +96,15 @@ class vector {
     if (size > max_size()) {
       throw std::length_error("Out of memory");
     }
-    V *buff = allocator_.allocate(size);
-    for (size_type i = 0; i < size_; ++i) {
-      buff[i] = arr_[i];
+    if (size > capacity_) {
+      V *buff = allocator_.allocate(size);
+      for (size_type i = 0; i < size_; ++i) {
+        buff[i] = std::move(arr_[i]);
+      }
+      delete[] arr_;
+      arr_ = buff;
+      capacity_ = size;
     }
-    delete[] arr_;
-    arr_ = buff;
-    capacity_ = buff->capacity_;
-    buff = nullptr;
   }
   //  Возвращает количество элементов, для которых в данный момент выделено место в контейнере
   size_type capacity() const noexcept { return capacity_; }
