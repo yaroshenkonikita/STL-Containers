@@ -69,7 +69,6 @@ class vector {
   //  Возвращает ссылку на элемент в указанном месте pos с проверкой границ
   reference at(size_type pos) {
     if (pos >= size_) {
-//      if (pos < begin() || pos > end()) {
       throw std::out_of_range("Out of range");
     }
     return arr_[pos];
@@ -142,15 +141,14 @@ class vector {
   //  Добавляет заданное значение элемента в конец контейнера
   void push_back(const_reference value) {
     if (size_ == capacity_) {
-      reserve(size_ == 0 ? 1 : capacity_ * 2);
-//      insert(end(), value);
+      if (capacity_ != 0) {
+        reserve(capacity_ * 2);
+      } else {
+        reserve(1);
+      }
     }
-    ++size_;
-    if (size_ == 1) {
-      arr_[0] = value;
-    } else {
-      arr_[size_] = value;
-    }
+    arr_[size_] = value;
+    size_ += 1;
   }
   //  Удаляет последний элемент контейнера
   void pop_back() { allocator_.destroy(arr_ + --size_); }
