@@ -69,6 +69,7 @@ class vector {
   //  Возвращает ссылку на элемент в указанном месте pos с проверкой границ
   reference at(size_type pos) {
     if (pos >= size_) {
+//      if (pos < begin() || pos > end()) {
       throw std::out_of_range("Out of range");
     }
     return arr_[pos];
@@ -120,21 +121,37 @@ class vector {
   }
   //  Вставляет элементы в указанное место в контейнере
   iterator insert(iterator pos, const_reference value) {
-    size_type index = pos - begin();
-    if (index > size_) {
-      throw std::length_error("Out of memory");
+    auto dif = pos - begin();
+    size_++;
+    for (int i = size_ - 1; i > pos - begin(); i--) {
+      arr_[i] = arr_[i - 1];
     }
-    std::copy(begin() + index, end(), begin() + index + 1);
-    *(arr_ + index) = value;
-    ++size_;
-    return begin() + index;
+    arr_[pos - begin()] = value;
+    if (size_ - 1 == capacity_) {
+      reserve(size_ == 0 ? 1 : capacity_ * 2);
+    }
+    return begin() + dif;
   }
-//  void erase(iterator pos) {
-//
-//  }
-//  void push_back(const_reference value) {
-//
-//  }
+  //  Удаляет указанные элементы из контейнера.
+  void erase(iterator pos) {
+    for (size_type i = pos - begin(); i < size_ - 1; i++) {
+      arr_[i] = arr_[i + 1];
+    }
+    size_--;
+  }
+  //  Добавляет заданное значение элемента в конец контейнера
+  void push_back(const_reference value) {
+    if (size_ == capacity_) {
+      reserve(size_ == 0 ? 1 : capacity_ * 2);
+//      insert(end(), value);
+    }
+    ++size_;
+    if (size_ == 1) {
+      arr_[0] = value;
+    } else {
+      arr_[size_] = value;
+    }
+  }
   //  Удаляет последний элемент контейнера
   void pop_back() { allocator_.destroy(arr_ + --size_); }
   //  Меняет содержимое и вместимость контейнера с другими
@@ -142,15 +159,8 @@ class vector {
     std::swap(arr_, other.arr_);
     std::swap(size_, other.size_);
     std::swap(capacity_, other.capacity_);
+    std::swap(allocator_, other.allocator_);
   }
-  //  ------------------------------Iterators operators------------------------------
-////  reference operator++() noexcept { return arr_ + sizeof(value_type); }
-//  reference operator++() noexcept { return arr_ + 1; }
-////  reference operator--() noexcept { return arr_ - sizeof(value_type); }
-//  reference operator--() noexcept { return arr_ - 1; }
-//  bool operator==(iterator it) noexcept { return arr_ == it; }
-//  bool operator!=(iterator it) noexcept { return arr_ != it; }
-//  reference operator*() const noexcept { return arr_; }
 
  private:
   pointer arr_;

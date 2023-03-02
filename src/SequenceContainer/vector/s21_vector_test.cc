@@ -44,9 +44,9 @@ TEST(constructors, moveConstructor) {
 }
 
 TEST(constructors, moveOperator) {
-  s21::vector<int> vector{1, 2, 3, 4};
+  s21::vector<int> vector = {1, 2, 3, 4};
   s21::vector<int> vector1;
-  std::vector<int> std_vector{1, 2, 3, 4};
+  std::vector<int> std_vector = {1, 2, 3, 4};
   std::vector<int> std_vector1;
   vector1 = std::move(vector);
   std_vector1 = std::move(std_vector);
@@ -65,8 +65,8 @@ TEST(elementAccess, at) {
 }
 
 TEST(elementAccess, frontAndBack) {
-  s21::vector<int> vector{1, 2};
-  std::vector<int> std{1, 2};
+  s21::vector<int> vector = {1, 2};
+  std::vector<int> std = {1, 2};
   ASSERT_EQ(vector.front(), std.front());
   ASSERT_EQ(vector.back(), std.back());
 }
@@ -103,7 +103,7 @@ TEST(capacity, empty) {
   EXPECT_EQ(std1.empty(), vector1.empty());
 }
 
-TEST(capacity, Max_size) {
+TEST(capacity, maxSize) {
   std::vector<int> v1 = {1, 2, 3, 4};
   s21::vector<int> v2 = {1, 2, 3, 4};
   EXPECT_EQ(v1.max_size(), v2.max_size());
@@ -125,6 +125,68 @@ TEST(capacity, shrink_to_fit_test) {
   std.shrink_to_fit();
   EXPECT_EQ(vector.capacity(), std.capacity());
   EXPECT_EQ(vector.size(), std.size());
+}
+
+TEST(modifiers, clear) {
+  s21::vector<int> vector = {1, 2, 3, 4};
+  std::vector<int> std = {1, 2, 3, 4};
+  vector.clear();
+  std.clear();
+  EXPECT_EQ(vector.capacity(), std.capacity());
+  EXPECT_EQ(vector.size(), std.size());
+}
+
+TEST(modifiers, insert) {
+  s21::vector<int> vector = {1, 2, 3, 4};
+  std::vector<int> std = {1, 2, 3, 4};
+  auto iter1 = vector.begin();
+  auto iter2 = std.begin();
+  vector.insert(iter1, 1);
+  std.insert(iter2, 1);
+  EXPECT_EQ(vector[4], std[4]);
+  EXPECT_EQ(vector.capacity(), std.capacity());
+  EXPECT_EQ(vector.size(), std.size());
+}
+
+TEST(modifiers, erase) {
+  s21::vector<int> vector = {1, 2, 3, 4};
+  std::vector<int> std = {1, 2, 3, 4};
+  vector.erase(vector.begin());
+  std.erase(std.begin());
+  EXPECT_EQ(vector.capacity(), std.capacity());
+  EXPECT_EQ(vector.size(), std.size());
+}
+
+TEST(modifiers, pop_back) {
+  s21::vector<int> vector = {1, 2, 3, 4};
+  std::vector<int> std = {1, 2, 3, 4};
+  vector.pop_back();
+  std.pop_back();
+  EXPECT_EQ(vector.capacity(), std.capacity());
+  EXPECT_EQ(vector.size(), std.size());
+}
+
+TEST(modifiers, push_back) {
+  s21::vector<int> vector = {1, 2, 3, 4};
+  std::vector<int> std = {1, 2, 3, 4};
+  vector.push_back(5);
+  std.push_back(5);
+  EXPECT_EQ(vector.capacity(), std.capacity());
+  EXPECT_EQ(vector.size(), std.size());
+}
+
+TEST(modifiers, swap) {
+  std::vector<int> vector = {1, 2, 3, 9};
+  std::vector<int> std = {4, 5, 6};
+  vector.swap(std);
+  s21::vector<int> vector1 = {1, 2, 3, 9};
+  s21::vector<int> std1 = {4, 5, 6};
+  vector1.swap(std1);
+
+  for (size_t i = 0; i < vector.size(); ++i) {
+    EXPECT_EQ(vector.at(i), vector1.at(i));
+    EXPECT_EQ(std.at(i), std1.at(i));
+  }
 }
 
 int main(int argc, char **argv) {
