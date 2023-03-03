@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <algorithm>
 
 namespace s21 {
 template<typename V, class Allocator = std::allocator<V>>
@@ -25,25 +26,35 @@ class vector {
   vector() : arr_(nullptr), size_(0), capacity_(0) {}
 
   //  Параметризованный конструктор
-  vector(size_type n) : arr_(nullptr), size_(n), capacity_(n) {
-    arr_ = new value_type[size_];
-    for (size_t i = 0; i < size_; i++) {
-      arr_[i] = value_type();
-    }
+  vector(size_type n) : arr_(nullptr), size_(0), capacity_(0) {
+    reserve(n);
+    size_ = n;
+//    for (size_t i = 0; i < size_; i++) {
+//      arr_[i] = value_type();
+//    }
   }
 
   //  Конструктор списка инициализаторов
-  vector(std::initializer_list<value_type> const &items) : vector(items.size()) {
-    std::copy(items.begin(), items.end(), arr_);
+  vector(std::initializer_list<value_type> const &items) {
+    size_ = 0;
+    capacity_ = 0;
+    arr_ = nullptr;
+    reserve(items.size());
+    for (value_type item : items) {
+      push_back(item);
+    }
   }
 
   //  Конструктор копирования
-  vector(const vector &v) : vector(v.capacity_) {
-    for (size_type i = 0; i < v.size_; ++i) {
+  vector(const vector &v) {
+    size_ = 0;
+    capacity_ = 0;
+    arr_ = nullptr;
+    reserve(v.capacity_);
+    size_ = v.size_;
+    for (size_type i = 0; i < size_; i++) {
       arr_[i] = v.arr_[i];
     }
-    size_ = v.size_;
-    capacity_ = v.capacity_;
   }
 
   //  Конструктор перемещения
@@ -56,9 +67,6 @@ class vector {
   //  Деструктор
   ~vector() {
     delete[] arr_;
-    arr_ = nullptr;
-    size_ = 0;
-    capacity_ = 0;
   }
 
   //  Перегрузка оператора для перемещения объекта
@@ -85,7 +93,7 @@ class vector {
     return arr_[pos];
   }
   //  Возвращает ссылку на элемент в указанном месте
-  reference operator[](size_type pos) { return arr_[pos]; }
+  reference operator[](size_type pos) { return at(pos); }
 
   //  Возвращает ссылку на первый элемент в контейнере
   reference front() { return arr_[0]; }
@@ -120,8 +128,10 @@ class vector {
       throw std::length_error("Out of memory");
     }
     if (size > capacity_) {
-      V *buff = allocator_.allocate(size);
-      for (size_type i = 0; i < size_; ++i) buff[i] = std::move(arr_[i]);
+      value_type *buff = new value_type[size]{};
+      for (size_type i = 0; i < size_; i++) {
+        buff[i] = arr_[i];
+      }
       delete[] arr_;
       arr_ = buff;
       capacity_ = size;
@@ -138,14 +148,22 @@ class vector {
 
   //  Удаляет все элементы из контейнера
   void clear() noexcept {
-    for (size_type i = 0; i < size_; ++i) {
-      allocator_.destroy(arr_ + i);
-    }
     size_ = 0;
   }
 
   //  Вставляет элементы в указанное место в контейнере
   iterator insert(iterator pos, const_reference value) {
+//    if (size_ == capacity_) {
+//      reserve(size_ == 0 ? 1 : capacity_ * 2);
+//    }
+//    auto dif = pos - begin();
+//    for (int i = size_; i > dif; --i) {
+//      arr_[i] = arr_[i - 1];
+//    }
+//    size_++;
+//    arr_[dif] = value;
+//    return begin() + dif;
+
     auto dif = pos - begin();
     size_++;
     for (int i = size_ - 1; i > pos - begin(); i--) {
@@ -156,27 +174,28 @@ class vector {
       reserve(size_ == 0 ? 1 : capacity_ * 2);
     }
     return begin() + dif;
+
   }
 
   //  Удаляет указанные элементы из контейнера.
   void erase(iterator pos) {
+    size_--;
     for (size_type i = pos - begin(); i < size_ - 1; i++) {
       arr_[i] = arr_[i + 1];
     }
-    size_--;
+
   }
 
   //  Добавляет заданное значение элемента в конец контейнера
   void push_back(const_reference value) {
-    if (size_ == capacity_) {
-        reserve(capacity_ * 2);
+    if (size_ >= capacity_) {
+      reserve(size_ == 0 ? 1 : capacity_ * 2);
     }
-    arr_[size_] = value;
-    size_ += 1;
+    arr_[size_++] = value;
   }
 
   //  Удаляет последний элемент контейнера
-  void pop_back() { allocator_.destroy(arr_ + --size_); }
+  void pop_back() { --size_; }
 
   //  Меняет содержимое и вместимость контейнера с другими
   void swap(vector<value_type> &other) {
