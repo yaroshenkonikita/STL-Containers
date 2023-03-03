@@ -24,9 +24,6 @@ class vector {
   vector(size_type n) : arr_(nullptr), size_(0), capacity_(0) {
     reserve(n);
     size_ = n;
-//    for (size_t i = 0; i < size_; i++) {
-//      arr_[i] = value_type();
-//    }
   }
 
   //  Конструктор списка инициализаторов
@@ -158,18 +155,6 @@ class vector {
     size_++;
     arr_[dif] = value;
     return begin() + dif * sizeof(value);
-
-//    auto dif = pos - begin();
-//    size_++;
-//    for (int i = size_ - 1; i > pos - begin(); i--) {
-//      arr_[i] = arr_[i - 1];
-//    }
-//    arr_[pos - begin()] = value;
-//    if (size_ - 1 == capacity_) {
-//      reserve(size_ == 0 ? 1 : capacity_ * 2);
-//    }
-//    return begin() + dif;
-
   }
 
   //  Удаляет указанные элементы из контейнера.
