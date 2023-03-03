@@ -1,12 +1,8 @@
 #ifndef CPP2_S21_CONTAINERS_0_SRC_S21_VECTOR_H
 #define CPP2_S21_CONTAINERS_0_SRC_S21_VECTOR_H
 
-#include <cmath>
-#include <iostream>
-#include <algorithm>
-
 namespace s21 {
-template<typename V, class Allocator = std::allocator<V>>
+template<typename V>
 class vector {
  public:
 
@@ -17,7 +13,6 @@ class vector {
   using iterator = V *;
   using const_iterator = const V *;
   using size_type = size_t;
-  using allocator_type = Allocator;
   using pointer = value_type *;
 
   //  ------------------------------Functions------------------------------
@@ -120,7 +115,7 @@ class vector {
   size_type size() const noexcept { return size_; }
 
   //  Возвращает максимальное количество элементов, которые может содержать контейнер
-  size_type max_size() const noexcept { return allocator_.max_size(); }
+  size_type max_size() const noexcept { return std::numeric_limits<std::size_t>::max() / sizeof(value_type) / 2; }
 
   //  Увеличиваем емкость вектора до значения, которое больше или равно size
   void reserve(size_type size) {
@@ -201,14 +196,12 @@ class vector {
     std::swap(arr_, other.arr_);
     std::swap(size_, other.size_);
     std::swap(capacity_, other.capacity_);
-    std::swap(allocator_, other.allocator_);
   }
 
  private:
   pointer arr_;
   size_type size_;
   size_type capacity_;
-  allocator_type allocator_;
 };
 }
 
