@@ -116,6 +116,8 @@ TEST(capacity, reserve) {
   std::vector<int> std = {1, 2, 3, 4};
   vector.reserve(10);
   std.reserve(10);
+  vector.reserve(7);
+  std.reserve(7);
   ASSERT_EQ(vector.size(), std.size());
   ASSERT_EQ(vector.capacity(), std.capacity());
 }
@@ -145,7 +147,7 @@ TEST(modifiers, insert) {
   auto iter2 = std.begin();
   vector.insert(iter1, 1);
   std.insert(iter2, 1);
-  EXPECT_EQ(vector[4], std[4]);
+  EXPECT_EQ(vector[0], std[0]);
   EXPECT_EQ(vector.capacity(), std.capacity());
   EXPECT_EQ(vector.size(), std.size());
 }
