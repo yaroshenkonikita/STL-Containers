@@ -25,12 +25,14 @@ public:
   list();
   explicit list(size_type size); // explicit ???
   list(std::initializer_list<value_type> const &items);
-  list(const list<value_type> &other);
+  //  list(const list<value_type> &other);
   list(list<value_type> &&other) noexcept;
   ~list();
   /*__________________________________________________________________*/
   void push_back(const_reference data);
   void push_front(const_reference data);
+  void pop_front();
+  void pop_back();
   int getSize() { return size_list; }
   const_reference front() {
     length_error();
@@ -43,7 +45,7 @@ public:
   size_type size() { return (size_type)size_list; }
   bool empty() { return size_list == 0; }
 
-private: // switch private!
+private:
   class node {
   public:
     node *next;
@@ -76,37 +78,35 @@ void list<value_type>::push_front(const_reference data) {
   if (head != nullptr) {
     head->prev = current;
   }
-  head = current;
-  size_list++;
   if (tail == nullptr) {
     tail = current;
   }
+  head = current;
+  size_list++;
 }
 
 template <typename value_type>
 void list<value_type>::push_back(const_reference data) {
   node *current = new node(data);
-  if (head == nullptr) {
-    head = current;
-  }
   if (tail != nullptr) {
     tail->next = current;
   }
   current->next = nullptr;
   current->prev = tail;
+  if (head == nullptr) {
+    head = current;
+  }
   tail = current;
   size_list++;
 }
 
 template <typename value_type> list<value_type>::list() {
   size_list = 0;
-  head = nullptr;
-  tail = nullptr;
+  head = tail = nullptr;
 }
 
 template <typename value_type> list<value_type>::list(size_type size) {
-  head = nullptr;
-  tail = nullptr;
+  head = tail = nullptr;
   size_list = 0;
   for (size_type i = 0; i < size; i++) {
     push_front(value_type());
@@ -115,8 +115,7 @@ template <typename value_type> list<value_type>::list(size_type size) {
 
 template <typename value_type>
 list<value_type>::list(std::initializer_list<value_type> const &items) {
-  head = nullptr;
-  tail = nullptr;
+  head = tail = nullptr;
   size_list = 0;
   for (value_type element : items) {
     push_front(element);
@@ -130,19 +129,36 @@ list<value_type>::list(list<value_type> &&other) noexcept {
   tail = std::exchange(other.tail, nullptr);
 }
 
-template <typename value_type>
-list<value_type>::list(const list<value_type> &other) {
-
-}
+// template <typename value_type>
+// list<value_type>::list(const list<value_type> &other) {
+//   head = tail = nullptr;
+//   size_list = 0;
+//   for (size_type i = 0; i < other.size; i++) {
+//     push_front(value_type());
+//   }
+//
+// }
 
 template <typename value_type> list<value_type>::~list() {
-  node *current = head;
-  while (current != nullptr) {
-    node *previous = current;
-    current = current->next;
-    delete previous;
+  while (!empty()) {
+    pop_front();
   }
-  head = tail = nullptr;
-  size_list = 0;
 }
+
+template <typename value_type> void list<value_type>::pop_front() {
+  length_error();
+  node *current = head;
+  head = head->next;
+  delete current;
+  size_list--;
+}
+
+template <typename value_type> void list<value_type>::pop_back() {
+  length_error();
+  node *current = tail;
+  tail = tail->prev;
+  delete current;
+  size_list--;
+}
+
 #endif // CPP2_S21_CONTAINERS_0_SRC_S21_LIST_H
