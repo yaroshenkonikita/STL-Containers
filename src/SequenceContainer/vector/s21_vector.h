@@ -153,37 +153,36 @@ class vector {
 
   //  Вставляет элементы в указанное место в контейнере
   iterator insert(iterator pos, const_reference value) {
-//    if (size_ == capacity_) {
-//      reserve(size_ == 0 ? 1 : capacity_ * 2);
-//    }
-//    auto dif = pos - begin();
-//    for (int i = size_; i > dif; --i) {
-//      arr_[i] = arr_[i - 1];
-//    }
-//    size_++;
-//    arr_[dif] = value;
-//    return begin() + dif;
-
-    auto dif = pos - begin();
-    size_++;
-    for (int i = size_ - 1; i > pos - begin(); i--) {
-      arr_[i] = arr_[i - 1];
-    }
-    arr_[pos - begin()] = value;
-    if (size_ - 1 == capacity_) {
+    if (size_ == capacity_) {
       reserve(size_ == 0 ? 1 : capacity_ * 2);
     }
-    return begin() + dif;
+    size_type dif = pos - begin();
+    for (size_type i = size_; i > dif; --i) {
+      arr_[i] = arr_[i - 1];
+    }
+    size_++;
+    arr_[dif] = value;
+    return begin() + dif * sizeof(value);
+
+//    auto dif = pos - begin();
+//    size_++;
+//    for (int i = size_ - 1; i > pos - begin(); i--) {
+//      arr_[i] = arr_[i - 1];
+//    }
+//    arr_[pos - begin()] = value;
+//    if (size_ - 1 == capacity_) {
+//      reserve(size_ == 0 ? 1 : capacity_ * 2);
+//    }
+//    return begin() + dif;
 
   }
 
   //  Удаляет указанные элементы из контейнера.
   void erase(iterator pos) {
-    size_--;
-    for (size_type i = pos - begin(); i < size_ - 1; i++) {
+    --size_;
+    for (size_type i = pos - begin(); i < size_; i++) {
       arr_[i] = arr_[i + 1];
     }
-
   }
 
   //  Добавляет заданное значение элемента в конец контейнера
