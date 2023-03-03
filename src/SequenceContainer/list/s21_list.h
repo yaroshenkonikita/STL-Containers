@@ -33,7 +33,6 @@ public:
   void push_front(const_reference data);
   void pop_front();
   void pop_back();
-  int getSize() { return size_list; }
   const_reference front() {
     length_error();
     return head->data;
@@ -44,6 +43,8 @@ public:
   }
   size_type size() { return (size_type)size_list; }
   bool empty() { return size_list == 0; }
+  void clear();
+  void swap(list& other);
 
 private:
   class node {
@@ -69,6 +70,22 @@ private:
     }
   }
 };
+
+template <typename T> void list<T>::swap(list &other) {
+  node *current = head;
+  node *current_other = other.head;
+  while (current != nullptr && current_other != nullptr) {
+    std::swap(current->data,current_other->data);
+    current = current->next;
+    current_other = current_other->next;
+  }
+}
+
+template <typename T> void list<T>::clear() {
+  while (!empty()) {
+    pop_front();
+  }
+}
 
 template <typename value_type>
 void list<value_type>::push_front(const_reference data) {
@@ -118,7 +135,7 @@ list<value_type>::list(std::initializer_list<value_type> const &items) {
   head = tail = nullptr;
   size_list = 0;
   for (value_type element : items) {
-    push_front(element);
+    push_back(element);
   }
 }
 
@@ -140,9 +157,7 @@ list<value_type>::list(list<value_type> &&other) noexcept {
 // }
 
 template <typename value_type> list<value_type>::~list() {
-  while (!empty()) {
-    pop_front();
-  }
+  clear();
 }
 
 template <typename value_type> void list<value_type>::pop_front() {
