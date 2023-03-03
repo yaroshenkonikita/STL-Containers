@@ -166,6 +166,24 @@ TEST(modifiers, pop_back) {
   EXPECT_EQ(vector.size(), std.size());
 }
 
+TEST(modifiers, swap) {
+  std::vector<int> std1 = {4, 5, 6};
+  std::vector<int> std2 = {1, 2, 3, 9};
+  std1.swap(std2);
+  s21::vector<int> vector1 = {4, 5, 6};
+  s21::vector<int> vector2 = {1, 2, 3, 9};
+  vector1.swap(vector2);
+
+  for (size_t i = 0; i < 4; i++) {
+    if (std1.size() > i) {
+      EXPECT_EQ(std1.at(i), vector1.at(i));
+    }
+    if (std2.size() > i) {
+      EXPECT_EQ(std2.at(i), vector2.at(i));
+    }
+  }
+}
+
 TEST(modifiers, push_back) {
   s21::vector<int> vector = {1, 2, 3, 4};
   std::vector<int> std = {1, 2, 3, 4};
@@ -175,23 +193,7 @@ TEST(modifiers, push_back) {
   EXPECT_EQ(vector.size(), std.size());
 }
 
-TEST(modifiers, swap) {
-  std::vector<int> vector = {4, 5, 6};
-  std::vector<int> std = {1, 2, 3, 9};
-  vector.swap(std);
-  s21::vector<int> vector1 = {4, 5, 6};
-  s21::vector<int> std1 = {1, 2, 3, 9};
-  vector1.swap(std1);
 
-  for (size_t i = 0; i < vector.size(); ++i) {
-    if (vector.size() > i) {
-      EXPECT_EQ(vector.at(i), vector1.at(i));
-    }
-    if (std.size() > i) {
-      EXPECT_EQ(std.at(i), std1.at(i));
-    }
-  }
-}
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
