@@ -1,7 +1,7 @@
 .PHONY: all clean test s21_vector.a
-
+#-fsanitize=address
 CC = g++
-CFLAGS = -Wall -Wextra -Werror -std=c++17
+CFLAGS = -Wall -Wextra -Werror -std=c++17 -pedantic
 TFLAGS = -lgtest
 CORE = s21_vector
 TEST = s21_vector_test

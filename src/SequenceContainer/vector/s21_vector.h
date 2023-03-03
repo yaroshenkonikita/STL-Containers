@@ -27,39 +27,27 @@ class vector {
   }
 
   //  Конструктор списка инициализаторов
-  vector(std::initializer_list<value_type> const &items) {
-    size_ = 0;
-    capacity_ = 0;
-    arr_ = nullptr;
+  vector(std::initializer_list<value_type> const &items) : arr_(nullptr), size_(0), capacity_(0) {
     reserve(items.size());
-    for (value_type item : items) {
-      push_back(item);
-    }
+    for (value_type item : items) push_back(item);
   }
 
   //  Конструктор копирования
-  vector(const vector &v) {
-    size_ = 0;
-    capacity_ = 0;
-    arr_ = nullptr;
+  vector(const vector &v) : arr_(nullptr), size_(0), capacity_(0) {
     reserve(v.capacity_);
     size_ = v.size_;
-    for (size_type i = 0; i < size_; i++) {
-      arr_[i] = v.arr_[i];
-    }
+    for (size_type i = 0; i < size_; i++) arr_[i] = v.arr_[i];
   }
 
   //  Конструктор перемещения
-  vector(vector &&v) noexcept: arr_(v.arr_), size_(v.size_), capacity_(v.capacity_) {
+  vector(vector &&v) noexcept : arr_(v.arr_), size_(v.size_), capacity_(v.capacity_) {
     v.arr_ = nullptr;
     v.size_ = 0;
     v.capacity_ = 0;
   }
 
   //  Деструктор
-  ~vector() {
-    delete[] arr_;
-  }
+  ~vector() { delete[] arr_; }
 
   //  Перегрузка оператора для перемещения объекта
   vector &operator=(vector &&v) noexcept {
@@ -79,9 +67,7 @@ class vector {
 
   //  Возвращает ссылку на элемент в указанном месте pos с проверкой границ
   reference at(size_type pos) {
-    if (pos >= size_) {
-      throw std::out_of_range("Out of range");
-    }
+    if (pos >= size_) throw std::out_of_range("Out of range");
     return arr_[pos];
   }
   //  Возвращает ссылку на элемент в указанном месте
@@ -116,14 +102,10 @@ class vector {
 
   //  Увеличиваем емкость вектора до значения, которое больше или равно size
   void reserve(size_type size) {
-    if (size > max_size()) {
-      throw std::length_error("Out of memory");
-    }
+    if (size > max_size()) throw std::length_error("Out of memory");
     if (size > capacity_) {
       value_type *buff = new value_type[size]{};
-      for (size_type i = 0; i < size_; i++) {
-        buff[i] = arr_[i];
-      }
+      for (size_type i = 0; i < size_; i++) buff[i] = arr_[i];
       delete[] arr_;
       arr_ = buff;
       capacity_ = size;
@@ -139,19 +121,13 @@ class vector {
   //  ------------------------------Modifiers------------------------------
 
   //  Удаляет все элементы из контейнера
-  void clear() noexcept {
-    size_ = 0;
-  }
+  void clear() noexcept { size_ = 0; }
 
   //  Вставляет элементы в указанное место в контейнере
   iterator insert(iterator pos, const_reference value) {
-    if (size_ == capacity_) {
-      reserve(size_ == 0 ? 1 : capacity_ * 2);
-    }
+    if (size_ == capacity_) reserve(size_ == 0 ? 1 : capacity_ * 2);
     size_type dif = pos - begin();
-    for (size_type i = size_; i > dif; --i) {
-      arr_[i] = arr_[i - 1];
-    }
+    for (size_type i = size_; i > dif; --i) arr_[i] = arr_[i - 1];
     size_++;
     arr_[dif] = value;
     return begin() + dif * sizeof(value);
@@ -160,16 +136,12 @@ class vector {
   //  Удаляет указанные элементы из контейнера.
   void erase(iterator pos) {
     --size_;
-    for (size_type i = pos - begin(); i < size_; i++) {
-      arr_[i] = arr_[i + 1];
-    }
+    for (size_type i = pos - begin(); i < size_; i++) arr_[i] = arr_[i + 1];
   }
 
   //  Добавляет заданное значение элемента в конец контейнера
   void push_back(const_reference value) {
-    if (size_ >= capacity_) {
-      reserve(size_ == 0 ? 1 : capacity_ * 2);
-    }
+    if (size_ >= capacity_) reserve(size_ == 0 ? 1 : capacity_ * 2);
     arr_[size_++] = value;
   }
 
