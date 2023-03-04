@@ -7,7 +7,7 @@ CORE = s21_vector
 TEST = s21_vector_test
 COVEREGE = --coverage
 
-all: s21_vector.a test
+all: clean gcov_report
 
 s21_vector.a: $(CORE).h
 	$(CC) $(CFLAGS) -c $(CORE).cc
@@ -24,4 +24,4 @@ gcov_report: test
 	open report/index.html
 
 clean:
-	-rm -rf *.o *.a test object_files/./test object_files/*.gc* Report/* *.info *.gc* core/*.a
+	-rm -rf *.o *.a test Report/* *.info *.gc* core/*.a report
