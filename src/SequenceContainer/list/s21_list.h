@@ -7,9 +7,11 @@
 
 #include "initializer_list"
 #include "iostream"
+#include "limits"
 #include "list"
 #include "utility"
 
+namespace s21 {
 template <typename T> class list {
   using value_type = T;
   using reference = T &;
@@ -25,9 +27,11 @@ public:
   list();
   explicit list(size_type size); // explicit ???
   list(std::initializer_list<value_type> const &items);
-  //  list(const list<value_type> &other);
+  list(const list<value_type> &other);
   list(list<value_type> &&other) noexcept;
   ~list();
+
+  list<value_type> &operator=(list<value_type> &&other) noexcept;
   /*__________________________________________________________________*/
   void push_back(const_reference data);
   void push_front(const_reference data);
@@ -41,10 +45,13 @@ public:
     length_error();
     return tail->data;
   }
-  size_type size() { return (size_type)size_list; }
+  size_type size() { return size_list; }
+  size_type max_size() const noexcept {
+    return std::numeric_limits<size_type>::max() / sizeof(T) / 2;
+  }
   bool empty() { return size_list == 0; }
   void clear();
-  void swap(list& other);
+  void swap(list &other);
 
 private:
   class node {
@@ -70,15 +77,70 @@ private:
     }
   }
 };
+template <typename value_type>
+list<value_type> &
+list<value_type>::operator=(list<value_type> &&other) noexcept {
+  if (this != &other) {
+    clear();
+    size_list = std::exchange(other.size_list, 0);
+    head = std::exchange(other.head, nullptr);
+    tail = std::exchange(other.tail, nullptr);
+  }
+  return *this;
+}
+template <typename T> list<T>::list(const list<value_type> &other) {
+  size_list = 0;
+  head = tail = nullptr;
+  node *current_other = other.head;
+  while (current_other != nullptr) {
+    push_back(current_other->data);
+    current_other = current_other->next;
+  }
+}
 
 template <typename T> void list<T>::swap(list &other) {
   node *current = head;
   node *current_other = other.head;
   while (current != nullptr && current_other != nullptr) {
-    std::swap(current->data,current_other->data);
+    std::swap(current->data, current_other->data);
     current = current->next;
     current_other = current_other->next;
   }
+  //  if(size() == other.size()) {
+  //    while (current != nullptr) {
+  //      std::swap(current->data, current_other->data);
+  //      current = current->next;
+  //      current_other = current_other->next;
+  //    }
+  //  } else if(size() < other.size()) {
+  //    while (current_other != nullptr) {
+  //      if(current == nullptr) {
+  //        push_back(current_other->data);
+  //        current = current->next;
+  //        node *previus = current_other;
+  //        current_other = current_other->next;
+  //        delete previus;
+  //      } else {
+  //        std::swap(current->data, current_other->data);
+  //        current = current->next;
+  //        current_other = current_other->next;
+  //      }
+  //    }
+  //  } else {
+  //    while (current != nullptr) {
+  //      if (current_other == nullptr) {
+  //        other.push_back(current->data);
+  //        current_other = current_other->next;
+  //        node *previus = current;
+  //        current = current->next;
+  //        delete previus;
+  //      } else {
+  //        std::swap(current->data, current_other->data);
+  //        current = current->next;
+  //        current_other = current_other->next;
+  //      }
+  //    }
+  //  }
 }
 
 template <typename T> void list<T>::clear() {
@@ -146,19 +208,7 @@ list<value_type>::list(list<value_type> &&other) noexcept {
   tail = std::exchange(other.tail, nullptr);
 }
 
-// template <typename value_type>
-// list<value_type>::list(const list<value_type> &other) {
-//   head = tail = nullptr;
-//   size_list = 0;
-//   for (size_type i = 0; i < other.size; i++) {
-//     push_front(value_type());
-//   }
-//
-// }
-
-template <typename value_type> list<value_type>::~list() {
-  clear();
-}
+template <typename value_type> list<value_type>::~list() { clear(); }
 
 template <typename value_type> void list<value_type>::pop_front() {
   length_error();
@@ -175,5 +225,5 @@ template <typename value_type> void list<value_type>::pop_back() {
   delete current;
   size_list--;
 }
-
+}
 #endif // CPP2_S21_CONTAINERS_0_SRC_S21_LIST_H

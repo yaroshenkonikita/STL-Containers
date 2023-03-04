@@ -1,5 +1,5 @@
 .PHONY: all clean test $(SOURCENAME).a gcov_report style
-
+#-pedantic -fsanitize=address
 CC = g++
 CFLAGS = -Wall -Werror -Wextra -std=c++17
 TFLAGS = -lgtest
