@@ -87,13 +87,22 @@ TEST(iterators, begin) {
   EXPECT_EQ(*std.begin(), *vector.begin());
 }
 
-TEST(iterators, end) {
-  std::vector<int> v1 = {1, 2, 3, 4};
-  s21::vector<int> v2 = {1, 2, 3, 4};
-  auto iter1 = v1.end();
-  auto iter2 = v2.end();
+TEST(iterators, cbegin) {
+  std::vector<int> const std = {1, 2, 3, 4};
+  s21::vector<int> const vector = {1, 2, 3, 4};
+  EXPECT_EQ(*std.cbegin(), *vector.cbegin());
+}
 
-  EXPECT_EQ(*(iter1 - 1), *(iter2 - 1));
+TEST(iterators, end) {
+  std::vector<int> std = {1, 2, 3, 4};
+  s21::vector<int> vector = {1, 2, 3, 4};
+  EXPECT_EQ(*(std.end()), *(vector.end()));
+}
+
+TEST(iterators, cend) {
+  std::vector<int> const std = {1, 2, 3, 4};
+  s21::vector<int> const vector = {1, 2, 3, 4};
+  EXPECT_EQ(*(std.cend()), *(vector.cend()));
 }
 
 TEST(capacity, empty) {

@@ -1,6 +1,8 @@
 #ifndef CPP2_S21_CONTAINERS_0_SRC_S21_VECTOR_H
 #define CPP2_S21_CONTAINERS_0_SRC_S21_VECTOR_H
 
+#include "iostream"
+
 namespace s21 {
 template<typename V>
 class vector {
@@ -85,9 +87,9 @@ class vector {
   //  ------------------------------Iterators------------------------------
 
   iterator begin() noexcept { return arr_; }
-  const_iterator begin() const noexcept { return arr_; }
+  const_iterator cbegin() const noexcept { return arr_; }
   iterator end() noexcept { return arr_ + size_; }
-  const_iterator end() const noexcept { return arr_ + size_; }
+  const_iterator cend() const noexcept { return arr_ + size_; }
 
   //  ------------------------------Capacity------------------------------
 
