@@ -8,8 +8,8 @@ TEST(constructors, defaultConstructor) {
 }
 
 TEST(constructors, initializer) {
-  std::array<double, 4> array = {1, 2, 3, 4};
-  s21::array<double, 4> std = {1, 2, 3, 4};
+  std::array<double, 4> std = {1, 2, 3, 4};
+  s21::array<double, 4> array = {1, 2, 3, 4};
   for (size_t i = 0; i < array.size(); i++) {
     EXPECT_EQ(array[i], std[i]);
   }

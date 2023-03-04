@@ -22,9 +22,9 @@ class array {
 
   //  Конструктор списка инициализаторов
   array(std::initializer_list<value_type> const &items) {
-    int init = 0;
-    for (auto i = items.begin(); i != items.end(); i++, init++) {
-      arr_[init] = *i;
+    size_ = 0;
+    for (auto i = items.begin(); i != items.end(); i++, size_++) {
+      arr_[size_] = *i;
     }
   }
 
@@ -35,8 +35,8 @@ class array {
   }
 
   //  Конструктор перемещения
-  array(array &&a) noexcept {
-    std::move(a.cbegin(), a.cend(), arr_);
+  array(array &&a) noexcept : size_(a.size_){
+    std::move(a.begin(), a.end(), arr_);
   }
 
   //  Деструктор
@@ -75,7 +75,7 @@ class array {
   size_type size() const noexcept { return size_; }
 
   //  Возвращает максимальное количество элементов, которые может содержать контейнер
-  size_type max_size() const noexcept { return std::numeric_limits<size_type>::max() / sizeof(value_type) / 2; }
+  size_type max_size() const noexcept { return size_; }
 
   //  Меняет содержимое и вместимость контейнера с другими
   void swap(array &other) {
