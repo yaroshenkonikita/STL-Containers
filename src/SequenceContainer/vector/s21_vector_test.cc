@@ -115,9 +115,9 @@ TEST(capacity, empty) {
 }
 
 TEST(capacity, maxSize) {
-  std::vector<int> v1 = {1, 2, 3, 4};
-  s21::vector<int> v2 = {1, 2, 3, 4};
-  EXPECT_EQ(v1.max_size(), v2.max_size());
+  s21::vector<float> vector = {1.2, 2.1, 3.2, 4.2};
+  std::vector<float> std = {1.2, 2.1, 3.2};
+  EXPECT_EQ(vector.max_size(), std.max_size());
 }
 
 TEST(capacity, reserve) {

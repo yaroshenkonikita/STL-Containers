@@ -2,6 +2,7 @@
 #define CPP2_S21_CONTAINERS_0_SRC_S21_VECTOR_H
 
 #include "iostream"
+#include "limits"
 
 namespace s21 {
 template<typename V>
@@ -100,7 +101,7 @@ class vector {
   size_type size() const noexcept { return size_; }
 
   //  Возвращает максимальное количество элементов, которые может содержать контейнер
-  size_type max_size() const noexcept { return std::numeric_limits<std::size_t>::max() / sizeof(value_type) / 2; }
+  size_type max_size() const noexcept { return std::numeric_limits<size_type>::max() / sizeof(value_type) / 2; }
 
   //  Увеличиваем емкость вектора до значения, которое больше или равно size
   void reserve(size_type size) {
