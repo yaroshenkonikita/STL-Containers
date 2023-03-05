@@ -18,24 +18,25 @@ class array {
   using size_type = size_t;
 
   //  Дефолтный конструктор
-  array() : size_(N) {}
+  array() {}
 
   //  Конструктор списка инициализаторов
   array(std::initializer_list<value_type> const &items) {
-    size_ = 0;
-    for (auto i = items.begin(); i != items.end(); i++, size_++) {
-      arr_[size_] = *i;
+//    size_ = 0;
+    int it = 0;
+    for (auto i = items.begin(); i != items.end(); i++, it++) {
+      arr_[it] = *i;
     }
   }
 
   //  Конструктор копирования
   array(const array &a) {
-    size_ = a.size_;
+//    size_ = a.size_;
     for (size_type i = 0; i < size_; i++) arr_[i] = a.arr_[i];
   }
 
   //  Конструктор перемещения
-  array(array &&a) noexcept: size_(a.size_) { std::move(a.begin(), a.end(), arr_); }
+  array(array &&a) noexcept { std::move(a.begin(), a.end(), arr_); }
 
   //  Деструктор
   ~array() = default;
@@ -71,7 +72,13 @@ class array {
   const_iterator cend() const noexcept { return arr_ + size_; }
 
   //  Проверяет, нет ли в контейнере элементов
-  bool empty() const noexcept { return size_ == 0; }
+  bool empty() const noexcept {
+    for (size_t i = 0; i < size_; i++) {
+      if (arr_[i] != 0)
+        return false;
+    }
+    return true;
+  }
 
   //  Возвращает количество элементов в контейнере
   size_type size() const noexcept { return size_; }
@@ -84,9 +91,6 @@ class array {
 
   //  Присваивает заданное значение value всем элементам в контейнере
   void fill(const_reference value) {
-    if (empty()) {
-      throw std::out_of_range("Array is empty");
-    }
     for (size_t i = 0; i < size_; ++i) arr_[i] = value;
   }
 
