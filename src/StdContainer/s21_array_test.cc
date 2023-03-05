@@ -2,12 +2,12 @@
 
 #include "s21_array.h"
 
-TEST(constructors, defaultConstructor) {
+TEST(array, defaultConstructor) {
   s21::array<double, 0> arr;
   EXPECT_EQ(0, arr.size());
 }
 
-TEST(constructors, initializer) {
+TEST(array, initializer) {
   std::array<double, 4> std = {1, 2, 3, 4};
   s21::array<double, 4> array = {1, 2, 3, 4};
   for (size_t i = 0; i < array.size(); i++) {
@@ -16,7 +16,7 @@ TEST(constructors, initializer) {
   EXPECT_EQ(array.size(), std.size());
 }
 
-TEST(constructors, copyConstructor) {
+TEST(array, copyConstructor) {
   s21::array<int, 4> std = {1, 2, 3, 4};
   s21::array<int, 4> array(std);
   for (size_t i = 0; i < array.size(); ++i) {
@@ -24,7 +24,7 @@ TEST(constructors, copyConstructor) {
   }
 }
 
-TEST(constructors, moveConstructor) {
+TEST(array, moveConstructor) {
   s21::array<int, 4> array = {1, 2, 3, 4};
   std::array<int, 4> std = {1, 2, 3, 4};
   s21::array<int, 4> array1 = std::move(array);
@@ -34,7 +34,7 @@ TEST(constructors, moveConstructor) {
     EXPECT_EQ(array1.at(i), test.at(i));
 }
 
-TEST(constructors, moveOperator) {
+TEST(array, moveOperator) {
   s21::array<int, 4> array = {1, 2, 3, 4};
   s21::array<int, 4> array1;
   std::array<int, 4> std_array = {1, 2, 3, 4};
@@ -44,7 +44,7 @@ TEST(constructors, moveOperator) {
   EXPECT_EQ(array1.size(), std_array1.size());
 }
 
-TEST(elementAccess, at) {
+TEST(array, at) {
   s21::array<int, 4> array = {1, 2, 3, 4};
   std::array<int, 4> std = {1, 2, 3, 4};
   for (size_t i = 0; i < array.size(); ++i) {
@@ -54,32 +54,32 @@ TEST(elementAccess, at) {
   EXPECT_ANY_THROW(std.at(5));
 }
 
-TEST(elementAccess, frontAndBack) {
+TEST(array, frontAndBack) {
   s21::array<int, 4> array = {1, 2, 3, 4};
   std::array<int, 4> std = {1, 2, 3, 4};
   ASSERT_EQ(array.front(), std.front());
   ASSERT_EQ(array.back(), std.back());
 }
 
-TEST(elementAccess, data) {
+TEST(array, data) {
   std::array<int, 4> array = {1, 2, 3, 4};
   s21::array<int, 4> std = {1, 2, 3, 4};
   EXPECT_EQ(*array.data(), *std.data());
 }
 
-TEST(iterators, begin) {
+TEST(array, begin) {
   std::array<int, 4> std = {1, 2, 3, 4};
   s21::array<int, 4> array = {1, 2, 3, 4};
   EXPECT_EQ(*std.begin(), *array.begin());
 }
 
-TEST(iterators, cbegin) {
+TEST(array, cbegin) {
   std::array<int, 4> const std = {1, 2, 3, 4};
   s21::array<int, 4> const array = {1, 2, 3, 4};
   EXPECT_EQ(*std.cbegin(), *array.cbegin());
 }
 
-TEST(iterators, end) {
+TEST(array, end) {
   std::array<int, 4> std = {1, 2, 3, 4};
   s21::array<int, 4> array = {1, 2, 3, 4};
   auto it1 = std.end();
@@ -89,7 +89,7 @@ TEST(iterators, end) {
   EXPECT_EQ(*it2, *it1);
 }
 
-TEST(iterators, cend) {
+TEST(array, cend) {
   std::array<int, 4> const std = {1, 2, 3, 4};
   s21::array<int, 4> const array = {1, 2, 3, 4};
   auto it1 = std.cend();
@@ -99,7 +99,7 @@ TEST(iterators, cend) {
   EXPECT_EQ(*it2, *it1);
 }
 
-TEST(capacity, empty) {
+TEST(array, empty) {
   std::array<int, 4> std = {1, 2, 3, 4};
   s21::array<int, 4> array = {1, 2, 3, 4};
   EXPECT_EQ(std.empty(), array.empty());
@@ -108,13 +108,13 @@ TEST(capacity, empty) {
   EXPECT_EQ(std1.empty(), array1.empty());
 }
 
-TEST(capacity, maxSize) {
+TEST(array, maxSize) {
   std::array<int, 4> std = {1, 2, 3, 4};
   s21::array<int, 4> array = {1, 2, 3, 4};
   EXPECT_EQ(array.max_size(), std.max_size());
 }
 
-TEST(modifiers, swap) {
+TEST(array, swap) {
   s21::array<int, 4> array1 = {4, 5, 6};
   s21::array<int, 4> array2 = {1, 2, 3, 9};
   array1.swap(array2);
@@ -127,7 +127,7 @@ TEST(modifiers, swap) {
   }
 }
 
-TEST(s21_array, fill) {
+TEST(array, fill) {
   s21::array<int, 4> array;
   s21::array<int, 4> std;
   array.fill(1);

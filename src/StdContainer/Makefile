@@ -10,7 +10,7 @@ all: clean gcov_report
 
 test:
 	@echo "Please wait"
-	@$(CC) $(CFLAGS) $(COVEREGE) $(CORE).h $(TEST).cc -o test $(TFLAGS)
+	@$(CC) $(CFLAGS) $(COVEREGE) $(TEST).cc -o test $(TFLAGS)
 	@./test
 
 gcov_report: test

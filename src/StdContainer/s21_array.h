@@ -64,6 +64,7 @@ class array {
   //  Возвращает указатель на базовый массив
   value_type *data() noexcept { return arr_; }
 
+  //  Итерирование
   iterator begin() noexcept { return arr_; }
   const_iterator cbegin() const noexcept { return arr_; }
   iterator end() noexcept { return arr_ + size_; }
