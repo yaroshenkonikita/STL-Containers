@@ -6,15 +6,15 @@
 #include <array>
 
 namespace s21 {
-template<typename A, size_t N>
+template<typename T, size_t N>
 class array {
  public:
 
-  using value_type = A;
-  using reference = A &;
-  using const_reference = const A &;
-  using iterator = A *;
-  using const_iterator = const A *;
+  using value_type = T;
+  using reference = T &;
+  using const_reference = const T &;
+  using iterator = T *;
+  using const_iterator = const T *;
   using size_type = size_t;
 
   //  Дефолтный конструктор
@@ -38,10 +38,13 @@ class array {
   array(array &&a) noexcept: size_(a.size_) { std::move(a.begin(), a.end(), arr_); }
 
   //  Деструктор
-  ~array() {}
+  ~array() = default;
 
   //  Перегрузка оператора для перемещения объекта
-  void operator=(array &&a) { std::move(a.cbegin(), a.cend(), arr_); }
+  array &operator=(array &&a) noexcept {
+    std::move(a.cbegin(), a.cend(), arr_);
+    return *this;
+  }
 
   //  Возвращает ссылку на элемент в указанном месте pos с проверкой границ
   reference at(size_type pos) {
@@ -87,8 +90,8 @@ class array {
   }
 
  private:
-  value_type arr_[N];
-  size_type size_;
+  value_type arr_[N]{};
+  size_type size_ = N;
 };
 }
 
