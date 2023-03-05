@@ -9,7 +9,6 @@ template<typename V>
 class vector {
  public:
 
-  //  ------------------------------Member type------------------------------
   using value_type = V;
   using reference = value_type &;
   using const_reference = const value_type &;
@@ -17,8 +16,6 @@ class vector {
   using const_iterator = const V *;
   using size_type = size_t;
   using pointer = value_type *;
-
-  //  ------------------------------Functions------------------------------
 
   //  Дефолтный конструктор
   vector() : arr_(nullptr), size_(0), capacity_(0) {}
@@ -43,7 +40,7 @@ class vector {
   }
 
   //  Конструктор перемещения
-  vector(vector &&v) noexcept : arr_(v.arr_), size_(v.size_), capacity_(v.capacity_) {
+  vector(vector &&v) noexcept: arr_(v.arr_), size_(v.size_), capacity_(v.capacity_) {
     v.arr_ = nullptr;
     v.size_ = 0;
     v.capacity_ = 0;
@@ -66,8 +63,6 @@ class vector {
     return *this;
   }
 
-  //  ------------------------------Element access------------------------------
-
   //  Возвращает ссылку на элемент в указанном месте pos с проверкой границ
   reference at(size_type pos) {
     if (pos >= size_) throw std::out_of_range("Out of range");
@@ -85,14 +80,11 @@ class vector {
   //  Возвращает указатель на базовый массив
   pointer data() noexcept { return arr_; }
 
-  //  ------------------------------Iterators------------------------------
-
+  // Итерирование
   iterator begin() noexcept { return arr_; }
   const_iterator cbegin() const noexcept { return arr_; }
   iterator end() noexcept { return arr_ + size_; }
   const_iterator cend() const noexcept { return arr_ + size_; }
-
-  //  ------------------------------Capacity------------------------------
 
   //  Проверяет, нет ли в контейнере элементов
   bool empty() const noexcept { return size_ == 0; }
@@ -120,8 +112,6 @@ class vector {
 
   //  Запрашивает удаление неиспользуемой емкости
   void shrink_to_fit() { if (size_ != capacity_) reserve(size_); }
-
-  //  ------------------------------Modifiers------------------------------
 
   //  Удаляет все элементы из контейнера
   void clear() noexcept { size_ = 0; }

@@ -24,7 +24,6 @@ TEST(constructors, initializer) {
     EXPECT_EQ(vector[i], std[i]);
   }
   EXPECT_EQ(vector.size(), std.size());
-//  EXPECT_EQ(vector.capacity(), std.capacity());
 }
 
 TEST(constructors, copyConstructor) {
@@ -205,8 +204,6 @@ TEST(modifiers, push_back) {
   EXPECT_EQ(vector.capacity(), std.capacity());
   EXPECT_EQ(vector.size(), std.size());
 }
-
-
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
