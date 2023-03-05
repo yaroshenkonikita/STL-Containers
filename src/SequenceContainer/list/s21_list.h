@@ -12,13 +12,14 @@
 #include "utility"
 
 namespace s21 {
+
 template <typename T> class list {
   using value_type = T;
   using reference = T &;
   using const_reference = const T &;
   using size_type = size_t;
-  //  using iterator = ListIterator<T>;
-  //  using const_iterator = ListConstIterator<T>;
+  //    using iterator = ListIterator<T>;
+  //    using const_iterator = ListConstIterator<T>;
 
 public:
   /*__________________________________________________________________*/
@@ -33,6 +34,10 @@ public:
 
   list<value_type> &operator=(list<value_type> &&other) noexcept;
   /*__________________________________________________________________*/
+
+  //  iterator insert(iterator pos, const_reference value)
+  void insert(value_type data, int index);
+  void node_delete(int index);
   void push_back(const_reference data);
   void push_front(const_reference data);
   void pop_front();
@@ -47,7 +52,7 @@ public:
   }
   size_type size() { return size_list; }
   size_type max_size() const noexcept {
-    return std::numeric_limits<size_type>::max() / sizeof(T) / 2;
+    return std::numeric_limits<size_type>::max() / sizeof(value_type) / 2;
   }
   bool empty() { return size_list == 0; }
   void clear();
@@ -71,12 +76,45 @@ private:
   node *tail;
   size_type size_list;
 
+  class ListIterator {
+    node *current{};
+    ListIterator &operator++() {
+      current = current->next;
+      return this;
+    }
+    ListIterator &operator--() {
+      current = current->prev;
+      return this;
+    }
+    value_type &operator*() { return current->data; }
+
+    explicit ListIterator(node *other) { current = other; }
+  };
+
   void length_error() {
     if (head == nullptr) {
       throw std::length_error("list is empty");
     }
   }
 };
+template <typename value_type> void list<value_type>::node_delete(int index) {}
+template <typename value_type>
+void list<value_type>::insert(value_type data, int index) {
+  if (!index) {
+    push_front(data);
+  } else if (index == size_list - 1) {
+    push_back(data);
+  } else {
+    node *previous = head;
+    for (int i = 0; i < index - 1; i++) {
+      previous = previous->next;
+    }
+    node *new_node = new node(data, previous->next);
+    previous->next = new_node;
+    size_list++;
+  }
+}
+
 template <typename value_type>
 list<value_type> &
 list<value_type>::operator=(list<value_type> &&other) noexcept {
@@ -225,5 +263,5 @@ template <typename value_type> void list<value_type>::pop_back() {
   delete current;
   size_list--;
 }
-}
+} // namespace s21
 #endif // CPP2_S21_CONTAINERS_0_SRC_S21_LIST_H
