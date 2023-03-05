@@ -35,9 +35,7 @@ class array {
   }
 
   //  Конструктор перемещения
-  array(array &&a) noexcept : size_(a.size_){
-    std::move(a.begin(), a.end(), arr_);
-  }
+  array(array &&a) noexcept: size_(a.size_) { std::move(a.begin(), a.end(), arr_); }
 
   //  Деструктор
   ~array() {}
@@ -78,13 +76,13 @@ class array {
   size_type max_size() const noexcept { return size_; }
 
   //  Меняет содержимое и вместимость контейнера с другими
-  void swap(array &other) {
-    std::swap(arr_, other.arr_);
-    std::swap(size_, other.size_);
-  }
+  void swap(array &other) { std::swap(*this, other); }
 
+  //  Присваивает заданное значение value всем элементам в контейнере
   void fill(const_reference value) {
-    if ((size_ = 0)) throw std::out_of_range("array is empty");
+    if (empty()) {
+      throw std::out_of_range("Array is empty");
+    }
     for (size_t i = 0; i < size_; ++i) arr_[i] = value;
   }
 

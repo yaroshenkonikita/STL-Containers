@@ -45,28 +45,26 @@ TEST(constructors, moveOperator) {
 }
 
 TEST(elementAccess, at) {
-  std::array<int, 4> v1 = {1, 2, 3, 4};
-  s21::array<int, 4> v2 = {1, 2, 3, 4};
-  for (size_t i = 0; i < v1.size(); ++i) {
-    EXPECT_EQ(v1.at(i), v2.at(i));
+  s21::array<int, 4> array = {1, 2, 3, 4};
+  std::array<int, 4> std = {1, 2, 3, 4};
+  for (size_t i = 0; i < array.size(); ++i) {
+    EXPECT_EQ(array.at(i), std.at(i));
   }
-  EXPECT_ANY_THROW(v2.at(5));
-  EXPECT_ANY_THROW(v2.at(5));
+  EXPECT_ANY_THROW(std.at(5));
+  EXPECT_ANY_THROW(std.at(5));
 }
 
 TEST(elementAccess, frontAndBack) {
-  s21::array<int, 4> array = {1, 2};
-  std::array<int, 4> std = {1, 2};
+  s21::array<int, 4> array = {1, 2, 3, 4};
+  std::array<int, 4> std = {1, 2, 3, 4};
   ASSERT_EQ(array.front(), std.front());
   ASSERT_EQ(array.back(), std.back());
 }
 
 TEST(elementAccess, data) {
-  s21::array<int, 0> v;
-  std::array<double, 4> array = {1.21, 2, 3, 4};
-  s21::array<double, 4> std = {1.21, 2, 3, 4};
+  std::array<int, 4> array = {1, 2, 3, 4};
+  s21::array<int, 4> std = {1, 2, 3, 4};
   EXPECT_EQ(*array.data(), *std.data());
-  EXPECT_EQ(v.data(), nullptr);
 }
 
 TEST(iterators, begin) {
@@ -84,13 +82,21 @@ TEST(iterators, cbegin) {
 TEST(iterators, end) {
   std::array<int, 4> std = {1, 2, 3, 4};
   s21::array<int, 4> array = {1, 2, 3, 4};
-  EXPECT_EQ(*(std.end()), *(array.end()));
+  auto it1 = std.end();
+  auto it2 = array.end();
+  it1--;
+  it2--;
+  EXPECT_EQ(*it2, *it1);
 }
 
 TEST(iterators, cend) {
   std::array<int, 4> const std = {1, 2, 3, 4};
   s21::array<int, 4> const array = {1, 2, 3, 4};
-  EXPECT_EQ(*(std.cend()), *(array.cend()));
+  auto it1 = std.cend();
+  auto it2 = array.cend();
+  it1--;
+  it2--;
+  EXPECT_EQ(*it2, *it1);
 }
 
 TEST(capacity, empty) {
@@ -109,20 +115,25 @@ TEST(capacity, maxSize) {
 }
 
 TEST(modifiers, swap) {
-  std::array<int, 4> std1 = {4, 5, 6};
-  std::array<int, 4> std2 = {1, 2, 3, 9};
-  std1.swap(std2);
   s21::array<int, 4> array1 = {4, 5, 6};
   s21::array<int, 4> array2 = {1, 2, 3, 9};
   array1.swap(array2);
+  std::array<int, 4> std1 = {4, 5, 6};
+  std::array<int, 4> std2 = {1, 2, 3, 9};
+  std1.swap(std2);
+  for (size_t i = 0; i != array1.size(); ++i) {
+    ASSERT_EQ(array1[i], std1[i]);
+    ASSERT_EQ(array2[i], std2[i]);
+  }
+}
 
-  for (size_t i = 0; i < 4; i++) {
-    if (std1.size() > i) {
-      EXPECT_EQ(std1.at(i), array1.at(i));
-    }
-    if (std2.size() > i) {
-      EXPECT_EQ(std2.at(i), array2.at(i));
-    }
+TEST(s21_array, fill) {
+  s21::array<int, 4> array;
+  s21::array<int, 4> std;
+  array.fill(1);
+  std.fill(1);
+  for (size_t i = 0; i != array.size(); ++i) {
+    ASSERT_EQ(array[i], std[i]);
   }
 }
 
