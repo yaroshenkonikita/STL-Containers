@@ -26,7 +26,6 @@ private:
         Node(Key key, Node *node) : _key(key), _parent(node) {}
         ~Node() { delete _left; delete _right; }
         Key _key{};
-        int _balance{};
         Node *_left{}, *_right{}, *_parent{};
     };
 
