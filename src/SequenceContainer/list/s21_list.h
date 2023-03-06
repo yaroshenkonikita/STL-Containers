@@ -31,13 +31,14 @@ public:
   list(const list<value_type> &other);
   list(list<value_type> &&other) noexcept;
   ~list();
-
+  /*__________________________________________________________________*/
   list<value_type> &operator=(list<value_type> &&other) noexcept;
   /*__________________________________________________________________*/
-
+  /* PUBLIC METHODS */
+  /*__________________________________________________________________*/
   //  iterator insert(iterator pos, const_reference value)
   void insert(value_type data, int index);
-  void node_delete(int index);
+  //  void node_delete(int index);
   void push_back(const_reference data);
   void push_front(const_reference data);
   void pop_front();
@@ -58,7 +59,7 @@ public:
   void clear();
   void swap(list &other);
 
-private:
+  // private:
   class node {
   public:
     node *next;
@@ -77,19 +78,59 @@ private:
   size_type size_list;
 
   class ListIterator {
-    node *current{};
-    ListIterator &operator++() {
+  public:
+    node *current;
+
+    ListIterator operator++() {
+//      ListIterator it;
       current = current->next;
-      return this;
+//      ListIterator it = *this;
+//      ++*this;
+      return *this;
     }
     ListIterator &operator--() {
       current = current->prev;
-      return this;
+      return *this;
     }
     value_type &operator*() { return current->data; }
 
+    ListIterator() {
+      current = nullptr;
+    }
     explicit ListIterator(node *other) { current = other; }
+
   };
+
+  ListIterator begin() {
+    //    ListIterator it(this->head);
+    return ListIterator(head);
+  }
+
+  ListIterator end() {
+    //    ListIterator it(this->tail->next);
+    return ListIterator(this->tail->next);
+  }
+
+  ListIterator insert_iter(ListIterator pos,
+                                       const_reference value) {
+    ListIterator it(begin());
+    if (*pos == head->data) {
+      push_front(value);
+    } else if (*pos == tail->data) {
+      push_back(value);
+    } else {
+      node *previous = head;
+      while (*it != *pos) {
+        previous = previous->next;
+        ++it;
+      }
+      node *new_node = new node(value, previous->next);
+      previous->next = new_node;
+      it.current = new_node;
+      size_list++;
+    }
+    return it;
+  }
 
   void length_error() {
     if (head == nullptr) {
@@ -97,12 +138,18 @@ private:
     }
   }
 };
-template <typename value_type> void list<value_type>::node_delete(int index) {}
+
+// template <typename value_type> void list<value_type>::node_delete(int index)
+// {}
+
 template <typename value_type>
 void list<value_type>::insert(value_type data, int index) {
+  if ((size_t)index > size_list) {
+    throw std::out_of_range("the given element index is not in the list");
+  }
   if (!index) {
     push_front(data);
-  } else if (index == size_list - 1) {
+  } else if ((size_t)index == size_list - 1) {
     push_back(data);
   } else {
     node *previous = head;
