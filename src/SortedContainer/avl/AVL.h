@@ -1,30 +1,25 @@
 #include "iostream"
 
 template<typename T>
-class Vector {
+class node {
  public:
-  // структура для представления узлов дерева
-  struct node {
-    int key;
-    unsigned char height;
-    node *left;
-    node *right;
-    node(int k) {
-      key = k;
-      left = right = 0;
-      height = 1;
-    }
-  };
+
+  // параметризованный конструктор
+  node(int k) { key = k; left = 0; right = 0; height = 1; }
+
   // работа с полем height
-  unsigned char height(node *pointer) { return pointer ? pointer->height : 0; }
+  unsigned char upper(node *pointer) { return pointer ? pointer->height : 0; }
+
   // вычисляет balance factor заданного узла
-  int bFactor(node *pointer) { return height(pointer->right) - height(pointer->left); }
+  int bFactor(node *pointer) { return upper(pointer->right) - upper(pointer->left); }
+
   // устанавливает корректное значение поля height
   void fixHeight(node *pointer) {
-    unsigned char heightLeft = height(pointer->left);
-    unsigned char heightRight = height(pointer->right);
+    unsigned char heightLeft = upper(pointer->left);
+    unsigned char heightRight = upper(pointer->right);
     pointer->height = (heightLeft > heightRight ? heightLeft : heightRight) + 1;
   }
+
   // правый поворот вокруг pointer
   node *rotateRight(node *pointer) {
     node *q = pointer->left;
@@ -34,6 +29,7 @@ class Vector {
     fixHeight(q);
     return q;
   }
+
   // левый поворот вокруг q
   node *rotateLeft(node *q) {
     node *pointer = q->right;
@@ -43,6 +39,7 @@ class Vector {
     fixHeight(pointer);
     return pointer;
   }
+
   // балансировка узла pointer
   node *balance(node *pointer) {
     fixHeight(pointer);
@@ -58,6 +55,7 @@ class Vector {
     }
     return pointer; // балансировка не нужна
   }
+
   // вставка ключа k в дерево с корнем pointer
   node *insert(node *pointer, int k) {
     if (!pointer) return new node(k);
@@ -67,10 +65,12 @@ class Vector {
       pointer->right = insert(pointer->right, k);
     return balance(pointer);
   }
+
   // поиск узла с минимальным ключом в дереве pointer
   node *findMin(node *pointer) {
     return pointer->left ? findMin(pointer->left) : pointer;
   }
+
   // удаление узла с минимальным ключом из дерева pointer
   node *removeMin(node *pointer) {
     if (pointer->left == 0)
@@ -78,6 +78,7 @@ class Vector {
     pointer->left = removeMin(pointer->left);
     return balance(pointer);
   }
+
   // удаление ключа k из дерева pointer
   node *remove(node *pointer, int k) {
     if (!pointer) return 0;
@@ -95,4 +96,36 @@ class Vector {
     }
     return balance(pointer);
   }
+  // геттеры и сеттеры
+  int GetKey() const {
+    return key;
+  }
+  void SetKey(int k) {
+    key = k;
+  }
+  unsigned char GetHeight() const {
+    return height;
+  }
+  void SetHeight(unsigned char h) {
+    height = h;
+  }
+  node *GetLeft() const {
+    return left;
+  }
+  void SetLeft(node *l) {
+    left = l;
+  }
+  node *GetRight() const {
+    return right;
+  }
+  void SetRight(node *r) {
+    right = r;
+  }
+
+ private:
+  // структура для представления узлов дерева
+  int key;
+  unsigned char height;
+  node *left;
+  node *right;
 };
