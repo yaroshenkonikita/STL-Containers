@@ -5,7 +5,7 @@
 #ifndef CPP2_S21_CONTAINERS_0_BINARYTREE_H
 #define CPP2_S21_CONTAINERS_0_BINARYTREE_H
 
-#include <iostream>
+#include  <iostream>
 
 #include <memory_resource>
 #include <functional>
@@ -49,7 +49,10 @@ public:
 
 
 
-    BinaryTree() { _root = _end = new Node(); }
+    BinaryTree() {
+        _root = _end = new Node();
+//        _end->_right = &_begin;
+    }
     BinaryTree(const std::initializer_list<value_type>& items) {
          _root = _end = new Node();
         for (value_type item : items) {
@@ -61,6 +64,7 @@ public:
     void clear() {
         delete _root;
         _root = _end = new Node();
+        _size = 0;
         _begin = nullptr;
     }
 
@@ -73,6 +77,7 @@ public:
         if (current_node == _end) {
             current_node = _begin = _root = new Node(key);
             current_node->_right = _end;
+            _end->_right = current_node;
         } else {
             while (true) {
                 if (Compare{}(key, current_node->_key)) {
@@ -100,13 +105,23 @@ public:
         }
         ++_size;
     }
+
+    iterator begin() {
+        return TreeIterator(_begin);
+    }
+
+    iterator end() {
+        return TreeIterator(_end);
+    }
+
     bool empty() {
         return _size == 0;
     }
+
     size_type max_size() {
         return std::numeric_limits<std::size_t>::max() / sizeof(value_type) / 2;
     }
-private:
+protected:
     node_type *_root{}, *_begin{}, *_end{};
     size_type _size{};
 };
@@ -115,8 +130,31 @@ private:
 template <typename Key, typename Compare>
 class BinaryTree<Key, Compare>::TreeIterator {
 public:
-private:
+    TreeIterator() = delete;
+    explicit TreeIterator(node_type* current) : current_node(current) {}
+    ~TreeIterator() = default;
 
+    Key &operator*() {
+        return current_node->_key;
+    }
+    iterator &operator++() {
+        if (current_node->_right != nullptr) {
+            current_node = current_node->_right;
+        } else {
+            node_type *last_position = current_node;
+            current_node = current_node->_parent;
+            while (current_node->_right == last_position) {
+                last_position = current_node;
+                current_node = current_node->_parent;
+            }
+            if (current_node->_right) {
+                current_node = current_node->_right;
+            }
+        }
+        return *this;
+    }
+private:
+    node_type *current_node{};
 };
 
 template <typename Key, typename Compare>
