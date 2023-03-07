@@ -43,6 +43,7 @@ public:
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
     using node_type = Node;
+    using pointer = node_type*;
     using iterator = TreeIterator;
     using const_iterator = const TreeIterator;
 
@@ -50,6 +51,8 @@ public:
 
     BinaryTree() {
         _begin = _root = _end = new Node();
+        _begin->_left = _end;
+        _end->_right = _begin;
     }
     BinaryTree(const std::initializer_list<value_type>& items) {
         _begin = _root = _end = new Node();
@@ -57,11 +60,15 @@ public:
             insert(item);
         }
     }
-    virtual ~BinaryTree() { delete _root; }
+    ~BinaryTree() {
+        delete _root;
+    }
 
     void clear() {
+        _begin->_left = _end->_right = nullptr;
+        _end->_parent->_right = nullptr;
         delete _root;
-        _begin = _root = _end = new Node();
+        _begin = _root = _end;
         _size = 0;
     }
 
@@ -70,11 +77,12 @@ public:
 //    }
 
     iterator insert(const_reference key) {
-        Node *current_node = _root;
-        if (current_node == _end) {
-            current_node = _begin = _root = new Node(key);
-            current_node->_right = _end;
+        if (_begin == _end) {
+            _begin = _root = new Node(key);
+            _begin->_right = _end;
+            _end->_parent = _begin;
         } else {
+            Node *current_node = _root;
             while (true) {
                 if (Compare{}(key, current_node->_key)) {
                     if (current_node->_left != nullptr) {
@@ -90,8 +98,7 @@ public:
                     current_node = current_node->_right;
                 } else {
                     if (current_node->_right == _end) {
-                        current_node->_right = new Node(key, current_node);
-                        current_node->_right->_right = _end;
+                        _end->_parent = current_node->_right = new Node(key, current_node);
                     } else {
                         current_node->_right = new Node(key, current_node);
                     }
@@ -102,16 +109,20 @@ public:
         ++_size;
     }
 
-    size_type size() {
+    TreeIterator CreateIterator(node_type *node) {
+        return TreeIterator(node, _begin, _end, _size);
+    }
+
+    size_type size() noexcept {
         return _size;
     }
 
-    iterator begin() const noexcept {
-        return TreeIterator(_begin);
+    iterator begin() {
+        return CreateIterator(_begin);
     }
 
-    iterator end() const noexcept {
-        return TreeIterator(_end);
+    iterator end() {
+        return CreateIterator(_end);
     }
 
 //    iterator cbegin() const noexcept {
@@ -129,7 +140,7 @@ public:
     size_type max_size() {
         return std::numeric_limits<std::size_t>::max() / sizeof(value_type) / 2;
     }
-protected:
+private:
     node_type *_root{}, *_begin{}, *_end{};
     size_type _size{};
 };
@@ -137,15 +148,20 @@ protected:
 // iterators ================================================================
 
 template <class Key, class Compare>
-class BinaryTree<Key, Compare>::TreeIterator : public BinaryTree {
+class BinaryTree<Key, Compare>::TreeIterator {
 public:
     TreeIterator() = delete;
-    explicit TreeIterator(node_type* current) : current_node(current) {}
+    TreeIterator(pointer current, pointer &begin, pointer &end, size_type &size)
+    : current_node(current), _begin(begin), _end(end), _size(size) {}
+    TreeIterator(TreeIterator &other)
+            : current_node(other.current_node), _begin(other._begin), _end(other._end), _size(other._size) {}
+    TreeIterator(TreeIterator &&other)
+            : current_node(other.current_node), _begin(other._begin), _end(other._end), _size(other._size) {}
     ~TreeIterator() = default;
 
     Key operator*() {
-        if (current_node == BinaryTree<Key, Compare>::_end) {
-            return this->_size;
+        if (current_node == _end) {
+            return _size;
         } else if (current_node == nullptr) {
             throw std::out_of_range("Дружище, ты куда собрался?"); // такого случая не должно быть
         }
@@ -153,8 +169,8 @@ public:
     }
 
     TreeIterator operator++() {
-        if (current_node == BinaryTree<Key, Compare>::_end) {
-            current_node = BinaryTree<Key, Compare>::_begin;
+        if (current_node == _end) {
+            current_node = _begin;
         } else if (current_node->_right != nullptr) {
             current_node = current_node->_right;
         } else {
@@ -163,18 +179,17 @@ public:
             if (current_node == nullptr) {
                 throw std::out_of_range("Ты сирота, а ну в детский дом!!"); // такого случая не должно быть
             }
-            while (current_node->_right == last_position || current_node->_right != nullptr) {
+            while (current_node->_right == last_position) {
                 last_position = current_node;
                 current_node = current_node->_parent;
             }
-            current_node = current_node->_right;
         }
         return *this;
     }
 
     TreeIterator operator--() {
-        if (current_node == BinaryTree<Key, Compare>::_begin) {
-            current_node = BinaryTree<Key, Compare>::_end;
+        if (current_node == _begin) {
+            current_node = _end;
         } else if (current_node->_left != nullptr) {
             current_node = current_node->_left;
         } else {
@@ -183,7 +198,7 @@ public:
             if (current_node == nullptr) {
                 throw std::out_of_range("Ты сирота, а ну в детский дом!!"); // такого случая не должно быть
             }
-            while (current_node->_left == last_position || current_node->_left != nullptr) {
+            while (current_node->_left == last_position || current_node->_left == nullptr) {
                 last_position = current_node;
                 current_node = current_node->_parent;
             }
@@ -201,7 +216,10 @@ public:
     }
 
 private:
-    node_type *current_node{};
+    pointer current_node;
+    pointer &_end;
+    pointer &_begin;
+    size_type &_size;
 };
 
 //template <typename Key, typename Compare>
