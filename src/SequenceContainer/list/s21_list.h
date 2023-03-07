@@ -82,28 +82,33 @@ public:
     node *current;
 
     ListIterator operator++() {
-//      ListIterator it;
+      //      ListIterator it;
       current = current->next;
-//      ListIterator it = *this;
-//      ++*this;
+      //      ListIterator it = *this;
+      //      ++*this;
       return *this;
     }
     ListIterator &operator--() {
       current = current->prev;
       return *this;
     }
+
     value_type &operator*() { return current->data; }
 
-    ListIterator() {
-      current = nullptr;
+    bool operator==(const ListIterator &other) const {
+      return current == other.current;
     }
-    explicit ListIterator(node *other) { current = other; }
+    bool operator!=(const ListIterator &other) const {
+      return current != other.current;
+    }
 
+    ListIterator() { current = nullptr; }
+    explicit ListIterator(node *other) { current = other; }
   };
 
   ListIterator begin() {
     //    ListIterator it(this->head);
-    return ListIterator(head);
+    return ListIterator(this->head);
   }
 
   ListIterator end() {
@@ -111,22 +116,19 @@ public:
     return ListIterator(this->tail->next);
   }
 
-  ListIterator insert_iter(ListIterator pos,
-                                       const_reference value) {
+  ListIterator insert_iter(ListIterator pos, const_reference value) {
     ListIterator it(begin());
-    if (*pos == head->data) {
+    if (pos.current == head) {
       push_front(value);
-    } else if (*pos == tail->data) {
+    } else if (pos.current == tail) {
       push_back(value);
+      it.current = tail;
     } else {
-      node *previous = head;
-      while (*it != *pos) {
-        previous = previous->next;
-        ++it;
-      }
-      node *new_node = new node(value, previous->next);
-      previous->next = new_node;
-      it.current = new_node;
+      --pos;
+      while (++it != pos);
+      ++pos;
+      node *new_node = new node(value, it.current->next, it.current->prev);
+      it.current->next = new_node;
       size_list++;
     }
     return it;
