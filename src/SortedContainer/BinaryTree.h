@@ -65,9 +65,9 @@ public:
         _size = 0;
     }
 
-    iterator lower_bound(const_reference key) {
-        return TreeIterator(begin()); // недоделка
-    }
+//    iterator lower_bound(const_reference key) {
+//        return TreeIterator(begin()); // недоделка
+//    }
 
     iterator insert(const_reference key) {
         Node *current_node = _root;
@@ -103,6 +103,10 @@ public:
         ++_size;
     }
 
+    size_type size() {
+        return _size;
+    }
+
     iterator begin() const noexcept {
         return TreeIterator(_begin);
     }
@@ -111,13 +115,13 @@ public:
         return TreeIterator(_end);
     }
 
-    iterator cbegin() const noexcept {
-        return TreeIterator(_begin);
-    }
-
-    iterator cend() const noexcept {
-        return TreeIterator(_end);
-    }
+//    iterator cbegin() const noexcept {
+//        return TreeIterator(_begin);
+//    }
+//
+//    iterator cend() const noexcept {
+//        return TreeIterator(_end);
+//    }
 
     bool empty() {
         return _size == 0;
@@ -134,14 +138,14 @@ protected:
 // iterators ================================================================
 
 template <class Key, class Compare>
-class BinaryTree<Key, Compare>::TreeIterator {
+class BinaryTree<Key, Compare>::TreeIterator : public BinaryTree {
 public:
     TreeIterator() = delete;
     explicit TreeIterator(node_type* current) : current_node(current) {}
     ~TreeIterator() = default;
 
     Key operator*() {
-        if (current_node == this->_end) {
+        if (current_node == BinaryTree<Key, Compare>::_end) {
             return this->_size;
         } else if (current_node == nullptr) {
             throw std::out_of_range("Дружище, ты куда собрался?"); // такого случая не должно быть
@@ -168,8 +172,8 @@ public:
     }
 
     TreeIterator operator--() {
-        if (current_node == this->_begin) {
-            current_node = this->_end;
+        if (current_node == BinaryTree<Key, Compare>::_begin) {
+            current_node = BinaryTree<Key, Compare>::_end;
         } else if (current_node->_left != nullptr) {
             current_node = current_node->_left;
         } else {
@@ -187,11 +191,11 @@ public:
         return *this;
     }
 
-    bool operator!=(TreeIterator &other) {
+    bool operator!=(TreeIterator other) {
         return other.current_node != current_node;
     }
 
-    bool operator==(TreeIterator &other) {
+    bool operator==(TreeIterator other) {
         return other.current_node == current_node;
     }
 
