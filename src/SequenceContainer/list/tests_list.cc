@@ -346,15 +346,38 @@ TEST(list_test, insert_iter3) {
   ++it;
   EXPECT_EQ(*basic2.begin(), basic2.front());
   basic2.insert_iter(it, "lol");
+  EXPECT_EQ(basic2.back(), "go!");
+}
+
+TEST(list_test, insert_iter4) {
+  s21::list<std::string> basic2 = {"hello", "world", "lets", "go!"};
+  s21::list<std::string>::ListIterator it(basic2.begin());
+  ++it;
+  ++it;
+  ++it;
+  ++it;
+  EXPECT_EQ(*basic2.begin(), basic2.front());
+  basic2.insert_iter(it, "lol");
   EXPECT_EQ(basic2.back(), "lol");
 }
 
+TEST(list_test, erase) {
+  s21::list<std::string> basic2 = {"hello", "world", "lets", "go!"};
+  s21::list<std::string>::ListIterator it(basic2.begin());
+  EXPECT_EQ(basic2.front(), "hello");
+  basic2.erase(it);
+  EXPECT_EQ(basic2.front(), "world");
+  ++it; // ecли не передвинуть итератор будет СЕГА!!!
+  basic2.erase(it);
+  EXPECT_EQ(basic2.front(), "lets");
+}
+
 // TEST(list_test, max_size) {
-//   std::s21::list<std::string> basic2({"hello", "world", "lets", "go!"});
+//   std::list<std::string> basic2({"hello", "world", "lets", "go!"});
 //   s21::list<std::string> basic({"hello", "world", "lets", "go!"});
 //   EXPECT_EQ(basic2.max_size(),basic.max_size());
 // }
-
+//
 // TEST(list_test, max_size2) {
 //   std::list<int> basic2;
 //   s21::list<int> basic;

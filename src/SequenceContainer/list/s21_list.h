@@ -137,7 +137,20 @@ public:
     }
     return it;
   }
-
+  void erase(ListIterator pos) {
+    if (pos.current == head) {
+      pop_front();
+    } else if (pos.current == tail->next) {
+      pop_back();
+    } else {
+      node *previous = pos.current->prev;
+      node *to_delete = previous->next;
+      previous->next = to_delete->next;
+//      ++pos;
+      pos.current->prev = to_delete->prev;
+      size_list--;
+    }
+  }
   void length_error() {
     if (head == nullptr) {
       throw std::length_error("list is empty");
