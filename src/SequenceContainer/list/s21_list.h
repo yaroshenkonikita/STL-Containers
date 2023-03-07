@@ -120,16 +120,20 @@ public:
     ListIterator it(begin());
     if (pos.current == head) {
       push_front(value);
-    } else if (pos.current == tail) {
+      it = begin();
+    } else if (pos.current == tail->next) {
       push_back(value);
       it.current = tail;
     } else {
-      --pos;
-      while (++it != pos);
-      ++pos;
-      node *new_node = new node(value, it.current->next, it.current->prev);
+      while (it != pos) {
+        ++it;
+      }
+      --it;
+      node *new_node = new node(value, pos.current, it.current);
       it.current->next = new_node;
+      pos.current->prev = new_node;
       size_list++;
+      ++it;
     }
     return it;
   }
