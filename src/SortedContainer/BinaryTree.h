@@ -7,9 +7,9 @@
 
 #include  <iostream>
 
-#include <memory_resource>
-#include <functional>
-#include <limits>
+//#include <memory_resource>
+//#include <functional>
+//#include <limits>
 
 namespace s21 {
 template <class Key, class Compare = std::less<Key>>
@@ -44,16 +44,15 @@ public:
     using difference_type = std::ptrdiff_t;
     using node_type = Node;
     using iterator = TreeIterator;
-    using const_iterator = TreeConstIterator;
+    using const_iterator = const TreeIterator;
 
 
 
     BinaryTree() {
-        _root = _end = new Node();
-//        _end->_right = &_begin;
+        _end->_right = _begin = _root = _end = new Node();
     }
     BinaryTree(const std::initializer_list<value_type>& items) {
-         _root = _end = new Node();
+        _begin = _root = _end = new Node();
         for (value_type item : items) {
             insert(item);
         }
@@ -62,13 +61,12 @@ public:
 
     void clear() {
         delete _root;
-        _root = _end = new Node();
+        _begin = _root = _end = new Node();
         _size = 0;
-        _begin = nullptr;
     }
 
     iterator lower_bound(const_reference key) {
-
+        return TreeIterator(begin()); // недоделка
     }
 
     iterator insert(const_reference key) {
@@ -105,11 +103,19 @@ public:
         ++_size;
     }
 
-    iterator begin() {
+    iterator begin() const noexcept {
         return TreeIterator(_begin);
     }
 
-    iterator end() {
+    iterator end() const noexcept {
+        return TreeIterator(_end);
+    }
+
+    iterator cbegin() const noexcept {
+        return TreeIterator(_begin);
+    }
+
+    iterator cend() const noexcept {
         return TreeIterator(_end);
     }
 
@@ -126,32 +132,69 @@ protected:
 };
 
 // iterators ================================================================
-template <typename Key, typename Compare>
+
+template <class Key, class Compare>
 class BinaryTree<Key, Compare>::TreeIterator {
 public:
     TreeIterator() = delete;
     explicit TreeIterator(node_type* current) : current_node(current) {}
     ~TreeIterator() = default;
 
-    Key &operator*() {
+    Key operator*() {
+        if (current_node == this->_end) {
+            return this->_size;
+        } else if (current_node == nullptr) {
+            throw std::out_of_range("Дружище, ты куда собрался?"); // такого случая не должно быть
+        }
         return current_node->_key;
     }
-    iterator &operator++() {
+
+    TreeIterator operator++() {
         if (current_node->_right != nullptr) {
             current_node = current_node->_right;
         } else {
             node_type *last_position = current_node;
             current_node = current_node->_parent;
-            while (current_node->_right == last_position) {
+            if (current_node == nullptr) {
+                throw std::out_of_range("Ты сирота, а ну в детский дом!!"); // такого случая не должно быть
+            }
+            while (current_node->_right == last_position || current_node->_right != nullptr) {
                 last_position = current_node;
                 current_node = current_node->_parent;
             }
-            if (current_node->_right) {
-                current_node = current_node->_right;
-            }
+            current_node = current_node->_right;
         }
         return *this;
     }
+
+    TreeIterator operator--() {
+        if (current_node == this->_begin) {
+            current_node = this->_end;
+        } else if (current_node->_left != nullptr) {
+            current_node = current_node->_left;
+        } else {
+            node_type *last_position = current_node;
+            current_node = current_node->_parent;
+            if (current_node == nullptr) {
+                throw std::out_of_range("Ты сирота, а ну в детский дом!!"); // такого случая не должно быть
+            }
+            while (current_node->_left == last_position || current_node->_left != nullptr) {
+                last_position = current_node;
+                current_node = current_node->_parent;
+            }
+            current_node = current_node->_left;
+        }
+        return *this;
+    }
+
+    bool operator!=(TreeIterator &other) {
+        return other.current_node != current_node;
+    }
+
+    bool operator==(TreeIterator &other) {
+        return other.current_node == current_node;
+    }
+
 private:
     node_type *current_node{};
 };
