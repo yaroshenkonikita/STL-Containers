@@ -57,7 +57,7 @@ public:
             insert(item);
         }
     }
-    ~BinaryTree() { delete _root; }
+    virtual ~BinaryTree() { delete _root; }
 
     void clear() {
         delete _root;
@@ -92,7 +92,6 @@ public:
                     if (current_node->_right == _end) {
                         current_node->_right = new Node(key, current_node);
                         current_node->_right->_right = _end;
-                        _end = current_node->_right;
                     } else {
                         current_node->_right = new Node(key, current_node);
                     }
