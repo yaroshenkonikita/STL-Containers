@@ -49,7 +49,7 @@ public:
 
 
     BinaryTree() {
-        _end->_right = _begin = _root = _end = new Node();
+        _begin = _root = _end = new Node();
     }
     BinaryTree(const std::initializer_list<value_type>& items) {
         _begin = _root = _end = new Node();
@@ -74,7 +74,6 @@ public:
         if (current_node == _end) {
             current_node = _begin = _root = new Node(key);
             current_node->_right = _end;
-            _end->_right = current_node;
         } else {
             while (true) {
                 if (Compare{}(key, current_node->_key)) {
@@ -93,6 +92,7 @@ public:
                     if (current_node->_right == _end) {
                         current_node->_right = new Node(key, current_node);
                         current_node->_right->_right = _end;
+                        _end = current_node->_right;
                     } else {
                         current_node->_right = new Node(key, current_node);
                     }
@@ -154,7 +154,9 @@ public:
     }
 
     TreeIterator operator++() {
-        if (current_node->_right != nullptr) {
+        if (current_node == BinaryTree<Key, Compare>::_end) {
+            current_node = BinaryTree<Key, Compare>::_begin;
+        } else if (current_node->_right != nullptr) {
             current_node = current_node->_right;
         } else {
             node_type *last_position = current_node;
@@ -203,10 +205,10 @@ private:
     node_type *current_node{};
 };
 
-template <typename Key, typename Compare>
-class BinaryTree<Key, Compare>::TreeConstIterator {
-
-};
+//template <typename Key, typename Compare>
+//class BinaryTree<Key, Compare>::TreeConstIterator {
+//
+//};
 
 } // namespace s21
 
