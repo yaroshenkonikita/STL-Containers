@@ -1,17 +1,48 @@
 #include "iostream"
 
-template<typename T>
-class node {
+namespace s21 {
+template<typename T, typename Key>
+class AVL {
+
+  using size_type = std::size_t;
+  using value_type = T;
+  using reference = value_type&;
+  using const_reference = const value_type&;
+
+  struct node {
+    value_type key;
+    node *height;
+    node *left;
+    node *right;
+
+    node() = default;
+    node(T key_) : key(key_) {}
+    node(node *key_, node *height_) : key(key_), height(height_) {}
+    node(std::initializer_list<value_type> const &items) {
+      for (value_type item : items) item.insert(item);
+    }
+    ~node() { delete left; delete right; }
+  };
+
  public:
 
-  // параметризованный конструктор
-  node(int k) { key = k; left = 0; right = 0; height = 1; }
+  AVL();
+
+  AVL(node *root) {
+
+  }
+
+  AVL(std::initializer_list<value_type> const &items) {
+    for (value_type item : items) {
+      insert(item);
+    }
+  }
 
   // работа с полем height
   unsigned char upper(node *pointer) { return pointer ? pointer->height : 0; }
 
-  // вычисляет balance factor заданного узла
-  int bFactor(node *pointer) { return upper(pointer->right) - upper(pointer->left); }
+  // вычисляет разницу высот правого и левого поддеревьев
+  int heightDifference(node *pointer) { return upper(pointer->right) - upper(pointer->left); }
 
   // устанавливает корректное значение поля height
   void fixHeight(node *pointer) {
@@ -22,7 +53,7 @@ class node {
 
   // правый поворот вокруг pointer
   node *rotateRight(node *pointer) {
-    node *q = pointer->left;
+    node * q = pointer->left;
     pointer->left = q->right;
     q->right = pointer;
     fixHeight(pointer);
@@ -32,7 +63,7 @@ class node {
 
   // левый поворот вокруг q
   node *rotateLeft(node *q) {
-    node *pointer = q->right;
+    node * pointer = q->right;
     q->right = pointer->left;
     pointer->left = q;
     fixHeight(q);
@@ -43,13 +74,13 @@ class node {
   // балансировка узла pointer
   node *balance(node *pointer) {
     fixHeight(pointer);
-    if (bFactor(pointer) == 2) {
-      if (bFactor(pointer->right) < 0)
+    if (heightDifference(pointer) == 2) {
+      if (heightDifference(pointer->right) < 0)
         pointer->right = rotateRight(pointer->right);
       return rotateLeft(pointer);
     }
-    if (bFactor(pointer) == -2) {
-      if (bFactor(pointer->left) > 0)
+    if (heightDifference(pointer) == -2) {
+      if (heightDifference(pointer->left) > 0)
         pointer->left = rotateLeft(pointer->left);
       return rotateRight(pointer);
     }
@@ -85,47 +116,21 @@ class node {
     if (k < pointer->key) pointer->left = remove(pointer->left, k);
     else if (k > pointer->key) pointer->right = remove(pointer->right, k);
     else { //  k == pointer->key
-      node *q = pointer->left;
-      node *r = pointer->right;
+      node * q = pointer->left;
+      node * r = pointer->right;
       delete pointer;
       if (!r) return q;
-      node *min = findMin(r);
+      node * min = findMin(r);
       min->right = removeMin(r);
       min->left = q;
       return balance(min);
     }
     return balance(pointer);
   }
-  // геттеры и сеттеры
-  int GetKey() const {
-    return key;
-  }
-  void SetKey(int k) {
-    key = k;
-  }
-  unsigned char GetHeight() const {
-    return height;
-  }
-  void SetHeight(unsigned char h) {
-    height = h;
-  }
-  node *GetLeft() const {
-    return left;
-  }
-  void SetLeft(node *l) {
-    left = l;
-  }
-  node *GetRight() const {
-    return right;
-  }
-  void SetRight(node *r) {
-    right = r;
-  }
 
  private:
   // структура для представления узлов дерева
-  int key;
-  unsigned char height;
-  node *left;
-  node *right;
+  node *root;
+  size_type size;
 };
+}
