@@ -58,6 +58,7 @@ public:
   bool empty() { return size_list == 0; }
   void clear();
   void swap(list &other);
+  void reverse() { std::swap(head, tail); }
 
   // private:
   class node {
@@ -125,28 +126,30 @@ public:
       push_back(value);
       it.current = tail;
     } else {
-      while (it != pos) {
+      while (it.current != pos.current->prev) {
         ++it;
       }
-      --it;
+      // возможно тут есть ошибка, надо перепроверить
       node *new_node = new node(value, pos.current, it.current);
       it.current->next = new_node;
       pos.current->prev = new_node;
       size_list++;
-      ++it;
     }
     return it;
   }
+
+  // если после использования, воспользоваться итератором - будет сега. В
+  // оригинале также//
   void erase(ListIterator pos) {
     if (pos.current == head) {
       pop_front();
     } else if (pos.current == tail->next) {
       pop_back();
     } else {
+      // возможно тут есть ошибка, надо перепроверить
       node *previous = pos.current->prev;
       node *to_delete = previous->next;
       previous->next = to_delete->next;
-//      ++pos;
       pos.current->prev = to_delete->prev;
       size_list--;
     }
@@ -157,9 +160,6 @@ public:
     }
   }
 };
-
-// template <typename value_type> void list<value_type>::node_delete(int index)
-// {}
 
 template <typename value_type>
 void list<value_type>::insert(value_type data, int index) {
@@ -203,48 +203,9 @@ template <typename T> list<T>::list(const list<value_type> &other) {
 }
 
 template <typename T> void list<T>::swap(list &other) {
-  node *current = head;
-  node *current_other = other.head;
-  while (current != nullptr && current_other != nullptr) {
-    std::swap(current->data, current_other->data);
-    current = current->next;
-    current_other = current_other->next;
-  }
-  //  if(size() == other.size()) {
-  //    while (current != nullptr) {
-  //      std::swap(current->data, current_other->data);
-  //      current = current->next;
-  //      current_other = current_other->next;
-  //    }
-  //  } else if(size() < other.size()) {
-  //    while (current_other != nullptr) {
-  //      if(current == nullptr) {
-  //        push_back(current_other->data);
-  //        current = current->next;
-  //        node *previus = current_other;
-  //        current_other = current_other->next;
-  //        delete previus;
-  //      } else {
-  //        std::swap(current->data, current_other->data);
-  //        current = current->next;
-  //        current_other = current_other->next;
-  //      }
-  //    }
-  //  } else {
-  //    while (current != nullptr) {
-  //      if (current_other == nullptr) {
-  //        other.push_back(current->data);
-  //        current_other = current_other->next;
-  //        node *previus = current;
-  //        current = current->next;
-  //        delete previus;
-  //      } else {
-  //        std::swap(current->data, current_other->data);
-  //        current = current->next;
-  //        current_other = current_other->next;
-  //      }
-  //    }
-  //  }
+  std::swap(size_list, other.size_list);
+  std::swap(head, other.head);
+  std::swap(tail, other.tail);
 }
 
 template <typename T> void list<T>::clear() {

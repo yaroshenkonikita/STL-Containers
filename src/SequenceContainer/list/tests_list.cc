@@ -260,17 +260,19 @@ TEST(list_test, swap2) {
   EXPECT_EQ(basic2.front(), "hello");
   basic.swap(basic2);
   EXPECT_EQ(basic.front(), "hello");
-  EXPECT_EQ(basic.back(), "lets");
-  EXPECT_EQ(basic2.back(), "go!");
+  EXPECT_EQ(basic.back(), "go!");
+  EXPECT_EQ(basic2.back(), "3");
   EXPECT_EQ(basic2.front(), "1");
 }
 
-// TEST(list_test, swap3) {
-//   s21::list<std::string> basic;
-//   s21::list<std::string> basic2({"hello", "world", "lets", "go!"});
-//   basic.swap(basic2);
-//   EXPECT_EQ(basic.front(),"hello");
-// }
+ TEST(list_test, swap3) {
+   s21::list<std::string> basic;
+   s21::list<std::string> basic2({"hello", "world", "lets", "go!"});
+   basic.swap(basic2);
+   EXPECT_TRUE(basic2.empty());
+   EXPECT_EQ(basic.size(),(size_t)4);
+   EXPECT_EQ(basic.front(),"hello");
+ }
 
 TEST(list_test, swap4) {
   std::list<std::string> basic;
@@ -363,13 +365,38 @@ TEST(list_test, insert_iter4) {
 
 TEST(list_test, erase) {
   s21::list<std::string> basic2 = {"hello", "world", "lets", "go!"};
-  s21::list<std::string>::ListIterator it(basic2.begin());
+  auto it(basic2.begin());
   EXPECT_EQ(basic2.front(), "hello");
   basic2.erase(it);
   EXPECT_EQ(basic2.front(), "world");
-  ++it; // ecли не передвинуть итератор будет СЕГА!!!
+//  ++it; // ecли не передвинуть итератор будет СЕГА!!!
+//  basic2.erase(it);
+//  EXPECT_EQ(basic2.front(), "lets");
+}
+
+TEST(list_test, std_erase) {
+  std::list<std::string> basic2 = {"hello", "world", "lets", "go!"};
+  std::list<std::string>::iterator it(basic2.begin());
+  EXPECT_EQ(basic2.front(), "hello");
   basic2.erase(it);
-  EXPECT_EQ(basic2.front(), "lets");
+  EXPECT_EQ(basic2.front(), "world");
+//  ++it; // ecли не передвинуть итератор будет СЕГА!!!
+//  basic2.erase(it);
+//  EXPECT_EQ(basic2.front(), "lets");
+}
+
+TEST(list_test, erase2) {
+  s21::list<std::string> basic2 = {"hello", "world", "lets", "go!"};
+  auto it(basic2.end());
+  EXPECT_EQ(basic2.back(), "go!");
+  basic2.erase(it);
+  EXPECT_EQ(basic2.back(), "lets");
+  it = basic2.begin();
+  basic2.erase(it);
+  EXPECT_EQ(basic2.front(), "world");
+  //  ++it; // ecли не передвинуть итератор будет СЕГА!!!
+  //  basic2.erase(it);
+  //  EXPECT_EQ(basic2.front(), "lets");
 }
 
 // TEST(list_test, max_size) {
