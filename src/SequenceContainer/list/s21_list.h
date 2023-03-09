@@ -10,6 +10,7 @@
 #include "limits"
 #include "list"
 #include "utility"
+#include <functional>
 
 namespace s21 {
 
@@ -58,7 +59,9 @@ public:
   bool empty() { return size_list == 0; }
   void clear();
   void swap(list &other);
-  void reverse() { std::swap(head, tail); }
+  void reverse();
+  void unique();
+  void sort();
 
   // private:
   class node {
@@ -73,6 +76,12 @@ public:
       this->next = next;
       this->prev = prev;
     }
+    explicit node(size_t data = size_t(), node *next = nullptr,
+                  node *prev = nullptr) { // explicit ???
+      this->data = data;
+      this->next = next;
+      this->prev = prev;
+    }
   };
   node *head;
   node *tail;
@@ -82,39 +91,44 @@ public:
   public:
     node *current;
 
-    ListIterator operator++() {
-      //      ListIterator it;
-      current = current->next;
-      //      ListIterator it = *this;
-      //      ++*this;
+    ListIterator &operator++() {
+      if (current)
+        current = current->next;
       return *this;
     }
+
+    // Postfix ++ overload
+    ListIterator operator++(int) {
+      ListIterator ListIterator = *this;
+      ++*this;
+      return ListIterator;
+    }
+
     ListIterator &operator--() {
-      current = current->prev;
+      if (current)
+        current = current->prev;
       return *this;
     }
 
     value_type &operator*() { return current->data; }
 
     bool operator==(const ListIterator &other) const {
-      return current == other.current;
+      return current->next == other.current->next;
     }
     bool operator!=(const ListIterator &other) const {
-      return current != other.current;
+      return current->next != other.current->next;
     }
 
-    ListIterator() { current = nullptr; }
+    ListIterator() { current = this->head; }
     explicit ListIterator(node *other) { current = other; }
   };
 
-  ListIterator begin() {
-    //    ListIterator it(this->head);
-    return ListIterator(this->head);
-  }
+  ListIterator begin() { return ListIterator(head); }
 
   ListIterator end() {
-    //    ListIterator it(this->tail->next);
-    return ListIterator(this->tail->next);
+    node *end_node = new node(size_list, nullptr, tail);
+    tail->next = end_node;
+    return ListIterator(end_node);
   }
 
   ListIterator insert_iter(ListIterator pos, const_reference value) {
@@ -289,6 +303,57 @@ template <typename value_type> void list<value_type>::pop_back() {
   tail = tail->prev;
   delete current;
   size_list--;
+}
+
+template <typename T> void list<T>::reverse() {
+  auto it = begin();
+  for (; it != end(); --it) {
+    std::swap(it.current->next, it.current->prev);
+  }
+  auto it2 = end();
+  it2.current->next = nullptr;
+  it2.current->prev = it.current;
+  std::swap(head, tail);
+}
+
+template <typename T> void list<T>::unique() {
+  auto current = begin();
+  ListIterator next(head->next);
+  while (next != end()) {
+    if (*current == *next) {
+      auto del = current;
+      current++;
+      erase(del);
+      next++;
+    } else {
+      current++;
+      next++;
+    }
+  }
+}
+
+template <typename T> void list<T>::sort() {
+  list<T> temp;
+  ListIterator cur(begin());
+  while (temp.size() == size()) {
+    for (;cur != end();cur++) {
+      value_type is_less = cur.current->data;
+      ListIterator next(cur.current->next);
+      ListIterator del(nullptr);
+      while (next != end()) {
+        if (std::less<T>{}(is_less,next.current->data)) {
+          next++;
+        } else {
+          is_less = next.current->data;
+          del.current = next.current;
+          next++;
+        }
+      }
+      erase(del);
+      temp.push_back(is_less);
+    }
+  }
+  this->swap(temp);
 }
 } // namespace s21
 #endif // CPP2_S21_CONTAINERS_0_SRC_S21_LIST_H

@@ -357,7 +357,7 @@ TEST(list_test, insert_iter4) {
   ++it;
   ++it;
   ++it;
-  ++it;
+  it++;
   EXPECT_EQ(*basic2.begin(), basic2.front());
   basic2.insert_iter(it, "lol");
   EXPECT_EQ(basic2.back(), "lol");
@@ -406,8 +406,8 @@ TEST(list_test, erase2) {
 // }
 //
 // TEST(list_test, max_size2) {
-//   std::list<int> basic2;
-//   s21::list<int> basic;
+//   std::list<char> basic2;
+//   s21::list<char> basic;
 //   EXPECT_EQ(basic2.max_size(),basic.max_size());
 // }
 

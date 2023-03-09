@@ -1,20 +1,16 @@
 #include "s21_list.h"
 
 int main() {
-  s21::list<int>basic({1,2,3,4,5,6,7});
-  std::list<std::string>stl({"hello", "213", "hello, world", "2123", "12323", "1","3"});
-  std::list<std::string>stl2({"1", "2"});
-  auto it_stl = stl.begin();
-//  it_stl++;
-//  it_stl++;
-//  stl.sort();
-//  for (auto it3= stl.begin(); it3 != stl.end();++it3) {
-//    std::cout << *it3 << std::endl;
-//  }
-  stl.splice(it_stl, stl2);
-  for (auto it3= stl.begin(); it3 != stl.end();++it3) {
+  s21::list<int>basic({2,3,1,0,12,3});
+  basic.sort();
+  for (auto it3= basic.begin(); it3 != basic.end();++it3) {
     std::cout << *it3 << std::endl;
   }
+//  std::list<int>basic2({1,2,3,4,5,6,7,100,123});
+//    basic2.reverse();
+//  for (auto it3= basic2.end(); it3 != basic2.begin();--it3) {
+//    std::cout << *it3 << std::endl;
+//  }
 //  basic.reverse();
 //  for (auto it3= basic.begin(); it3 != basic.end();++it3) {
 //    std::cout << *it3 << std::endl;
