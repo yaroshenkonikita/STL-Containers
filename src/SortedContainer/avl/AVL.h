@@ -1,7 +1,7 @@
 #include "iostream"
 
 namespace s21 {
-template<typename T, typename Key>
+template<typename Key, typename T>
 class AVL {
  protected:
   class Node;
@@ -15,13 +15,14 @@ class AVL {
 
  public:
 
-  AVL();
+  AVL() : root(new Node) {}
 
-  AVL(Node *root) {
+  AVL(const Node &other) : AVL() {
 
   }
 
   AVL(std::initializer_list<key_type> const &items) {
+    root = new Node();
     for (key_type item : items) {
       insert(item);
     }
@@ -120,11 +121,11 @@ class AVL {
  private:
   // структура для представления узлов дерева
   Node *root;
-  size_type size;
+  size_type size{};
 };
 
-template<typename T, typename Key>
-class AVL<T, Key>::Node {
+template<typename Key, typename T>
+class AVL<Key, T>::Node {
  public:
   Node() = default;
   explicit Node(key_type key) : key_(key) {}
