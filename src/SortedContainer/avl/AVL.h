@@ -1,120 +1,136 @@
 #include "iostream"
 
 namespace s21 {
-template <class T>
-class BinSTree;
+template<typename T, typename Key>
+class AVL {
+ protected:
+  class Node;
 
-template <class T>
-class TreeNode {
- private:
-  TreeNode *left;
-  TreeNode *right;
+  using size_type = std::size_t;
+  using key_type = Key;
+  using reference = key_type&;
+  using const_reference = const key_type&;
+  using node_type = Node;
+  using pointer = node_type*;
 
  public:
-  T data;
 
-  // Конструктор инициализирует поля данных и указателей значение NULL соответствует пустому поддереву
-  TreeNode(const T& item, TreeNode<T> *leftChild, TreeNode<T> *rightChild) : data(item), left(leftChild), right(rightChild) {}
+  AVL();
 
-  // Методы доступа к полям указателей
-  TreeNode* Left(void) const;
-  TreeNode* Right(void) const;
+  AVL(Node *root) {
 
-  // Создать объект TreeNode с указательными полями leftChild и rightChild. По умолчанию указатели содержат NULL.
-  TreeNode *GetTreeNode(T item, TreeNode<T> *leftChild = NULL, TreeNode<T> *rightChild = NULL) {
-    TreeNode<T> *p;
-    // вызвать new для создания нового узла, передать туда параметры leftChild и rightChild
-    p = new TreeNode<T> (item, leftChild, rightChild);
-    // если памяти недостаточно, завершить программу
-    if (p == NULL) exit(1);
-    // вернуть указатель на выделенную системой память
-    return p;
   }
 
-  // освободить динамическую память, занимаемую данным узлом
-  void FreeTreeNode(TreeNode<T> *p) { delete p; }
-
-  // симметричное рекурсивное прохождение узлов дерева
-  void Inorder (TreeNode<T> *child, void visit(T& item)) {
-    if (child != NULL) {
-      // спуститься по левому поддереву
-      Inorder(child->Left(), visit);
-      // посетить узел
-      visit(child->data);
-      // спуститься по правому поддереву
-      Inorder(child->Right(), visit);
+  AVL(std::initializer_list<key_type> const &items) {
+    for (key_type item : items) {
+      insert(item);
     }
   }
 
-  // обратное рекурсивное прохождение узлов дерева
-  void Postorder (TreeNode<T> *child, void visit (T& item))
-  {
-    if (child != NULL) {
-      // спуститься по левому поддереву
-      Postorder(child->Left(), visit);
-      // спуститься по правому поддереву
-      Postorder(child->Right(), visit);
-      // посетить узел
-      visit(child->data);
+  // работа с полем height
+  unsigned char upper(Node *pointer) { return pointer ? pointer->height : 0; }
 
+  // вычисляет разницу высот правого и левого поддеревьев
+  int heightDifference(Node *pointer) { return upper(pointer->right) - upper(pointer->left); }
+
+  // устанавливает корректное значение поля height
+  void fixHeight(Node *pointer) {
+    unsigned char heightLeft = upper(pointer->left);
+    unsigned char heightRight = upper(pointer->right);
+    pointer->height = (heightLeft > heightRight ? heightLeft : heightRight) + 1;
+  }
+
+  // правый поворот вокруг pointer
+  Node *rotateRight(Node *pointer) {
+    Node * q = pointer->left;
+    pointer->left = q->right;
+    q->right = pointer;
+    fixHeight(pointer);
+    fixHeight(q);
+    return q;
+  }
+
+  // левый поворот вокруг q
+  Node *rotateLeft(Node *q) {
+    Node * pointer = q->right;
+    q->right = pointer->left;
+    pointer->left = q;
+    fixHeight(q);
+    fixHeight(pointer);
+    return pointer;
+  }
+
+  // балансировка узла pointer
+  Node *balance(Node *pointer) {
+    fixHeight(pointer);
+    if (heightDifference(pointer) == 2) {
+      if (heightDifference(pointer->right) < 0)
+        pointer->right = rotateRight(pointer->right);
+      return rotateLeft(pointer);
     }
-  }
-
-  // проходит дерево с целью подсчета его листьев
-  void CountLeaf (TreeNode<T> *child, int& count) {
-    // Использовать обратный метод прохождения
-    if (child != NULL) {
-      CountLeaf(child->Left(), count);  // пройти левое поддерево
-      CountLeaf(child->Right(), count); // пройти правое поддерево
-      // Проверить, является ли данный узел листом.
-      // Если да, то произвести приращение переменной count
-      if (child->Left() == NULL && child->Right() == NULL) count++;
+    if (heightDifference(pointer) == -2) {
+      if (heightDifference(pointer->left) > 0)
+        pointer->left = rotateLeft(pointer->left);
+      return rotateRight(pointer);
     }
+    return pointer; // балансировка не нужна
   }
 
-  // Вычисляется глубина левого и правого поддеревьев
-  int Depth (TreeNode<T> *child) {
-    int depthLeft, depthRight, depthval;
-    if (child == NULL) depthval = -1;
-    else {
-      depthLeft = Depth(child->Left());
-      depthRight = Depth(child->Right());
-      depthval = 1 + (depthLeft > depthRight ? depthLeft : depthRight);
+  // вставка ключа k в дерево с корнем pointer
+  Node *insert(Node *pointer, int k) {
+    if (!pointer) return new Node(k);
+    if (k < pointer->key)
+      pointer->left = insert(pointer->left, k);
+    else
+      pointer->right = insert(pointer->right, k);
+    return balance(pointer);
+  }
+
+  // поиск узла с минимальным ключом в дереве pointer
+  Node *findMin(Node *pointer) {
+    return pointer->left ? findMin(pointer->left) : pointer;
+  }
+
+  // удаление узла с минимальным ключом из дерева pointer
+  Node *removeMin(Node *pointer) {
+    if (pointer->left == 0)
+      return pointer->right;
+    pointer->left = removeMin(pointer->left);
+    return balance(pointer);
+  }
+
+  // удаление ключа k из дерева pointer
+  Node *remove(Node *pointer, int k) {
+    if (!pointer) return 0;
+    if (k < pointer->key) pointer->left = remove(pointer->left, k);
+    else if (k > pointer->key) pointer->right = remove(pointer->right, k);
+    else { //  k == pointer->key
+      Node * q = pointer->left;
+      Node * r = pointer->right;
+      delete pointer;
+      if (!r) return q;
+      Node * min = findMin(r);
+      min->right = removeMin(r);
+      min->left = q;
+      return balance(min);
     }
-    return depthval;
+    return balance(pointer);
   }
 
-  // возвращает указатель на вновь созданный узел
-  TreeNode *CopyTree(TreeNode<T> *child) {
-    TreeNode *newLeftChild, *newRightChild, *newNode;
-    // остановить рекурсивное прохождение при достижении пустого дерева
-    if (child == NULL) return NULL;
-    // CopyTree строит новое дерево в процессе прохождения
-    // узлов дерева child. в каждом узле это-го дерева функция
-    // CopyTree проверяет наличие левого сына. если он есть,
-    // создается его копия. в противном случае возвращается
-    // NULL. CopyTree создает копию узла с помощью GetTreeNode
-    // и подвешивает к нему копии сыно-вей.
-    if (child->Left() != NULL) newLeftChild = CopyTree(child->Left());
-    else newLeftChild = NULL;
-    if (child->Right() != NULL) newRightChild = CopyTree(child->Right());
-    else newRightChild = NULL;
-    newNode = GetTreeNode(child->data, newLeftChild, newRightChild);
-    // вернуть указатель на вновь создан-ное дерево
-    return newNode;
-  }
-
-  // удалить каждый узел при его посещении
-  void DeleteTree(TreeNode *child) {
-    if(child != NULL) {
-      DeleteTree(child->Left());
-      DeleteTree(child->Right());
-      FreeTreeNode(child);
-    }
-  }
-
-  // friend для доступа к полям left и right
-  friend class BinSTree<T>;
+ private:
+  // структура для представления узлов дерева
+  Node *root;
+  size_type size;
 };
 
+template<typename T, typename Key>
+class AVL<T, Key>::Node {
+ public:
+  Node() = default;
+  explicit Node(key_type key) : key_(key) {}
+  Node(key_type value, node_type *node) : key_(value), _parent(node) {}
+  ~Node() { delete _left; delete _right; }
+  key_type key_{};
+  pointer _left{}, _right{}, _parent{};
+};
 }
