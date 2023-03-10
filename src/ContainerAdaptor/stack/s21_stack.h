@@ -8,11 +8,11 @@
 #include <iostream>
 #include <stack>
 
-#ifndef CPP2_S21_CONTAINERS_0_SRC_S21_STACK_H
-#define CPP2_S21_CONTAINERS_0_SRC_S21_STACK_H
+#ifndef CPP2_S21_CONTAINERS_0_SRC_S21_stack_H
+#define CPP2_S21_CONTAINERS_0_SRC_S21_stack_H
 namespace s21 {
 
-template <typename T> class Stack {
+template <typename T> class stack {
   using value_type = T;
   using reference = T &;
   using const_reference = const T &;
@@ -30,18 +30,18 @@ private:
   node *upper_element;
 
 public:
-  // Stack Member functions
-  Stack() : upper_element(nullptr) {}
-  Stack(std::initializer_list<value_type> const &items) {
+  // stack Member functions
+  stack() : upper_element(nullptr) {}
+  stack(std::initializer_list<value_type> const &items) {
     upper_element = nullptr;
     for (value_type element : items) {
       push(element);
     }
   }
-  Stack(const Stack<value_type> &other) {
+  stack(const stack<value_type> &other) {
     upper_element = nullptr;
     node *temp = other.upper_element;
-    Stack<value_type> buf;
+    stack<value_type> buf;
     while (temp != nullptr) {
       buf.push(temp->value);
       temp = temp->next;
@@ -51,17 +51,17 @@ public:
       buf.pop();
     }
   }
-  Stack(Stack &&other) noexcept {
+  stack(stack &&other) noexcept {
     upper_element = other.upper_element;
     other.upper_element = nullptr;
   }
-  ~Stack() {
+  ~stack() {
     while (!empty()) {
       pop();
     }
   }
 
-  Stack &operator=(Stack &&other) noexcept {
+  stack &operator=(stack &&other) noexcept {
     if (this != &other) {
       while (!empty()) {
         pop();
@@ -72,7 +72,7 @@ public:
     return *this;
   }
 
-  // Stack Element access
+  // stack Element access
   const_reference top() {
     if (empty()) {
       throw std::length_error("stack is empty");
@@ -80,7 +80,7 @@ public:
     return upper_element->value;
   }
 
-  // Stack Capacity
+  // stack Capacity
   bool empty() const { return upper_element == nullptr; }
   size_type size() {
     node *new_node = upper_element;
@@ -95,7 +95,7 @@ public:
     return result;
   }
 
-  // Stack Modifiers
+  // stack Modifiers
   void push(const_reference value) {
     node *new_node = new node(value, upper_element);
     upper_element = new_node;
@@ -108,7 +108,7 @@ public:
     upper_element = upper_element->next;
     delete del_node;
   }
-  void swap(Stack &other) { std::swap(upper_element, other.upper_element); }
+  void swap(stack &other) { std::swap(upper_element, other.upper_element); }
 };
 } // namespace s21
-#endif // CPP2_S21_CONTAINERS_0_SRC_S21_STACK_H
+#endif // CPP2_S21_CONTAINERS_0_SRC_S21_stack_H
