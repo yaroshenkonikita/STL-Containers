@@ -1,25 +1,29 @@
 #include "iostream"
 
 namespace s21 {
-template<typename Key, typename T>
+template<typename Key>
 class AVL {
- protected:
-  class Node;
-
+ public:
   using size_type = std::size_t;
   using key_type = Key;
   using reference = key_type&;
   using const_reference = const key_type&;
+ protected:
+  class Node {
+   public:
+    Node() = default;
+    explicit Node(key_type key) : key_(key) {}
+    Node(key_type value, Node *node) : key_(value), _parent(node) {}
+    ~Node() { delete _left; delete _right; }
+    key_type key_{};
+    Node* _left{}, _right{}, _parent{};
+  };
+
+ public:
   using node_type = Node;
   using pointer = node_type*;
 
- public:
-
-  AVL() : root(new Node) {}
-
-  AVL(const Node &other) : AVL() {
-
-  }
+  AVL() : root(new Node()) {}
 
   AVL(std::initializer_list<key_type> const &items) {
     root = new Node();
@@ -80,10 +84,8 @@ class AVL {
   // вставка ключа k в дерево с корнем pointer
   Node *insert(Node *pointer, int k) {
     if (!pointer) return new Node(k);
-    if (k < pointer->key)
-      pointer->left = insert(pointer->left, k);
-    else
-      pointer->right = insert(pointer->right, k);
+    if (k < pointer->key) pointer->left = insert(pointer->left, k);
+    else pointer->right = insert(pointer->right, k);
     return balance(pointer);
   }
 
@@ -122,16 +124,5 @@ class AVL {
   // структура для представления узлов дерева
   Node *root;
   size_type size{};
-};
-
-template<typename Key, typename T>
-class AVL<Key, T>::Node {
- public:
-  Node() = default;
-  explicit Node(key_type key) : key_(key) {}
-  Node(key_type value, node_type *node) : key_(value), _parent(node) {}
-  ~Node() { delete _left; delete _right; }
-  key_type key_{};
-  pointer _left{}, _right{}, _parent{};
 };
 }
