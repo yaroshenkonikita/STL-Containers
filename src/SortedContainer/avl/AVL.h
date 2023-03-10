@@ -17,8 +17,8 @@ class AVL {
     explicit Node(key_type key) : key_(key) {}
     Node(key_type value, Node *node) : key_(value), _parent(node) {}
     ~Node() { delete _left; delete _right; }
-    key_type key_{};
-    Node* _left{}, _right{}, _parent{};
+    key_type key_;
+    Node* _left, _right, _parent;
   };
 
  public:
@@ -125,6 +125,6 @@ class AVL {
  private:
   // структура для представления узлов дерева
   Node *root;
-  size_type size{};
+  size_type size;
 };
 }
