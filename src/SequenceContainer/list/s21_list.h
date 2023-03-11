@@ -306,14 +306,13 @@ template <typename value_type> void list<value_type>::pop_back() {
 }
 
 template <typename T> void list<T>::reverse() {
-  auto it = begin();
-  for (; it != end(); --it) {
-    std::swap(it.current->next, it.current->prev);
+  auto current = head;
+  while (current != nullptr) {
+    node *next_node = current->next;
+    std::swap(current->next, current->prev);
+    current = next_node;
   }
-  auto it2 = end();
-  it2.current->next = nullptr;
-  it2.current->prev = it.current;
-  std::swap(head, tail);
+  std::swap(head,tail);
 }
 
 template <typename T> void list<T>::unique() {

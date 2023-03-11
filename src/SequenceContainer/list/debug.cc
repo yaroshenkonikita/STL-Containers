@@ -2,7 +2,10 @@
 
 int main() {
   s21::list<int>basic({2,3,1,0,12,3});
-  basic.sort();
+  for (auto it3= basic.begin(); it3 != basic.end();++it3) {
+    std::cout << *it3 << std::endl;
+  }
+  basic.reverse();
   for (auto it3= basic.begin(); it3 != basic.end();++it3) {
     std::cout << *it3 << std::endl;
   }

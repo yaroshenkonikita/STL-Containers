@@ -398,6 +398,33 @@ TEST(list_test, erase2) {
   //  basic2.erase(it);
   //  EXPECT_EQ(basic2.front(), "lets");
 }
+TEST(list_test, reverse) {
+  s21::list<std::string> basic2 = {"hello", "world", "lets", "go!"};
+  EXPECT_EQ(basic2.front(), "hello");
+  basic2.reverse();
+  EXPECT_EQ(basic2.front(), "go!");
+}
+
+TEST(list_test, reverse2) {
+  s21::list<std::string> basic2;
+  EXPECT_TRUE(basic2.empty());
+  basic2.reverse();
+  EXPECT_TRUE(basic2.empty());
+}
+
+TEST(list_test, reverse3) {
+  s21::list<std::string> basic2({"1"});
+  EXPECT_EQ(basic2.front(), "1");
+  basic2.reverse();
+  EXPECT_EQ(basic2.front(), "1");
+}
+
+TEST(list_test, reverse4) {
+  s21::list<int> basic2({1,2,3,12312312,100500});
+  EXPECT_EQ(basic2.front(), 1);
+  basic2.reverse();
+  EXPECT_EQ(basic2.front(), 100500);
+}
 
 // TEST(list_test, max_size) {
 //   std::list<std::string> basic2({"hello", "world", "lets", "go!"});
