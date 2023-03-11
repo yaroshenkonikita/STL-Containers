@@ -1,10 +1,20 @@
 #include <gtest/gtest.h>
 
 #include "s21_stack.h"
+#include "stack"
 
 TEST(stack_test, move_constructor) {
   s21::stack<int> basic({1, 2, 3, 4});
   s21::stack<int> basic2(std::move(basic));
+  EXPECT_TRUE(basic.empty());
+  EXPECT_EQ(basic.size(), size_t(0));
+  EXPECT_EQ(basic2.top(), 4);
+  EXPECT_EQ(basic2.size(), size_t(4));
+}
+
+TEST(stack_test, move_constructor_std) {
+  std::stack<int> basic({1, 2, 3, 4});
+  std::stack<int> basic2(std::move(basic));
   EXPECT_TRUE(basic.empty());
   EXPECT_EQ(basic.size(), size_t(0));
   EXPECT_EQ(basic2.top(), 4);
