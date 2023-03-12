@@ -19,7 +19,7 @@ template <typename T> class list {
   using reference = T &;
   using const_reference = const T &;
   using size_type = size_t;
-  //    using iterator = ListIterator<T>;
+  //  using iterator = ListIterator;
   //    using const_iterator = ListConstIterator<T>;
 
 public:
@@ -129,6 +129,42 @@ public:
     node *end_node = new node(size_list, nullptr, tail);
     tail->next = end_node;
     return ListIterator(end_node);
+  }
+
+//  void InsertionSort() {
+//    ListIterator i(head->next);
+//    for (; i.current != nullptr; ++i) {
+//      value_type &temp = i.current->data;
+//      ListIterator j(i.current->prev);
+//      ListIterator k(i);
+//      //    while (j.head->value > temp) {
+//      while (j.current->data > temp) {
+//        std::swap(k,j);
+//        //      j.swap(k);
+//        if (j.current == head) {
+//          break;
+//        } else {
+//          --k;
+//          --j;
+//        }
+//      }
+//    }
+//  }
+  void InsertionSort(ListIterator start, ListIterator end) {
+    for (ListIterator i(start++); i != end; ++i) {
+      value_type &temp = i.current->data;
+      ListIterator j(i.current->prev);
+      ListIterator k(i);
+      while (j.current->data > temp) {
+        std::swap(j.current,k.current);
+        if (j == start) {
+          break;
+        } else {
+          --k;
+          --j;
+        }
+      }
+    }
   }
 
   ListIterator insert_iter(ListIterator pos, const_reference value) {
@@ -308,11 +344,11 @@ template <typename value_type> void list<value_type>::pop_back() {
 template <typename T> void list<T>::reverse() {
   auto current = head;
   while (current != nullptr) {
-    node *next_node = current->next;
+    auto next_node = current->next;
     std::swap(current->next, current->prev);
     current = next_node;
   }
-  std::swap(head,tail);
+  std::swap(head, tail);
 }
 
 template <typename T> void list<T>::unique() {
@@ -331,28 +367,27 @@ template <typename T> void list<T>::unique() {
   }
 }
 
-template <typename T> void list<T>::sort() {
-  list<T> temp;
-  ListIterator cur(begin());
-  while (temp.size() == size()) {
-    for (;cur != end();cur++) {
-      value_type is_less = cur.current->data;
-      ListIterator next(cur.current->next);
-      ListIterator del(nullptr);
-      while (next != end()) {
-        if (std::less<T>{}(is_less,next.current->data)) {
-          next++;
-        } else {
-          is_less = next.current->data;
-          del.current = next.current;
-          next++;
-        }
-      }
-      erase(del);
-      temp.push_back(is_less);
-    }
-  }
-  this->swap(temp);
-}
+template <typename T> void list<T>::sort() { InsertionSort(begin(),end()); }
+// template <typename T> void list<T>::InsertionSort(ListIterator start,
+// ListIterator end) {
+//   ListIterator i(start.current->next);
+//   for (; i != end; ++i) {
+//     value_type &temp = i.current->data;
+//     ListIterator j(i.current->prev);
+//     ListIterator k = i;
+////    while (j.head->value > temp) {
+//    while (j.current->data > temp) {
+//      std::swap(j,k);
+////      j.swap(k);
+//      if (j == start) {
+//        break;
+//      } else {
+//        --k;
+//        --j;
+//      }
+//    }
+//  }
+//}
+
 } // namespace s21
 #endif // CPP2_S21_CONTAINERS_0_SRC_S21_LIST_H
