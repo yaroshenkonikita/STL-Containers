@@ -1,7 +1,7 @@
 .PHONY: all clean test $(SOURCENAME).a gcov_report style
 #-pedantic -fsanitize=address
 CC = g++
-CFLAGS = -Wall -Werror -Wextra -std=c++17
+CFLAGS = -Wall -Werror -Wextra -std=c++17 -pedantic -fsanitize=address
 TFLAGS = -lgtest
 RFLAGS = -fprofile-arcs -ftest-coverage
 SOURCENAME = s21_list

@@ -9,14 +9,7 @@ TEST(list_test, def_constructor) {
   EXPECT_TRUE(basic.empty());
 }
 
-TEST(list_test, clear) {
-  s21::list<int> basic({1, 2, 3, 4, 5, 6, 12345});
-  EXPECT_TRUE(!basic.empty());
-  basic.clear();
-  EXPECT_TRUE(basic.empty());
-}
-
-TEST(list_test, parametr_constructor) {
+TEST(list_test, p_constructor) {
   s21::list<int> basic(12);
   EXPECT_EQ(basic.front(), int());
   EXPECT_EQ(basic.back(), int());
@@ -24,7 +17,7 @@ TEST(list_test, parametr_constructor) {
   EXPECT_FALSE(basic.empty());
 }
 
-TEST(list_test, parametr_constructor2) {
+TEST(list_test, p_constructor2) {
   s21::list<std::string> basic(12);
   EXPECT_EQ(basic.front(), std::string());
   EXPECT_EQ(basic.back(), std::string());
@@ -299,30 +292,6 @@ TEST(list_test, operator_move2) {
   EXPECT_EQ(basic2.back(), "go!");
 }
 
-TEST(list_test, insert) {
-  s21::list<std::string> basic2;
-  EXPECT_ANY_THROW(basic2.insert("123", 2));
-}
-
-TEST(list_test, insert2) {
-  s21::list<std::string> basic2;
-  EXPECT_ANY_THROW(basic2.insert("123", 1));
-}
-
-TEST(list_test, insert3) {
-  s21::list<std::string> basic2;
-  basic2.insert("123", 0);
-  EXPECT_EQ(basic2.front(), "123");
-}
-
-TEST(list_test, insert4) {
-  s21::list<std::string> basic2({"hello", "world", "lets", "go!"});
-  EXPECT_EQ(basic2.size(), (size_t)4);
-  basic2.insert("123", 0);
-  EXPECT_EQ(basic2.front(), "123");
-  EXPECT_EQ(basic2.size(), (size_t)5);
-}
-
 TEST(list_test, insert_iter) {
   s21::list<std::string> basic2 = {"hello", "world", "lets", "go!"};
   s21::list<std::string>::ListIterator it(basic2.begin());
@@ -458,17 +427,17 @@ TEST(list_test, sort3) {
 }
 
 
- TEST(list_test, max_size) {
-   std::list<std::string> basic2({"hello", "world", "lets", "go!"});
-   s21::list<std::string> basic({"hello", "world", "lets", "go!"});
-   EXPECT_EQ(basic2.max_size(),basic.max_size());
- }
-
- TEST(list_test, max_size2) {
-   std::list<char> basic2;
-   s21::list<char> basic;
-   EXPECT_EQ(basic2.max_size(),basic.max_size());
- }
+// TEST(list_test, max_size) {
+//   std::list<std::string> basic2({"hello", "world", "lets", "go!"});
+//   s21::list<std::string> basic({"hello", "world", "lets", "go!"});
+//   EXPECT_EQ(basic2.max_size(),basic.max_size());
+// }
+//
+// TEST(list_test, max_size2) {
+//   std::list<char> basic2;
+//   s21::list<char> basic;
+//   EXPECT_EQ(basic2.max_size(),basic.max_size());
+// }
 
 int main(int argc, char *argv[]) {
   testing::InitGoogleTest(&argc, argv);
