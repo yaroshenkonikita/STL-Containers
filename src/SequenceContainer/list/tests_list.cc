@@ -426,17 +426,49 @@ TEST(list_test, reverse4) {
   EXPECT_EQ(basic2.front(), 100500);
 }
 
-// TEST(list_test, max_size) {
-//   std::list<std::string> basic2({"hello", "world", "lets", "go!"});
-//   s21::list<std::string> basic({"hello", "world", "lets", "go!"});
-//   EXPECT_EQ(basic2.max_size(),basic.max_size());
-// }
-//
-// TEST(list_test, max_size2) {
-//   std::list<char> basic2;
-//   s21::list<char> basic;
-//   EXPECT_EQ(basic2.max_size(),basic.max_size());
-// }
+TEST(list_test, sort) {
+  s21::list<std::string> basic({"hello", "world", "lets", "go!"});
+  EXPECT_EQ(basic.front(), "hello");
+  basic.sort();
+  EXPECT_EQ(basic.front(), "go!");
+  std::list<std::string> basic2({"hello", "world", "lets", "go!"});
+  EXPECT_EQ(basic2.front(), "hello");
+  basic2.sort();
+  EXPECT_EQ(basic2.front(), "go!");
+}
+
+TEST(list_test, sort2) {
+  s21::list<std::string> basic;
+  basic.sort();
+  EXPECT_TRUE(basic.empty());
+  std::list<std::string> basic2;
+  basic2.sort();
+  EXPECT_TRUE(basic.empty());
+}
+
+TEST(list_test, sort3) {
+  s21::list<int> basic({-100,12321,123,-5124,13,0,-111,17,5125,41349394,-31423434,2});
+  std::list<int> basic2({-100,12321,123,-5124,13,0,-111,17,5125,41349394,-31423434,2});
+  basic.sort();
+  basic2.sort();
+  EXPECT_EQ(basic.front(), -31423434);
+  EXPECT_EQ(basic.back(), 41349394);
+  EXPECT_EQ(basic2.front(), -31423434);
+  EXPECT_EQ(basic2.back(), 41349394);
+}
+
+
+ TEST(list_test, max_size) {
+   std::list<std::string> basic2({"hello", "world", "lets", "go!"});
+   s21::list<std::string> basic({"hello", "world", "lets", "go!"});
+   EXPECT_EQ(basic2.max_size(),basic.max_size());
+ }
+
+ TEST(list_test, max_size2) {
+   std::list<char> basic2;
+   s21::list<char> basic;
+   EXPECT_EQ(basic2.max_size(),basic.max_size());
+ }
 
 int main(int argc, char *argv[]) {
   testing::InitGoogleTest(&argc, argv);

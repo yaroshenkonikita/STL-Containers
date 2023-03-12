@@ -54,7 +54,7 @@ public:
   }
   size_type size() { return size_list; }
   size_type max_size() const noexcept {
-    return std::numeric_limits<size_type>::max() / sizeof(value_type) / 2;
+    return std::numeric_limits<size_type>::max() / sizeof(node) / 2;
   }
   bool empty() { return size_list == 0; }
   void clear();
@@ -131,41 +131,6 @@ public:
     return ListIterator(end_node);
   }
 
-//  void InsertionSort() {
-//    ListIterator i(head->next);
-//    for (; i.current != nullptr; ++i) {
-//      value_type &temp = i.current->data;
-//      ListIterator j(i.current->prev);
-//      ListIterator k(i);
-//      //    while (j.head->value > temp) {
-//      while (j.current->data > temp) {
-//        std::swap(k,j);
-//        //      j.swap(k);
-//        if (j.current == head) {
-//          break;
-//        } else {
-//          --k;
-//          --j;
-//        }
-//      }
-//    }
-//  }
-  void InsertionSort(ListIterator start, ListIterator end) {
-    for (ListIterator i(start.current->next); i != end; ++i) {
-      ListIterator j(i.current->prev);
-      ListIterator k(i.current);
-      while (j.current->data > k.current->data) {
-        std::swap(j.current->data,k.current->data);
-        if (j == start) {
-          break;
-        } else {
-          --k;
-          --j;
-        }
-      }
-    }
-  }
-
   ListIterator insert_iter(ListIterator pos, const_reference value) {
     ListIterator it(begin());
     if (pos.current == head) {
@@ -203,10 +168,18 @@ public:
       size_list--;
     }
   }
+
+  void splice(const_iterator pos, list& other) {
+
+  }
+
   void length_error() {
     if (head == nullptr) {
       throw std::length_error("list is empty");
     }
+  }
+  void splice(ListIterator pos, list& other) {
+
   }
 };
 
@@ -365,8 +338,23 @@ template <typename T> void list<T>::unique() {
     }
   }
 }
-//template <typename T> void list<T>::splice(const_iterator pos, list& other) {
-template <typename T> void list<T>::sort() { InsertionSort(begin(),end()); }
 
+template <typename T> void list<T>::sort() {
+  if(!empty()) {
+    for (ListIterator i(head->next); i != end(); ++i) {
+      ListIterator j(i.current->prev);
+      ListIterator k(i.current);
+      while (j.current->data > k.current->data) {
+        std::swap(j.current->data,k.current->data);
+        if (j == begin()) {
+          break;
+        } else {
+          --k;
+          --j;
+        }
+      }
+    }
+  }
+}
 } // namespace s21
 #endif // CPP2_S21_CONTAINERS_0_SRC_S21_LIST_H

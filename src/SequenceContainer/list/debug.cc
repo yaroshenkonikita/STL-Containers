@@ -1,27 +1,22 @@
 #include "s21_list.h"
 
 int main() {
-  s21::list<int>basic({2,3,1,0,12,-13,3,10,-1,100500});
-  for (auto it3= basic.begin(); it3 != basic.end();++it3) {
-    std::cout << *it3 << std::endl;
-  }
-  basic.sort();
-  for (auto it3= basic.begin(); it3 != basic.end();++it3) {
-    std::cout << *it3 << std::endl;
-  }
-//  std::list<int>basic2({1,2,3,4,5,6,7,100,123});
-//    basic2.reverse();
-//  for (auto it3= basic2.end(); it3 != basic2.begin();--it3) {
-//    std::cout << *it3 << std::endl;
-//  }
-//  basic.reverse();
 //  for (auto it3= basic.begin(); it3 != basic.end();++it3) {
 //    std::cout << *it3 << std::endl;
 //  }
-//  auto it3= basic.end();
-//  --it3;
-//  for (; it3 != basic.begin();--it3) {
+//  basic.sort();
+//  for (auto it3= basic.begin(); it3 != basic.end();++it3) {
 //    std::cout << *it3 << std::endl;
 //  }
+  std::list<int> basic({-100,12321,123,-5124,13,0,-111,17,5125,41349394,-31423434,2});
+  std::list<int> basic2({-100,12321,123,-5124,13,0,-111,17,5125,41349394,-31423434,2});
+  basic.splice(basic.begin(),basic2);
+  for (auto it3= basic.begin(); it3 != basic.end();++it3) {
+    std::cout << *it3 << std::endl;
+  }
+  std::cout << "\n\n" << std::endl;
+  for (auto it3= basic2.begin(); it3 != basic2.end();++it3) {
+    std::cout << *it3 << std::endl;
+  }
   return 0;
 }
