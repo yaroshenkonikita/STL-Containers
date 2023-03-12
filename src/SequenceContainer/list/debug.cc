@@ -1,11 +1,7 @@
 #include "s21_list.h"
 
 int main() {
-  s21::list<int>basic({2,3,1,0,12,3});
-  for (auto it3= basic.begin(); it3 != basic.end();++it3) {
-    std::cout << *it3 << std::endl;
-  }
-  basic.reverse();
+  s21::list<int>basic({2,3,1,0,12,-13,3,10,-1,100500});
   for (auto it3= basic.begin(); it3 != basic.end();++it3) {
     std::cout << *it3 << std::endl;
   }

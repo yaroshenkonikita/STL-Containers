@@ -151,12 +151,11 @@ public:
 //    }
 //  }
   void InsertionSort(ListIterator start, ListIterator end) {
-    for (ListIterator i(start++); i != end; ++i) {
-      value_type &temp = i.current->data;
+    for (ListIterator i(start.current->next); i != end; ++i) {
       ListIterator j(i.current->prev);
-      ListIterator k(i);
-      while (j.current->data > temp) {
-        std::swap(j.current,k.current);
+      ListIterator k(i.current);
+      while (j.current->data > k.current->data) {
+        std::swap(j.current->data,k.current->data);
         if (j == start) {
           break;
         } else {
@@ -366,28 +365,8 @@ template <typename T> void list<T>::unique() {
     }
   }
 }
-
+//template <typename T> void list<T>::splice(const_iterator pos, list& other) {
 template <typename T> void list<T>::sort() { InsertionSort(begin(),end()); }
-// template <typename T> void list<T>::InsertionSort(ListIterator start,
-// ListIterator end) {
-//   ListIterator i(start.current->next);
-//   for (; i != end; ++i) {
-//     value_type &temp = i.current->data;
-//     ListIterator j(i.current->prev);
-//     ListIterator k = i;
-////    while (j.head->value > temp) {
-//    while (j.current->data > temp) {
-//      std::swap(j,k);
-////      j.swap(k);
-//      if (j == start) {
-//        break;
-//      } else {
-//        --k;
-//        --j;
-//      }
-//    }
-//  }
-//}
 
 } // namespace s21
 #endif // CPP2_S21_CONTAINERS_0_SRC_S21_LIST_H
