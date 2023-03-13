@@ -79,6 +79,12 @@ public:
       this->next = next;
       this->prev = prev;
     }
+//    explicit node(const_reference value = const_reference(), node *next = nullptr,
+//                  node *prev = nullptr) { // explicit ???
+//      this->data = value;
+//      this->next = next;
+//      this->prev = prev;
+//    }
   };
   //  node *head_;
   //  node *tail_;
@@ -122,9 +128,9 @@ public:
     ListIterator() { current = this->head_; }
     explicit ListIterator(node *other) { current = other; }
   };
-  class ListConstIterator : public ListIterator {
+  class ListConstIterator {
   public:
-    node *current;
+    const node *current;
     const_iterator &operator++() noexcept {
       if (current)
         current = current->next;
@@ -132,7 +138,7 @@ public:
     }
 
     const_iterator operator++(int) noexcept {
-      iterator ListIterator = *this;
+      const_iterator ListIterator = *this;
       ++*this;
       return ListIterator;
     }
@@ -158,15 +164,19 @@ public:
       return current->next != other.current->next;
     }
 
-    ListConstIterator() { current = this->head_; }
-    explicit ListConstIterator(const node *other) { current = other; }
+    ListConstIterator() : current(nullptr) {};
+    ListConstIterator(ListIterator &it) : current(it.current){};
+    ListConstIterator(ListIterator &&it) : current(it.current){};
+    explicit ListConstIterator(const node *other) : current(other){};
   };
-  iterator begin() { return iterator(head_); }
-  iterator end() {
+  iterator begin() noexcept { return iterator(head_); }
+  const_iterator begin() const noexcept { return const_iterator(head_); }
+  iterator end() noexcept {
     node *end_node = new node(size_list_, nullptr, tail_);
     tail_->next = end_node;
     return iterator(end_node);
   }
+
   iterator insert_iter(iterator pos, const_reference value) {
     iterator it(begin());
     if (pos.current == head_) {
@@ -203,9 +213,28 @@ public:
       size_list_--;
     }
   }
-//  void splice(const_iterator pos, list& other) {
-//
-//  }
+  void splice(iterator pos, list &other) {
+    if (pos == begin()) {
+      head_ = other.head_;
+
+      other.tail_->next = pos.current;
+      pos.current->prev = other.tail_;
+    } else {
+      iterator prev(pos.current->prev);
+
+      prev.current->next = other.head_;
+      other.head_->prev = prev.current;
+
+      pos.current->prev = other.tail_;
+      other.tail_->next = pos.current;
+    }
+    other.head_ = nullptr;
+    other.tail_ = nullptr;
+  }
+  //  void merge(list& other) {
+  //
+  //  }
+  // мерж можно сделать через сплайс+сорт
 
 private:
   node *head_;
@@ -217,7 +246,6 @@ private:
     }
   }
   void clear();
-  //  void splice(iterator pos, list &other) {}
 };
 
 template <typename value_type>

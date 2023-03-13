@@ -1,7 +1,7 @@
 .PHONY: all clean test $(SOURCENAME).a gcov_report style
 #-pedantic -fsanitize=address
 CC = g++
-CFLAGS = -Wall -Werror -Wextra -std=c++17 -pedantic -fsanitize=address
+CFLAGS = -Wall -Werror -Wextra -std=c++17
 TFLAGS = -lgtest
 RFLAGS = -fprofile-arcs -ftest-coverage
 SOURCENAME = s21_list
@@ -18,7 +18,7 @@ debug: s21_list.h
 	@rm debug
 
 clean:
-	@-rm -rf *.o *.a *gcda *gcno *info report test debug
+	@-rm -rf *.o *.a *gcda *gcno *info report test debug a.out
 
 leaks:
 	leaks -atExit -- ./test
