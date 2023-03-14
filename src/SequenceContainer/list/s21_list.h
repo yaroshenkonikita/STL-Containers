@@ -264,10 +264,6 @@ public:
       *this = std::move(other);
     }
   }
-//  void merge(list &other) {
-//    splice(end(), other);
-//    sort();
-//  }
 
 private:
   node *head_;
