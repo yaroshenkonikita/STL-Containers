@@ -296,7 +296,7 @@ TEST(list_test, insert_iter) {
   s21::list<std::string> basic2 = {"hello", "world", "lets", "go!"};
   s21::list<std::string>::ListIterator it(basic2.begin());
   EXPECT_EQ(*basic2.begin(), basic2.front());
-  basic2.insert_iter(it, "lol");
+  basic2.insert(it, "lol");
   EXPECT_EQ(basic2.front(), "lol");
 }
 
@@ -305,7 +305,7 @@ TEST(list_test, insert_iter2) {
   s21::list<std::string>::ListIterator it(basic2.begin());
   ++it;
   EXPECT_EQ(*basic2.begin(), basic2.front());
-  basic2.insert_iter(it, "lol");
+  basic2.insert(it, "lol");
   EXPECT_EQ(basic2.front(), "hello");
 }
 
@@ -316,7 +316,7 @@ TEST(list_test, insert_iter3) {
   ++it;
   ++it;
   EXPECT_EQ(*basic2.begin(), basic2.front());
-  basic2.insert_iter(it, "lol");
+  basic2.insert(it, "lol");
   EXPECT_EQ(basic2.back(), "go!");
 }
 
@@ -328,7 +328,7 @@ TEST(list_test, insert_iter4) {
   ++it;
   it++;
   EXPECT_EQ(*basic2.begin(), basic2.front());
-  basic2.insert_iter(it, "lol");
+  basic2.insert(it, "lol");
   EXPECT_EQ(basic2.back(), "lol");
 }
 
@@ -345,13 +345,13 @@ TEST(list_test, erase) {
 
 TEST(list_test, std_erase) {
   std::list<std::string> basic2 = {"hello", "world", "lets", "go!"};
-  std::list<std::string>::iterator it(basic2.begin());
+  auto it(basic2.begin());
   EXPECT_EQ(basic2.front(), "hello");
   basic2.erase(it);
   EXPECT_EQ(basic2.front(), "world");
-//  ++it; // ecли не передвинуть итератор будет СЕГА!!!
-//  basic2.erase(it);
-//  EXPECT_EQ(basic2.front(), "lets");
+  //  ++it; // ecли не передвинуть итератор будет СЕГА!!!
+  //  basic2.erase(it);
+  //  EXPECT_EQ(basic2.front(), "lets");
 }
 
 TEST(list_test, erase2) {

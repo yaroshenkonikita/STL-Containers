@@ -93,6 +93,9 @@ public:
   class ListIterator {
   public:
     node *current;
+    ListIterator() { current = nullptr; }
+    explicit ListIterator(node *other) { current = other; }
+
     iterator operator++() noexcept {
       current = current->next;
       return *this;
@@ -117,7 +120,7 @@ public:
       return ListIterator;
     }
 
-    value_type &operator*() const noexcept { return current->data; }
+    reference operator*() const noexcept { return current->data; }
 
     bool operator==(const iterator &other) const noexcept {
       return current->next == other.current->next;
@@ -125,8 +128,6 @@ public:
     bool operator!=(const iterator &other) const noexcept {
       return current->next != other.current->next;
     }
-    ListIterator() { current = this->head_; }
-    explicit ListIterator(node *other) { current = other; }
   };
   //  class ListConstIterator {
   //  public:
@@ -178,7 +179,7 @@ public:
     return iterator(end_node);
   }
 
-  iterator insert_iter(iterator pos, const_reference value) {
+  iterator insert(iterator pos, const_reference value) {
     iterator it(begin());
     if (pos.current == head_) {
       push_front(value);
@@ -238,10 +239,31 @@ public:
     other.tail_ = nullptr;
     other.size_list_ = 0;
   }
-  //  void merge(list& other) {
-  //
-  //  }
-  // мерж можно сделать через сплайс+сорт
+  void merge(list &other) {
+    if (this != &other) {
+      auto this_begin = begin();
+      auto other_begin = other.begin();
+      auto this_end = end();
+      auto other_end = other.end();
+
+      while (this_begin != this_end && other_begin != other_end) {
+        if (*this_begin <= *other_begin) {
+          ++this_begin;
+        } else {
+          insert(this_begin, *other_begin);
+          other.erase(other_begin);
+          other_begin = other.begin();
+          ++size_list_;
+          --other.size_list_;
+        }
+      }
+      splice(end(), other);
+    }
+  }
+//  void merge(list &other) {
+//    splice(end(), other);
+//    sort();
+//  }
 
 private:
   node *head_;
