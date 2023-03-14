@@ -240,24 +240,28 @@ public:
     other.size_list_ = 0;
   }
   void merge(list &other) {
-    if (this != &other) {
-      auto this_begin = begin();
-      auto other_begin = other.begin();
-      auto this_end = end();
-      auto other_end = other.end();
+    if(!empty()) {
+      if (this != &other || !other.empty()) {
+        auto this_begin = begin();
+        auto other_begin = other.begin();
+        auto this_end = end();
+        auto other_end = other.end();
 
-      while (this_begin != this_end && other_begin != other_end) {
-        if (*this_begin <= *other_begin) {
-          ++this_begin;
-        } else {
-          insert(this_begin, *other_begin);
-          other.erase(other_begin);
-          other_begin = other.begin();
-          ++size_list_;
-          --other.size_list_;
+        while (this_begin != this_end && other_begin != other_end) {
+          if (*this_begin <= *other_begin) {
+            ++this_begin;
+          } else {
+            insert(this_begin, *other_begin);
+            other.erase(other_begin);
+            other_begin = other.begin();
+            ++size_list_;
+            --other.size_list_;
+          }
         }
+        splice(end(), other);
       }
-      splice(end(), other);
+    } else {
+      *this = std::move(other);
     }
   }
 //  void merge(list &other) {

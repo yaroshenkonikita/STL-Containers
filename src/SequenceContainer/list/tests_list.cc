@@ -426,6 +426,39 @@ TEST(list_test, sort3) {
   EXPECT_EQ(basic2.back(), 41349394);
 }
 
+TEST(list_test, merge) {
+  s21::list<int> basic({-100,12321,123,-5124,13,0,-111,17,5125,41349394,-31423434,2});
+  s21::list<int> basic2({1000000000,-1000000000});
+  basic.sort();
+  basic2.sort();
+  basic.merge(basic2);
+  EXPECT_EQ(basic.front(), -1000000000);
+  EXPECT_EQ(basic.back(), 1000000000);
+  EXPECT_TRUE(basic2.empty());
+}
+
+TEST(list_test, std_merge) {
+  std::list<int> basic;
+  std::list<int> basic2({1000000000,-1000000000});
+  basic.sort();
+  basic2.sort();
+  basic.merge(basic2);
+  EXPECT_EQ(basic.front(), -1000000000);
+  EXPECT_EQ(basic.back(), 1000000000);
+  EXPECT_TRUE(basic2.empty());
+}
+
+TEST(list_test, std_merge2) {
+  s21::list<int> basic;
+  s21::list<int> basic2({1000000000,-1000000000});
+  basic.sort();
+  basic2.sort();
+  basic.merge(basic2);
+  EXPECT_EQ(basic.front(), -1000000000);
+  EXPECT_EQ(basic.back(), 1000000000);
+  EXPECT_TRUE(basic2.empty());
+}
+
 
 // TEST(list_test, max_size) {
 //   std::list<std::string> basic2({"hello", "world", "lets", "go!"});
