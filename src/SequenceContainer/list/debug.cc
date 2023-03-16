@@ -14,7 +14,9 @@ int main() {
     std::cout << *it3 << std::endl;
   }
   std::cout << "\n" << std::endl;
-  basic.merge(basic2);
+  s21::list<int>::ListConstIterator it(basic.begin());
+  s21::list<int>::ListIterator it2(basic.begin());
+  basic.splice(it2, basic2);
   for (auto var : basic) {
     std::cout << var << std::endl;
   }

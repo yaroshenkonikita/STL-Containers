@@ -67,34 +67,31 @@ public:
     node *prev;
     value_type data;
 
-    explicit node(value_type data = value_type(), node *next = nullptr,
-                  node *prev = nullptr) { // explicit ???
-      this->data = data;
-      this->next = next;
-      this->prev = prev;
-    }
+    //    explicit node(value_type data = value_type(), node *next = nullptr,
+    //                  node *prev = nullptr) { // explicit ???
+    //      this->data = data;
+    //      this->next = next;
+    //      this->prev = prev;
+    //    }
     explicit node(size_t data = size_t(), node *next = nullptr,
                   node *prev = nullptr) { // explicit ???
       this->data = data;
       this->next = next;
       this->prev = prev;
     }
-    //    explicit node(const_reference value = const_reference(), node *next =
-    //    nullptr,
-    //                  node *prev = nullptr) { // explicit ???
-    //      this->data = value;
-    //      this->next = next;
-    //      this->prev = prev;
-    //    }
+    explicit node(const_reference data = value_type(), node *next = nullptr,
+                  node *prev = nullptr) { // explicit ???
+      this->data = data;
+      this->next = next;
+      this->prev = prev;
+    }
   };
-  //  node *head_;
-  //  node *tail_;
-  //  size_type size_list_;
+
   class ListIterator {
   public:
     node *current;
-    ListIterator() { current = nullptr; }
-    explicit ListIterator(node *other) { current = other; }
+    ListIterator() : current(nullptr) {};
+    explicit ListIterator(node *other) : current(other) {};
 
     iterator operator++() noexcept {
       current = current->next;
@@ -129,47 +126,46 @@ public:
       return current->next != other.current->next;
     }
   };
-  //  class ListConstIterator {
-  //  public:
-  //    const node *current;
-  //    const_iterator &operator++() noexcept {
-  //      if (current)
-  //        current = current->next;
-  //      return *this;
-  //    }
-  //
-  //    const_iterator operator++(int) noexcept {
-  //      const_iterator ListIterator = *this;
-  //      ++*this;
-  //      return ListIterator;
-  //    }
-  //
-  //    const_iterator &operator--() noexcept {
-  //      if (current)
-  //        current = current->prev;
-  //      return *this;
-  //    }
-  //
-  //    const_iterator operator--(int) noexcept {
-  //      const_iterator ListIterator = *this;
-  //      --*this;
-  //      return ListIterator;
-  //    }
-  //
-  //    const_reference operator*() const noexcept { return current->data; }
-  //
-  //    bool operator==(const const_iterator &other) const noexcept {
-  //      return current->next == other.current->next;
-  //    }
-  //    bool operator!=(const const_iterator &other) const noexcept {
-  //      return current->next != other.current->next;
-  //    }
-  //
-  //    ListConstIterator() : current(nullptr){};
-  //    ListConstIterator(ListIterator &it) : current(it.current){};
-  //    ListConstIterator(ListIterator &&it) : current(it.current){};
-  //    explicit ListConstIterator(const node *other) : current(other){};
-  //  };
+  class ListConstIterator {
+  public:
+    const node *current;
+
+    ListConstIterator() : current(nullptr){};
+    explicit ListConstIterator(ListIterator &it) : current(it.current){};
+    explicit ListConstIterator(ListIterator &&it) : current(it.current){};
+    explicit ListConstIterator(const node *other) : current(other){};
+
+    const_iterator &operator++() noexcept {
+      current = current->next;
+      return *this;
+    }
+
+    const_iterator operator++(int) noexcept {
+      const_iterator ListIterator = *this;
+      ++*this;
+      return ListIterator;
+    }
+
+    const_iterator &operator--() noexcept {
+      current = current->prev;
+      return *this;
+    }
+
+    const_iterator operator--(int) noexcept {
+      const_iterator ListIterator = *this;
+      --*this;
+      return ListIterator;
+    }
+
+    const_reference operator*() const noexcept { return current->data; }
+
+    bool operator==(const const_iterator &other) const noexcept {
+      return current == other.current;
+    }
+    bool operator!=(const const_iterator &other) const noexcept {
+      return current->next != other.current->next;
+    }
+  };
   iterator begin() noexcept { return iterator(head_); }
   const_iterator begin() const noexcept { return const_iterator(head_); }
   iterator end() noexcept {
@@ -177,6 +173,12 @@ public:
     tail_->next = end_node;
     head_->prev = end_node;
     return iterator(end_node);
+  }
+  const_iterator end() const noexcept {
+    const node *end_node = new node(size_list_, head_, tail_);
+    tail_->next = end_node;
+    head_->prev = end_node;
+    return const_iterator(end_node);
   }
 
   iterator insert(iterator pos, const_reference value) {
@@ -217,22 +219,23 @@ public:
   }
   void splice(iterator pos, list &other) {
     if (pos == begin()) {
+      iterator tmp(pos);
       head_ = other.head_;
-
-      other.tail_->next = pos.current;
-      pos.current->prev = other.tail_;
+      other.tail_->next = tmp.current;
+      tmp.current->prev = other.tail_;
     } else if (pos == end()) {
       tail_->next = other.head_;
       other.head_->prev = tail_;
       tail_ = other.tail_;
     } else {
+      iterator tmp(pos);
       iterator prev(pos.current->prev);
 
       prev.current->next = other.head_;
       other.head_->prev = prev.current;
 
-      pos.current->prev = other.tail_;
-      other.tail_->next = pos.current;
+      tmp.current->prev = other.tail_;
+      other.tail_->next = tmp.current;
     }
     size_list_ += other.size_list_;
     other.head_ = nullptr;
@@ -240,7 +243,7 @@ public:
     other.size_list_ = 0;
   }
   void merge(list &other) {
-    if(!empty()) {
+    if (!empty()) {
       if (this != &other || !other.empty()) {
         auto this_begin = begin();
         auto other_begin = other.begin();
@@ -327,7 +330,7 @@ void list<value_type>::push_front(const_reference data) {
 
 template <typename value_type>
 void list<value_type>::push_back(const_reference data) {
-  node *current = new node(data);
+  node *current = new node(data, nullptr, nullptr);
   if (tail_ != nullptr) {
     tail_->next = current;
   }
