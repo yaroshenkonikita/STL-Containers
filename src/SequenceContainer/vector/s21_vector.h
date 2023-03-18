@@ -5,14 +5,14 @@
 #include "limits"
 
 namespace s21 {
-template <typename V>
+template <typename T>
 class vector {
  public:
-  using value_type = V;
+  using value_type = T;
   using reference = value_type &;
   using const_reference = const value_type &;
-  using iterator = V *;
-  using const_iterator = const V *;
+  using iterator = T *;
+  using const_iterator = const T *;
   using size_type = size_t;
   using pointer = value_type *;
 
