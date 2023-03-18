@@ -5,10 +5,9 @@
 #include "limits"
 
 namespace s21 {
-template<typename V>
+template <typename V>
 class vector {
  public:
-
   using value_type = V;
   using reference = value_type &;
   using const_reference = const value_type &;
@@ -27,7 +26,8 @@ class vector {
   }
 
   //  Конструктор списка инициализаторов
-  vector(std::initializer_list<value_type> const &items) : arr_(nullptr), size_(0), capacity_(0) {
+  vector(std::initializer_list<value_type> const &items)
+      : arr_(nullptr), size_(0), capacity_(0) {
     reserve(items.size());
     for (value_type item : items) push_back(item);
   }
@@ -40,7 +40,8 @@ class vector {
   }
 
   //  Конструктор перемещения
-  vector(vector &&v) noexcept: arr_(v.arr_), size_(v.size_), capacity_(v.capacity_) {
+  vector(vector &&v) noexcept
+      : arr_(v.arr_), size_(v.size_), capacity_(v.capacity_) {
     v.arr_ = nullptr;
     v.size_ = 0;
     v.capacity_ = 0;
@@ -92,50 +93,72 @@ class vector {
   //  Возвращает количество элементов в контейнере
   size_type size() const noexcept { return size_; }
 
-  //  Возвращает максимальное количество элементов, которые может содержать контейнер
-  size_type max_size() const noexcept { return std::numeric_limits<size_type>::max() / sizeof(value_type) / 2; }
+  //  Возвращает максимальное количество элементов, которые может содержать
+  //  контейнер
+  size_type max_size() const noexcept {
+    return std::numeric_limits<size_type>::max() / sizeof(value_type) / 2;
+  }
 
   //  Увеличиваем емкость вектора до значения, которое больше или равно size
   void reserve(size_type size) {
     if (size > max_size()) throw std::length_error("Out of memory");
     if (size > capacity_) {
-      value_type *buff = new value_type[size]{};
-      for (size_type i = 0; i < size_; i++) buff[i] = arr_[i];
+      value_type *new_data = new value_type[size];
+      std::copy(arr_, arr_ + size_, new_data);
       delete[] arr_;
-      arr_ = buff;
+      arr_ = new_data;
       capacity_ = size;
     }
   }
 
-  //  Возвращает количество элементов, для которых в данный момент выделено место в контейнере
+  //  Возвращает количество элементов, для которых в данный момент выделено
+  //  место в контейнере
   size_type capacity() const noexcept { return capacity_; }
 
   //  Запрашивает удаление неиспользуемой емкости
-  void shrink_to_fit() { if (size_ != capacity_) reserve(size_); }
+  void shrink_to_fit() {
+    if (capacity_ > size_) {
+      value_type *new_data = new value_type[size_];
+      std::copy(arr_, arr_ + size_, new_data);
+      delete[] arr_;
+      arr_ = new_data;
+      capacity_ = size_;
+    }
+  }
 
   //  Удаляет все элементы из контейнера
   void clear() noexcept { size_ = 0; }
 
   //  Вставляет элементы в указанное место в контейнере
   iterator insert(iterator pos, const_reference value) {
-    if (size_ == capacity_) reserve(size_ == 0 ? 1 : capacity_ * 2);
-    size_type dif = pos - begin();
-    for (size_type i = size_; i > dif; --i) arr_[i] = arr_[i - 1];
-    size_++;
-    arr_[dif] = value;
-    return begin() + dif * sizeof(value);
+    size_type index = pos - arr_;
+    if (size_ == capacity_) {
+      reserve(capacity_ * 2);
+    }
+    for (size_type i = size_; i > index; --i) {
+      arr_[i] = arr_[i - 1];
+    }
+    arr_[index] = value;
+    ++size_;
+    return arr_ + index;
   }
 
   //  Удаляет указанные элементы из контейнера.
   void erase(iterator pos) {
+    size_type index = pos - arr_;
+    for (size_type i = index; i < size_ - 1; ++i) {
+      arr_[i] = arr_[i + 1];
+    }
     --size_;
-    for (size_type i = pos - begin(); i < size_; i++) arr_[i] = arr_[i + 1];
   }
 
   //  Добавляет заданное значение элемента в конец контейнера
   void push_back(const_reference value) {
-    if (size_ >= capacity_) reserve(size_ == 0 ? 1 : capacity_ * 2);
-    arr_[size_++] = value;
+    if (size_ == capacity_) {
+      reserve(capacity_ * 2);
+    }
+    arr_[size_] = value;
+    ++size_;
   }
 
   //  Удаляет последний элемент контейнера
@@ -153,6 +176,6 @@ class vector {
   size_type size_;
   size_type capacity_;
 };
-}
+}  // namespace s21
 
-#endif //CPP2_S21_CONTAINERS_0_SRC_S21_VECTOR_H
+#endif  // CPP2_S21_CONTAINERS_0_SRC_S21_VECTOR_H
