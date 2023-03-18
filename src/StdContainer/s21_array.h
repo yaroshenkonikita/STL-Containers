@@ -1,103 +1,94 @@
 #ifndef CPP2_S21_CONTAINERS_0_SRC_S21_ARRAY_H
 #define CPP2_S21_CONTAINERS_0_SRC_S21_ARRAY_H
 
-#include "iostream"
-#include "limits"
-#include <array>
+#include <algorithm>         // для std::swap
+#include <cstddef>           // для std::size_t
+#include <initializer_list>  // для std::initializer_list
 
 namespace s21 {
-template<typename T, size_t N>
+template <typename T, std::size_t N>
 class array {
  public:
-
   using value_type = T;
   using reference = T &;
   using const_reference = const T &;
   using iterator = T *;
   using const_iterator = const T *;
-  using size_type = size_t;
+  using size_type = std::size_t;
 
   //  Дефолтный конструктор
-  array() {}
+  array() = default;
 
   //  Конструктор списка инициализаторов
   array(std::initializer_list<value_type> const &items) {
-//    size_ = 0;
-    int it = 0;
-    for (auto i = items.begin(); i != items.end(); i++, it++) {
-      arr_[it] = *i;
+    auto iter = items.begin();
+    for (std::size_t i = 0; i < N && iter != items.end(); ++i, ++iter) {
+      arr_[i] = *iter;
     }
   }
 
   //  Конструктор копирования
   array(const array &a) {
-//    size_ = a.size_;
-    for (size_type i = 0; i < size_; i++) arr_[i] = a.arr_[i];
+    for (size_type i = 0; i < N; i++) arr_[i] = a.arr_[i];
   }
 
   //  Конструктор перемещения
-  array(array &&a) noexcept { std::move(a.begin(), a.end(), arr_); }
+  array(array &&a) noexcept { std::move(a.begin(), a.end(), begin()); }
 
   //  Деструктор
   ~array() = default;
 
   //  Перегрузка оператора для перемещения объекта
   array &operator=(array &&a) noexcept {
-    std::move(a.cbegin(), a.cend(), arr_);
+    std::move(a.begin(), a.end(), begin());
     return *this;
   }
 
-  //  Возвращает ссылку на элемент в указанном месте pos с проверкой границ
+  //  Оператор доступа к элементу с проверкой границ
   reference at(size_type pos) {
-    if (pos >= size_) throw std::out_of_range("Out of range");
+    if (pos >= N) throw std::out_of_range("Index out of range");
     return arr_[pos];
   }
 
   //  Возвращает ссылку на элемент в указанном месте
   reference operator[](size_type pos) { return at(pos); }
 
-  //  Возвращает ссылку на первый элемент в контейнере
-  reference front() { return arr_[0]; }
+  //  Константный оператор доступа к первому элементу
+  const_reference front() { return arr_[0]; }
 
-  //  Возвращает ссылку на последний элемент в контейнере
-  reference back() { return arr_[size_ - 1]; }
+  //  Константный оператор доступа к последнему элементу
+  const_reference back() { return arr_[N - 1]; }
 
   //  Возвращает указатель на базовый массив
-  value_type *data() noexcept { return arr_; }
+  value_type data() noexcept { return arr_; }
 
   //  Итерирование
-  iterator begin() noexcept { return arr_; }
-  const_iterator cbegin() const noexcept { return arr_; }
-  iterator end() noexcept { return arr_ + size_; }
-  const_iterator cend() const noexcept { return arr_ + size_; }
+  iterator begin() noexcept { return &arr_[0]; }
+  const_iterator cbegin() const noexcept { return &arr_[0]; }
+  iterator end() noexcept { return &arr_[N]; }
+  const_iterator cend() const noexcept { return &arr_[N]; }
 
   //  Проверяет, нет ли в контейнере элементов
-  bool empty() const noexcept {
-    for (size_t i = 0; i < size_; i++) {
-      if (arr_[i] != 0)
-        return false;
-    }
-    return true;
-  }
+  bool empty() const noexcept { return N == 0; }
 
   //  Возвращает количество элементов в контейнере
-  size_type size() const noexcept { return size_; }
+  size_type size() const noexcept { return N; }
 
-  //  Возвращает максимальное количество элементов, которые может содержать контейнер
-  size_type max_size() const noexcept { return size_; }
+  //  Возвращает максимальное количество элементов, которые может содержать
+  //  контейнер
+  size_type max_size() const noexcept { return N; }
 
-  //  Меняет содержимое и вместимость контейнера с другими
-  void swap(array &other) { std::swap(*this, other); }
+  //  Меняет содержимое и вместимость контейнера с другими в выбранном диапазоне
+  void swap(array &other) { std::swap_ranges(begin(), end(), other.begin()); }
 
   //  Присваивает заданное значение value всем элементам в контейнере
   void fill(const_reference value) {
-    for (size_t i = 0; i < size_; ++i) arr_[i] = value;
+    for (std::size_t i = 0; i < N; i++) arr_[i] = value;
   }
 
  private:
   value_type arr_[N]{};
-  size_type size_ = N;
 };
-}
+}  // namespace s21
 
-#endif //CPP2_S21_CONTAINERS_0_SRC_S21_ARRAY_H
+#endif  // CPP2_S21_CONTAINERS_0_SRC_S21_ARRAY_H
