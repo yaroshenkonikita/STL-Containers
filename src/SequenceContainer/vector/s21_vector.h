@@ -19,11 +19,8 @@ class vector {
   //  Дефолтный конструктор
   vector() : arr_(nullptr), size_(0), capacity_(0) {}
 
-  //  Параметризованный конструктор
-  vector(size_type n) : arr_(nullptr), size_(0), capacity_(0) {
-    reserve(n);
-    size_ = n;
-  }
+  //  Конструктор с размером
+  explicit vector(size_type n) : arr_(new value_type[n]), size_(n), capacity_(n) {}
 
   //  Конструктор списка инициализаторов
   vector(std::initializer_list<value_type> const &items)
