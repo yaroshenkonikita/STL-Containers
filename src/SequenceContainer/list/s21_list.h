@@ -66,48 +66,45 @@ public:
     node *next;
     node *prev;
     value_type data;
-
-    //    explicit node(value_type data = value_type(), node *next = nullptr,
-    //                  node *prev = nullptr) { // explicit ???
-    //      this->data = data;
-    //      this->next = next;
-    //      this->prev = prev;
-    //    }
-    explicit node(size_t data = size_t(), node *next = nullptr,
-                  node *prev = nullptr) { // explicit ???
-      this->data = data;
-      this->next = next;
-      this->prev = prev;
-    }
     explicit node(const_reference data = value_type(), node *next = nullptr,
                   node *prev = nullptr) { // explicit ???
       this->data = data;
       this->next = next;
       this->prev = prev;
     }
+    //    explicit node(value_type data = value_type(), node *next = nullptr,
+    //                  node *prev = nullptr) { // explicit ???
+    //      this->data = data;
+    //      this->next = next;
+    //      this->prev = prev;
+    //    }
+    //    explicit node(size_t data = size_t(), node *next = nullptr,
+    //                  node *prev = nullptr) { // explicit ???
+    //      this->data = data;
+    //      this->next = next;
+    //      this->prev = prev;
+    //    }
   };
 
   class ListIterator {
   public:
     node *current;
-    ListIterator() : current(nullptr) {};
-    explicit ListIterator(node *other) : current(other) {};
+    ListIterator() : current(nullptr){};
+    explicit ListIterator(node *other) : current(other){};
 
     iterator operator++() noexcept {
       current = current->next;
       return *this;
     }
-
     // Postfix ++ overload
     iterator operator++(int) noexcept {
-      iterator ListIterator = *this;
+//      iterator ListIterator = *this;
       ++*this;
-      return ListIterator;
+      return *this;
     }
 
     iterator &operator--() noexcept {
-      if (current)
-        current = current->prev;
+      current = current->prev;
       return *this;
     }
 
@@ -117,7 +114,7 @@ public:
       return ListIterator;
     }
 
-    reference operator*() const noexcept { return current->data; }
+    value_type &operator*() { return current->data; }
 
     bool operator==(const iterator &other) const noexcept {
       return current->next == other.current->next;
@@ -126,60 +123,21 @@ public:
       return current->next != other.current->next;
     }
   };
-  class ListConstIterator {
+  class ListConstIterator : public ListIterator {
   public:
-    const node *current;
+    ListConstIterator() : ListIterator(){};
+    ListConstIterator(ListConstIterator &it) : ListIterator(it.current){};
+    ListConstIterator(ListConstIterator &&it) noexcept
+        : ListIterator(it.current){};
+    explicit ListConstIterator(const node *other) : ListIterator(other){};
 
-    ListConstIterator() : current(nullptr){};
-    explicit ListConstIterator(ListIterator &it) : current(it.current){};
-    explicit ListConstIterator(ListIterator &&it) : current(it.current){};
-    explicit ListConstIterator(const node *other) : current(other){};
-
-    const_iterator &operator++() noexcept {
-      current = current->next;
-      return *this;
-    }
-
-    const_iterator operator++(int) noexcept {
-      const_iterator ListIterator = *this;
-      ++*this;
-      return ListIterator;
-    }
-
-    const_iterator &operator--() noexcept {
-      current = current->prev;
-      return *this;
-    }
-
-    const_iterator operator--(int) noexcept {
-      const_iterator ListIterator = *this;
-      --*this;
-      return ListIterator;
-    }
-
-    const_reference operator*() const noexcept { return current->data; }
-
-    bool operator==(const const_iterator &other) const noexcept {
-      return current == other.current;
-    }
-    bool operator!=(const const_iterator &other) const noexcept {
-      return current->next != other.current->next;
+    value_type operator*() const noexcept {
+      return (value_type)this->current->data;
     }
   };
+
   iterator begin() noexcept { return iterator(head_); }
-  const_iterator begin() const noexcept { return const_iterator(head_); }
-  iterator end() noexcept {
-    node *end_node = new node(size_list_, head_, tail_);
-    tail_->next = end_node;
-    head_->prev = end_node;
-    return iterator(end_node);
-  }
-  const_iterator end() const noexcept {
-    const node *end_node = new node(size_list_, head_, tail_);
-    tail_->next = end_node;
-    head_->prev = end_node;
-    return const_iterator(end_node);
-  }
+  iterator end() noexcept { return iterator(end_); }
 
   iterator insert(iterator pos, const_reference value) {
     iterator it(begin());
@@ -204,9 +162,9 @@ public:
   // если после использования, воспользоваться итератором - будет сега. В
   // оригинале также//
   void erase(iterator pos) {
-    if (pos.current == head_) {
+    if (pos == begin()) {
       pop_front();
-    } else if (pos.current == tail_->next) {
+    } else if (pos == end()) {
       pop_back();
     } else {
       // возможно тут есть ошибка, надо перепроверить
@@ -238,8 +196,7 @@ public:
       other.tail_->next = tmp.current;
     }
     size_list_ += other.size_list_;
-    other.head_ = nullptr;
-    other.tail_ = nullptr;
+    other.head_ = other.tail_ = other.end_ = new node;
     other.size_list_ = 0;
   }
   void merge(list &other) {
@@ -271,9 +228,10 @@ public:
 private:
   node *head_;
   node *tail_;
+  node *end_;
   size_type size_list_;
   void length_error() {
-    if (head_ == nullptr) {
+    if (!size_list_) {
       throw std::length_error("list is empty");
     }
   }
@@ -288,14 +246,16 @@ list<value_type>::operator=(list<value_type> &&other) noexcept {
     size_list_ = std::exchange(other.size_list_, 0);
     head_ = std::exchange(other.head_, nullptr);
     tail_ = std::exchange(other.tail_, nullptr);
+    end_ = std::exchange(other.end_, nullptr);
+    other.head_ = other.tail_ = other.end_ = new node();
   }
   return *this;
 }
 template <typename T> list<T>::list(const list<value_type> &other) {
   size_list_ = 0;
-  head_ = tail_ = nullptr;
+  head_ = tail_ = end_ = new node();
   node *current_other = other.head_;
-  while (current_other != nullptr) {
+  while (current_other != other.end_) {
     push_back(current_other->data);
     current_other = current_other->next;
   }
@@ -305,51 +265,69 @@ template <typename T> void list<T>::swap(list &other) {
   std::swap(size_list_, other.size_list_);
   std::swap(head_, other.head_);
   std::swap(tail_, other.tail_);
+  std::swap(end_, other.end_);
 }
 
 template <typename T> void list<T>::clear() {
   while (!empty()) {
     pop_front();
   }
+  delete end_;
 }
 
 template <typename value_type>
 void list<value_type>::push_front(const_reference data) {
-  node *current = new node(data);
-  current->next = head_;
-  current->prev = nullptr;
-  if (head_ != nullptr) {
-    head_->prev = current;
+  if (!size_list_) {
+    node *current = new node(data, tail_, head_);
+    tail_ = head_ = current;
+    end_->next = head_;
+    end_->prev = tail_;
+  } else {
+    if (size_list_ == 1) {
+      node *current = new node(data, head_, end_);
+      head_ = current;
+      tail_->prev = head_;
+      end_->next = head_;
+    } else {
+      node *current = new node(data, head_, end_);
+      head_->prev = current;
+      end_->next = current;
+      head_ = current;
+    }
   }
-  if (tail_ == nullptr) {
-    tail_ = current;
-  }
-  head_ = current;
   size_list_++;
 }
 
 template <typename value_type>
 void list<value_type>::push_back(const_reference data) {
-  node *current = new node(data, nullptr, nullptr);
-  if (tail_ != nullptr) {
-    tail_->next = current;
+  if (!size_list_) {
+    node *current = new node(data, tail_, head_);
+    tail_ = head_ = current;
+    end_->next = head_;
+    end_->prev = tail_;
+  } else {
+    if (size_list_ == 1) {
+      node *current = new node(data, end_, head_);
+      head_->next = current;
+      end_->prev = current;
+      tail_ = current;
+    } else {
+      node *current = new node(data, end_, tail_);
+      tail_->next = current;
+      end_->prev = current;
+      tail_ = current;
+    }
   }
-  current->next = nullptr;
-  current->prev = tail_;
-  if (head_ == nullptr) {
-    head_ = current;
-  }
-  tail_ = current;
   size_list_++;
 }
 
 template <typename value_type> list<value_type>::list() {
   size_list_ = 0;
-  head_ = tail_ = nullptr;
+  head_ = tail_ = end_ = new node();
 }
 
 template <typename value_type> list<value_type>::list(size_type size) {
-  head_ = tail_ = nullptr;
+  head_ = tail_ = end_ = new node();
   size_list_ = 0;
   for (size_type i = 0; i < size; i++) {
     push_front(value_type());
@@ -358,7 +336,7 @@ template <typename value_type> list<value_type>::list(size_type size) {
 
 template <typename value_type>
 list<value_type>::list(std::initializer_list<value_type> const &items) {
-  head_ = tail_ = nullptr;
+  head_ = tail_ = end_ = new node();
   size_list_ = 0;
   for (value_type element : items) {
     push_back(element);
@@ -370,6 +348,8 @@ list<value_type>::list(list<value_type> &&other) noexcept {
   size_list_ = std::exchange(other.size_list_, 0);
   head_ = std::exchange(other.head_, nullptr);
   tail_ = std::exchange(other.tail_, nullptr);
+  end_ = std::exchange(other.end_, nullptr);
+  other.head_ = other.tail_ = other.end_ = new node();
 }
 
 template <typename value_type> list<value_type>::~list() { clear(); }
@@ -380,6 +360,8 @@ template <typename value_type> void list<value_type>::pop_front() {
   head_ = head_->next;
   delete current;
   size_list_--;
+  head_->prev = end_;
+  end_->next = head_;
 }
 
 template <typename value_type> void list<value_type>::pop_back() {
@@ -388,16 +370,22 @@ template <typename value_type> void list<value_type>::pop_back() {
   tail_ = tail_->prev;
   delete current;
   size_list_--;
+  tail_->next = end_;
+  end_->prev = tail_;
 }
 
 template <typename T> void list<T>::reverse() {
   auto current = head_;
-  while (current != nullptr) {
+  while (current != end_) {
     auto next_node = current->next;
     std::swap(current->next, current->prev);
     current = next_node;
   }
   std::swap(head_, tail_);
+//  head_->prev = end_;
+//  tail_->next = end_;
+//  end_->next = head_;
+//  end_->prev = tail_;
 }
 
 template <typename T> void list<T>::unique() {

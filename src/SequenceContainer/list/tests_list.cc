@@ -185,7 +185,7 @@ TEST(list_test, pop_front) {
   EXPECT_EQ(basic.front(), element3);
 }
 
-TEST(list_test, pop_front2) {
+TEST(list_test, pop_back) {
   s21::list<std::string> basic;
   std::string element = "hello";
   std::string element2 = "world";
@@ -198,6 +198,24 @@ TEST(list_test, pop_front2) {
   basic.pop_back();
   EXPECT_TRUE(basic.size() == 3);
   EXPECT_EQ(basic.back(), element2);
+  EXPECT_EQ(basic.front(), element4);
+}
+
+TEST(list_test, pop_back2) {
+  s21::list<std::string> basic;
+  std::string element = "hello";
+  std::string element2 = "world";
+  std::string element3 = "!!!";
+  std::string element4 = "&";
+  basic.push_front(element);
+  basic.push_front(element2);
+  basic.push_front(element3);
+  basic.push_front(element4);
+  basic.pop_back();
+  basic.pop_back();
+  basic.pop_back();
+  EXPECT_TRUE(basic.size() == 1);
+  EXPECT_EQ(basic.back(), element4);
   EXPECT_EQ(basic.front(), element4);
 }
 
@@ -258,14 +276,14 @@ TEST(list_test, swap2) {
   EXPECT_EQ(basic2.front(), "1");
 }
 
- TEST(list_test, swap3) {
-   s21::list<std::string> basic;
-   s21::list<std::string> basic2({"hello", "world", "lets", "go!"});
-   basic.swap(basic2);
-   EXPECT_TRUE(basic2.empty());
-   EXPECT_EQ(basic.size(),(size_t)4);
-   EXPECT_EQ(basic.front(),"hello");
- }
+TEST(list_test, swap3) {
+  s21::list<std::string> basic;
+  s21::list<std::string> basic2({"hello", "world", "lets", "go!"});
+  basic.swap(basic2);
+  EXPECT_TRUE(basic2.empty());
+  EXPECT_EQ(basic.size(), (size_t)4);
+  EXPECT_EQ(basic.front(), "hello");
+}
 
 TEST(list_test, swap4) {
   std::list<std::string> basic;
@@ -290,6 +308,56 @@ TEST(list_test, operator_move2) {
   basic2 = std::move(basic);
   EXPECT_EQ(basic2.front(), "hello");
   EXPECT_EQ(basic2.back(), "go!");
+}
+
+TEST(list_test, iter) {
+  s21::list<std::string> basic = {"hello", "world", "lets", "go!"};
+  s21::list<std::string>::ListIterator it(basic.begin());
+  EXPECT_EQ(*it, "hello");
+}
+
+TEST(list_test, iter2) {
+  s21::list<std::string> basic = {"hello", "world", "lets", "go!"};
+  s21::list<std::string>::ListIterator it(basic.begin());
+  it++;
+  EXPECT_EQ(*it, "world");
+}
+
+TEST(list_test, iter3) {
+  s21::list<std::string> basic = {"hello", "world", "lets", "go!"};
+  s21::list<std::string>::ListIterator it(basic.begin());
+  ++it;
+  EXPECT_EQ(*it, "world");
+}
+
+TEST(list_test, iter4) {
+  s21::list<std::string> basic = {"hello", "world", "lets", "go!"};
+  s21::list<std::string>::ListIterator it(basic.begin());
+  it++;
+  it++;
+  it++;
+  EXPECT_EQ(*it, "go!");
+}
+
+TEST(list_test, iter5) {
+  s21::list<std::string> basic = {"hello", "world", "lets", "go!"};
+  s21::list<std::string>::iterator it(basic.begin());
+  it++;
+  it++;
+  it++;
+  it++;
+  EXPECT_EQ(*it, "");
+}
+
+TEST(list_test, iter6) {
+  s21::list<std::string> basic = {"hello", "world", "lets", "go!"};
+  s21::list<std::string>::iterator it(basic.begin());
+  ++it;
+  ++it;
+  ++it;
+  ++it;
+  ++it;
+  EXPECT_EQ(*it, "hello");
 }
 
 TEST(list_test, insert_iter) {
@@ -326,10 +394,45 @@ TEST(list_test, insert_iter4) {
   ++it;
   ++it;
   ++it;
+  ++it;
+  EXPECT_EQ(*basic2.begin(), basic2.front());
+  basic2.insert(it, "lol");
+  EXPECT_EQ(basic2.back(), "lol");
+}
+
+TEST(list_test, insert_iter5) {
+  s21::list<std::string> basic2 = {"hello", "world", "lets", "go!"};
+  s21::list<std::string>::iterator it(basic2.begin());
+  ++it;
+  ++it;
+  ++it;
   it++;
   EXPECT_EQ(*basic2.begin(), basic2.front());
   basic2.insert(it, "lol");
   EXPECT_EQ(basic2.back(), "lol");
+}
+
+TEST(list_test, insert_iter6) {
+  s21::list<std::string> basic2 = {"hello", "world", "lets", "go!"};
+  s21::list<std::string>::iterator it(basic2.begin());
+  --it;
+  basic2.insert(it, "lol");
+  EXPECT_EQ(basic2.back(), "lol");
+}
+
+TEST(list_test, insert_iter7) {
+  std::list<std::string> basic2 = {"hello", "world", "lets", "go!"};
+  std::list<std::string>::iterator it(basic2.begin());
+  --it;
+  basic2.insert(it, "lol");
+  EXPECT_EQ(basic2.back(), "lol");
+}
+
+TEST(list_test, insert_iter8) {
+  std::list<std::string> basic2 = {"hello", "world", "lets", "go!"};
+  std::list<std::string>::iterator it(basic2.begin());
+  basic2.insert(it, "lol");
+  EXPECT_EQ(basic2.front(), "lol");
 }
 
 TEST(list_test, erase) {
@@ -338,9 +441,6 @@ TEST(list_test, erase) {
   EXPECT_EQ(basic2.front(), "hello");
   basic2.erase(it);
   EXPECT_EQ(basic2.front(), "world");
-//  ++it; // ecли не передвинуть итератор будет СЕГА!!!
-//  basic2.erase(it);
-//  EXPECT_EQ(basic2.front(), "lets");
 }
 
 TEST(list_test, std_erase) {
@@ -349,9 +449,23 @@ TEST(list_test, std_erase) {
   EXPECT_EQ(basic2.front(), "hello");
   basic2.erase(it);
   EXPECT_EQ(basic2.front(), "world");
-  //  ++it; // ecли не передвинуть итератор будет СЕГА!!!
-  //  basic2.erase(it);
-  //  EXPECT_EQ(basic2.front(), "lets");
+}
+
+TEST(list_test, std_erase2) {
+  s21::list<std::string> basic2 = {"hello", "world", "lets", "go!"};
+  auto it(basic2.end());
+  EXPECT_EQ(basic2.back(), "go!");
+  basic2.erase(it);
+  EXPECT_EQ(basic2.back(), "lets");
+}
+
+TEST(list_test, std_erase3) {
+  std::list<std::string> basic2 = {"hello", "world", "lets", "go!"};
+  auto it(basic2.end());
+  --it;
+  EXPECT_EQ(basic2.back(), "go!");
+  basic2.erase(it);
+  EXPECT_EQ(basic2.back(), "lets");
 }
 
 TEST(list_test, erase2) {
@@ -363,10 +477,62 @@ TEST(list_test, erase2) {
   it = basic2.begin();
   basic2.erase(it);
   EXPECT_EQ(basic2.front(), "world");
-  //  ++it; // ecли не передвинуть итератор будет СЕГА!!!
-  //  basic2.erase(it);
-  //  EXPECT_EQ(basic2.front(), "lets");
 }
+
+TEST(list_test, erase3) {
+  s21::list<std::string> basic2 = {"hello", "world", "lets", "go!"};
+  auto it(basic2.begin());
+  while (it != basic2.end()) {
+    basic2.erase(it);
+    it = basic2.begin();
+  }
+  EXPECT_TRUE(basic2.empty());
+}
+
+TEST(list_test, erase4) {
+  s21::list<std::string> basic2 = {"hello", "world", "lets", "go!"};
+  auto it(basic2.begin());
+  it++;
+  EXPECT_EQ(*it, "world");
+  basic2.erase(it);
+  it = basic2.begin();
+  it++;
+  EXPECT_EQ(*it, "lets");
+}
+
+TEST(list_test, splice) {
+  s21::list<std::string> basic = {"hello", "world"};
+  s21::list<std::string> basic2 = {"lets", "go!"};
+  auto it = basic.begin();
+  basic.splice(it, basic2);
+  EXPECT_EQ(basic.front(), "lets");
+  EXPECT_EQ(basic.back(), "world");
+}
+
+TEST(list_test, splice2) {
+  s21::list<std::string> basic = {"hello", "world"};
+  s21::list<std::string> basic2 = {"lets", "go!"};
+  auto it = basic.begin();
+  it++;
+  basic.splice(it, basic2);
+  it = basic.begin();
+  it++;
+  EXPECT_EQ(*it, "lets");
+  it++;
+  EXPECT_EQ(*it, "go!");
+  EXPECT_EQ(basic.front(), "hello");
+  EXPECT_EQ(basic.back(), "world");
+}
+
+TEST(list_test, splice3) {
+  s21::list<std::string> basic = {"hello", "world"};
+  s21::list<std::string> basic2 = {"lets", "go!"};
+  auto it = basic.end();
+  basic.splice(it, basic2);
+  EXPECT_EQ(basic.front(), "hello");
+  EXPECT_EQ(basic.back(), "go!");
+}
+
 TEST(list_test, reverse) {
   s21::list<std::string> basic2 = {"hello", "world", "lets", "go!"};
   EXPECT_EQ(basic2.front(), "hello");
@@ -389,7 +555,7 @@ TEST(list_test, reverse3) {
 }
 
 TEST(list_test, reverse4) {
-  s21::list<int> basic2({1,2,3,12312312,100500});
+  s21::list<int> basic2({1, 2, 3, 12312312, 100500});
   EXPECT_EQ(basic2.front(), 1);
   basic2.reverse();
   EXPECT_EQ(basic2.front(), 100500);
@@ -416,8 +582,10 @@ TEST(list_test, sort2) {
 }
 
 TEST(list_test, sort3) {
-  s21::list<int> basic({-100,12321,123,-5124,13,0,-111,17,5125,41349394,-31423434,2});
-  std::list<int> basic2({-100,12321,123,-5124,13,0,-111,17,5125,41349394,-31423434,2});
+  s21::list<int> basic(
+      {-100, 12321, 123, -5124, 13, 0, -111, 17, 5125, 41349394, -31423434, 2});
+  std::list<int> basic2(
+      {-100, 12321, 123, -5124, 13, 0, -111, 17, 5125, 41349394, -31423434, 2});
   basic.sort();
   basic2.sort();
   EXPECT_EQ(basic.front(), -31423434);
@@ -427,8 +595,9 @@ TEST(list_test, sort3) {
 }
 
 TEST(list_test, merge) {
-  s21::list<int> basic({-100,12321,123,-5124,13,0,-111,17,5125,41349394,-31423434,2});
-  s21::list<int> basic2({1000000000,-1000000000});
+  s21::list<int> basic(
+      {-100, 12321, 123, -5124, 13, 0, -111, 17, 5125, 41349394, -31423434, 2});
+  s21::list<int> basic2({1000000000, -1000000000});
   basic.sort();
   basic2.sort();
   basic.merge(basic2);
@@ -437,9 +606,9 @@ TEST(list_test, merge) {
   EXPECT_TRUE(basic2.empty());
 }
 
-TEST(list_test, std_merge) {
+TEST(list_test, merge2) {
   std::list<int> basic;
-  std::list<int> basic2({1000000000,-1000000000});
+  std::list<int> basic2({1000000000, -1000000000});
   basic.sort();
   basic2.sort();
   basic.merge(basic2);
@@ -448,9 +617,9 @@ TEST(list_test, std_merge) {
   EXPECT_TRUE(basic2.empty());
 }
 
-TEST(list_test, std_merge2) {
+TEST(list_test, merge3) {
   s21::list<int> basic;
-  s21::list<int> basic2({1000000000,-1000000000});
+  s21::list<int> basic2({1000000000, -1000000000});
   basic.sort();
   basic2.sort();
   basic.merge(basic2);
@@ -458,7 +627,6 @@ TEST(list_test, std_merge2) {
   EXPECT_EQ(basic.back(), 1000000000);
   EXPECT_TRUE(basic2.empty());
 }
-
 
 // TEST(list_test, max_size) {
 //   std::list<std::string> basic2({"hello", "world", "lets", "go!"});
