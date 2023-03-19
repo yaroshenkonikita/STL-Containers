@@ -25,5 +25,10 @@ gcov_report: test
 clean:
 	@-rm -rf *.o *.a *gcda *gcno *info report test debug a.out
 
+style:
+	@clang-format -style=google -n s21_list.h tests_list.cc
+	@clang-format -style=google -i s21_list.h tests_list.cc
+
+
 leaks:
 	leaks -atExit -- ./test
