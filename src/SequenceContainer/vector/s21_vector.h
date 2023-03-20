@@ -1,11 +1,11 @@
 #ifndef CPP2_S21_CONTAINERS_0_SRC_S21_VECTOR_H
 #define CPP2_S21_CONTAINERS_0_SRC_S21_VECTOR_H
 
-#include "iostream"
-#include "limits"
+//#include "iostream"
+//#include "limits"
 
 namespace s21 {
-template<typename T, typename... Args>
+template<typename T>
 class vector {
  public:
   using value_type = T;
@@ -168,25 +168,25 @@ class vector {
     std::swap(capacity_, other.capacity_);
   }
 
+  template <typename... Args>
+  const_iterator emplace(const_iterator pos, Args&&... args) {
+//    const_iterator it = pos;
+    iterator it = pos;
+    if (size_ == capacity_) {
+      reserve(capacity_ == 0 ? 1 : capacity_ * 2);
+    }
+    for (auto element : {std::forward<Args>(args)...}) {
+      insert(pos, element);
+    }
+    return pos--;
+  }
+
+  template <typename... Args>
   void emplace_back(Args &&... args) {
     if (size_ == capacity_) {
       reserve(capacity_ == 0 ? 1 : capacity_ * 2);
     }
-    for (auto element : {std::forward<Args>(args)...}) {
-      emplace(end(), element);
-    }
-  }
-
-  iterator emplace(const_iterator pos, Args &&... args) {
-    const_iterator it = pos;
-    size_type index = pos - cbegin();
-    if (size_ == capacity_) {
-      reserve(capacity_ == 0 ? 1 : capacity_ * 2);
-    }
-    for (auto element : {std::forward<Args>(args)...}) {
-      insert(it, element);
-    }
-    return it--;
+    new (arr_ + size_++) T(std::forward<Args>(args)...);
   }
 
  private:

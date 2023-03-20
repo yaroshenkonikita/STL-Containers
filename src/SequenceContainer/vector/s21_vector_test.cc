@@ -205,6 +205,22 @@ TEST(modifiers, push_back) {
   EXPECT_EQ(vector.size(), std.size());
 }
 
+TEST(emplace, emplace) {
+  s21::vector<int> vector = {1, 2, 3, 4};
+  std::vector<int> std = {1, 2, 3, 4};
+//  s21::vector<int>::const_iterator it = vector.begin();
+  auto it = vector.begin();
+  vector.emplace(it, 5);
+//  std.emplace(std.begin() , 5);
+}
+
+TEST(emplace, emplace_back) {
+  s21::vector<int> vector = {1, 2, 3, 4};
+  std::vector<int> std = {1, 2, 3, 4};
+  vector.emplace_back(5);
+  std.emplace_back(5);
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
