@@ -74,6 +74,7 @@ class list {
   void emplace_front(Args &&...args) {
     emplace(begin(), std::forward<Args>(args)...);
   }
+
   template <typename... Args>
   iterator emplace(const_iterator pos, Args &&...args) {
     iterator it(pos);

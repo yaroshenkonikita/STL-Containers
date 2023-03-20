@@ -322,27 +322,25 @@ TEST(list_test, constr_move) {
 
 TEST(list_test, iter) {
   s21::list<std::string> basic = {"hello", "world", "lets", "go!"};
-  s21::list<std::string>::ListIterator it(basic.begin());
+  s21::list<std::string>::iterator it(basic.begin());
   EXPECT_EQ(*it, "hello");
 }
 
 TEST(list_test, iter2) {
   s21::list<std::string> basic = {"hello", "world", "lets", "go!"};
-  s21::list<std::string>::ListIterator it(basic.begin());
-  it++;
-  EXPECT_EQ(*it, "world");
+  s21::list<std::string>::iterator it(basic.begin());
+  EXPECT_EQ(*it++, "world");
 }
 
 TEST(list_test, iter3) {
   s21::list<std::string> basic = {"hello", "world", "lets", "go!"};
-  s21::list<std::string>::ListIterator it(basic.begin());
-  ++it;
-  EXPECT_EQ(*it, "world");
+  s21::list<std::string>::iterator it(basic.end());
+  EXPECT_EQ(*it++, "hello");
 }
 
 TEST(list_test, iter4) {
   s21::list<std::string> basic = {"hello", "world", "lets", "go!"};
-  s21::list<std::string>::ListIterator it(basic.begin());
+  s21::list<std::string>::iterator it(basic.begin());
   it++;
   it++;
   it++;
