@@ -446,13 +446,86 @@ TEST(list_test, insert_iter8) {
   EXPECT_EQ(basic2.front(), "lol");
 }
 
+TEST(list_test, emplace) {
+  s21::list<std::string> basic2 = {"hello", "world", "lets", "go!"};
+  s21::list<std::string>::const_iterator it(basic2.begin());
+  basic2.emplace(it, "1");
+  EXPECT_EQ(basic2.front(), "1");
+}
+
+TEST(list_test, emplace2) {
+  s21::list<int> basic2 = {1, 3, 5, 7};
+  s21::list<int>::const_iterator it(basic2.begin());
+  auto it2 = basic2.emplace(it, 11, 12);
+  EXPECT_EQ(basic2.front(), 11);
+  EXPECT_EQ(*it--, 12);
+  EXPECT_EQ(*it--, 11);
+  EXPECT_EQ(*it2, 12);
+}
+
+TEST(list_test, emplace3) {
+  s21::list<std::string> basic2 = {"hello", "hello", "world", "lets", "go!"};
+  s21::list<std::string>::const_iterator it(basic2.begin());
+  auto it2 = basic2.emplace(it, "hi", "ho", "123");
+  EXPECT_EQ(basic2.front(), "hi");
+  EXPECT_EQ(*it--, "123");
+  EXPECT_EQ(*it--, "ho");
+  EXPECT_EQ(*it--, "hi");
+  EXPECT_EQ(*it--, "");
+  EXPECT_EQ(*it--, "go!");
+  EXPECT_EQ(*it2, "123");
+}
+
+TEST(list_test, emplace4) {
+  s21::list<int> basic2 = {1, 3, 5, 7};
+  s21::list<int>::const_iterator it(basic2.begin());
+  it++;
+  auto it2 = basic2.emplace(it, 11, 12);
+  EXPECT_EQ(basic2.front(), 1);
+  EXPECT_EQ(*it--, 12);
+  EXPECT_EQ(*it--, 11);
+  EXPECT_EQ(*it2, 12);
+}
+
+TEST(list_test, emplace5) {
+  s21::list<int> basic2 = {1, 3, 5, 7};
+  s21::list<int>::const_iterator it(basic2.end());
+  auto it2 = basic2.emplace(it--, 11, 12);
+  EXPECT_EQ(basic2.back(), 7);
+  EXPECT_EQ(*it--, 12);
+  EXPECT_EQ(*it--, 11);
+  EXPECT_EQ(*it2, 12);
+}
+
+TEST(list_test, emplace_back) {
+  s21::list<std::string> basic2 = {"hello", "hello", "world", "lets", "go!"};
+  s21::list<std::string>::const_iterator it(basic2.end());
+  basic2.emplace_back("hi", "ho", "123");
+  EXPECT_EQ(*it--, "123");
+  EXPECT_EQ(*it--, "ho");
+  EXPECT_EQ(*it--, "hi");
+  EXPECT_EQ(*it--, "go!");
+}
+
+TEST(list_test, emplace_front) {
+  s21::list<std::string> basic2 = {"hello", "hello", "world", "lets", "go!"};
+  basic2.emplace_front("hi", "ho", "123");
+  s21::list<std::string>::const_iterator it(basic2.begin());
+  EXPECT_EQ(*it, "hi");
+  EXPECT_EQ(*it++, "ho");
+  EXPECT_EQ(*it++, "123");
+  EXPECT_EQ(*it++, "hello");
+  it = basic2.begin();
+  EXPECT_EQ(*it--, "");
+  EXPECT_EQ(*it--, "go!");
+}
+
 TEST(list_test, unique) {
   s21::list<std::string> basic2 = {"hello", "hello", "world", "lets", "go!"};
   basic2.unique();
   EXPECT_EQ(basic2.front(), "hello");
   s21::list<std::string>::iterator it(basic2.begin());
-  it++;
-  EXPECT_EQ(*it, "world");
+  EXPECT_EQ(*it++, "world");
 }
 
 TEST(list_test, unique2) {
@@ -462,10 +535,8 @@ TEST(list_test, unique2) {
   EXPECT_EQ(basic2.back(), "go!");
   s21::list<std::string>::iterator it(basic2.begin());
   --it;
-  --it;
-  EXPECT_EQ(*it, "go!");
-  --it;
-  EXPECT_EQ(*it, "lets");
+  EXPECT_EQ(*it--, "go!");
+  EXPECT_EQ(*it--, "lets");
 }
 
 TEST(list_test, unique3) {
@@ -475,16 +546,11 @@ TEST(list_test, unique3) {
   EXPECT_EQ(basic2.back(), "go!");
   s21::list<std::string>::iterator it(basic2.begin());
   EXPECT_EQ(*it, "hello");
-  it++;
-  EXPECT_EQ(*it, "world");
-  it++;
-  EXPECT_EQ(*it, "lets");
-  it++;
-  EXPECT_EQ(*it, "go!");
-  it++;
-  EXPECT_EQ(*it, "");
-  it++;
-  EXPECT_EQ(*it, "hello");
+  EXPECT_EQ(*it++, "world");
+  EXPECT_EQ(*it++, "lets");
+  EXPECT_EQ(*it++, "go!");
+  EXPECT_EQ(*it++, "");
+  EXPECT_EQ(*it++, "hello");
 }
 
 TEST(list_test, unique4) {
@@ -493,16 +559,11 @@ TEST(list_test, unique4) {
   basic2.unique();
   s21::list<std::string>::iterator it(basic2.begin());
   EXPECT_EQ(*it, "hello");
-  it--;
-  EXPECT_EQ(*it, "");
-  it--;
-  EXPECT_EQ(*it, "go!");
-  it--;
-  EXPECT_EQ(*it, "lets");
-  it--;
-  EXPECT_EQ(*it, "world");
-  it--;
-  EXPECT_EQ(*it, "hello");
+  EXPECT_EQ(*it--, "");
+  EXPECT_EQ(*it--, "go!");
+  EXPECT_EQ(*it--, "lets");
+  EXPECT_EQ(*it--, "world");
+  EXPECT_EQ(*it--, "hello");
 }
 
 TEST(list_test, erase) {
@@ -532,7 +593,7 @@ TEST(list_test, std_erase2) {
 TEST(list_test, std_erase3) {
   std::list<std::string> basic2 = {"hello", "world", "lets", "go!"};
   auto it(basic2.end());
-  --it--;
+  --it;
   EXPECT_EQ(basic2.back(), "go!");
   basic2.erase(it);
   EXPECT_EQ(basic2.back(), "lets");
@@ -562,12 +623,10 @@ TEST(list_test, erase3) {
 TEST(list_test, erase4) {
   s21::list<std::string> basic2 = {"hello", "world", "lets", "go!"};
   auto it(basic2.begin());
-  it++;
-  EXPECT_EQ(*it, "world");
+  EXPECT_EQ(*it++, "world");
   basic2.erase(it);
   it = basic2.begin();
-  it++;
-  EXPECT_EQ(*it, "lets");
+  EXPECT_EQ(*it++, "lets");
 }
 
 TEST(list_test, splice) {
@@ -579,8 +638,7 @@ TEST(list_test, splice) {
   EXPECT_EQ(basic.front(), "lets");
   EXPECT_EQ(basic.back(), "world");
   EXPECT_EQ(*it, "hello");
-  it++;
-  EXPECT_EQ(*it, "world");
+  EXPECT_EQ(*it++, "world");
 }
 
 TEST(list_test, splice2) {
@@ -588,13 +646,10 @@ TEST(list_test, splice2) {
   s21::list<std::string> basic2 = {"lets", "go!"};
   s21::list<std::string>::iterator it2(basic.begin());
   s21::list<std::string>::const_iterator it(it2.current);
-  it++;
-  basic.splice(it, basic2);
+  basic.splice(it++, basic2);
   it = basic.begin();
-  it++;
-  EXPECT_EQ(*it, "lets");
-  it++;
-  EXPECT_EQ(*it, "go!");
+  EXPECT_EQ(*it++, "lets");
+  EXPECT_EQ(*it++, "go!");
   EXPECT_EQ(basic.front(), "hello");
   EXPECT_EQ(basic.back(), "world");
 }
@@ -615,10 +670,8 @@ TEST(list_test, reverse) {
   EXPECT_EQ(basic2.front(), "go!");
   auto it = basic2.begin();
   EXPECT_EQ(*it, "go!");
-  --it;
-  EXPECT_EQ(*it, "");
-  --it;
-  EXPECT_EQ(*it, "hello");
+  EXPECT_EQ(*it--, "");
+  EXPECT_EQ(*it--, "hello");
 }
 
 TEST(list_test, reverse2) {

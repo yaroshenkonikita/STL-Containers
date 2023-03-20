@@ -30,7 +30,7 @@ class list {
   /* CONSTRUCTORS AND DESTRUCTOR */
   /*__________________________________________________________________*/
   list();
-  explicit list(size_type size);  // explicit ???
+  explicit list(size_type size);
   list(std::initializer_list<value_type> const &items);
   list(const list<value_type> &other);
   list(list<value_type> &&other) noexcept;
@@ -61,7 +61,28 @@ class list {
   void reverse();
   void unique();
   void sort();
+  /*__________________________________________________________________*/
+  /* Part 3. Bonus. Implementation of the modified emplace methods */
+  /*__________________________________________________________________*/
 
+  template <typename... Args>
+  void emplace_back(Args &&...args) {
+    emplace(end(), std::forward<Args>(args)...);
+  }
+
+  template <typename... Args>
+  void emplace_front(Args &&...args) {
+    emplace(begin(), std::forward<Args>(args)...);
+  }
+  template <typename... Args>
+  iterator emplace(const_iterator pos, Args &&...args) {
+    iterator it(pos);
+    for (auto element : {std::forward<Args>(args)...}) {
+      insert(it, element);
+    }
+    return it--;
+  }
+  /*__________________________________________________________________*/
   // private:
   class node {
    public:
@@ -69,7 +90,7 @@ class list {
     node *prev;
     value_type data;
     explicit node(const_reference data = value_type(), node *next = nullptr,
-                  node *prev = nullptr) {  // explicit ???
+                  node *prev = nullptr) {
       this->data = data;
       this->next = next;
       this->prev = prev;
@@ -110,12 +131,12 @@ class list {
       return current->next != other.current->next;
     }
   };
-  class ListConstIterator : public ListIterator {
+  class ListConstIterator : public iterator {
    public:
-    ListConstIterator() : ListIterator(){};
-    ListConstIterator(ListIterator &it) : ListIterator(it.current){};
-    ListConstIterator(ListIterator &&it) noexcept : ListIterator(it.current){};
-    explicit ListConstIterator(node *other) : ListIterator(other){};
+    ListConstIterator() : iterator(){};
+    ListConstIterator(iterator &it) : iterator(it.current){};
+    ListConstIterator(iterator &&it) noexcept : iterator(it.current){};
+    explicit ListConstIterator(node *other) : iterator(other){};
 
     value_type operator*() const noexcept {
       return (value_type)this->current->data;
@@ -137,7 +158,6 @@ class list {
       while (it.current != pos.current->prev) {
         ++it;
       }
-      // возможно тут есть ошибка, надо перепроверить
       node *new_node = new node(value, pos.current, it.current);
       it.current->next = new_node;
       pos.current->prev = new_node;
@@ -235,8 +255,9 @@ list<value_type> &list<value_type>::operator=(
   }
   return *this;
 }
-template <typename T>
-list<T>::list(const list<value_type> &other) {
+
+template <typename value_type>
+list<value_type>::list(const list<value_type> &other) {
   size_list_ = 0;
   head_ = tail_ = end_ = new node();
   node *current_other = other.head_;
@@ -245,20 +266,23 @@ list<T>::list(const list<value_type> &other) {
     current_other = current_other->next;
   }
 }
-template <typename T>
-void list<T>::swap(list &other) {
+
+template <typename value_type>
+void list<value_type>::swap(list &other) {
   std::swap(size_list_, other.size_list_);
   std::swap(head_, other.head_);
   std::swap(tail_, other.tail_);
   std::swap(end_, other.end_);
 }
-template <typename T>
-void list<T>::clear() {
+
+template <typename value_type>
+void list<value_type>::clear() {
   while (!empty()) {
     pop_front();
   }
   delete end_;
 }
+
 template <typename value_type>
 void list<value_type>::push_front(const_reference data) {
   if (!size_list_) {
@@ -274,6 +298,7 @@ void list<value_type>::push_front(const_reference data) {
   }
   size_list_++;
 }
+
 template <typename value_type>
 void list<value_type>::push_back(const_reference data) {
   if (!size_list_) {
@@ -289,19 +314,25 @@ void list<value_type>::push_back(const_reference data) {
   }
   size_list_++;
 }
+
 template <typename value_type>
 list<value_type>::list() {
   size_list_ = 0;
   head_ = tail_ = end_ = new node();
 }
+
 template <typename value_type>
 list<value_type>::list(size_type size) {
   head_ = tail_ = end_ = new node();
   size_list_ = 0;
+  if (size >= max_size()) {
+    throw std::out_of_range("Limit of the container is exceeded");
+  }
   for (size_type i = 0; i < size; i++) {
     push_front(value_type());
   }
 }
+
 template <typename value_type>
 list<value_type>::list(std::initializer_list<value_type> const &items) {
   head_ = tail_ = end_ = new node();
@@ -310,6 +341,7 @@ list<value_type>::list(std::initializer_list<value_type> const &items) {
     push_back(element);
   }
 }
+
 template <typename value_type>
 list<value_type>::list(list<value_type> &&other) noexcept {
   size_list_ = std::exchange(other.size_list_, 0);
@@ -318,10 +350,12 @@ list<value_type>::list(list<value_type> &&other) noexcept {
   end_ = std::exchange(other.end_, nullptr);
   other.head_ = other.tail_ = other.end_ = new node();
 }
+
 template <typename value_type>
 list<value_type>::~list() {
   clear();
 }
+
 template <typename value_type>
 void list<value_type>::pop_front() {
   length_error();
@@ -332,6 +366,7 @@ void list<value_type>::pop_front() {
   head_->prev = end_;
   end_->next = head_;
 }
+
 template <typename value_type>
 void list<value_type>::pop_back() {
   length_error();
@@ -342,8 +377,9 @@ void list<value_type>::pop_back() {
   tail_->next = end_;
   end_->prev = tail_;
 }
-template <typename T>
-void list<T>::reverse() {
+
+template <typename value_type>
+void list<value_type>::reverse() {
   auto current = head_;
   while (current != end_) {
     auto next_node = current->next;
@@ -356,8 +392,9 @@ void list<T>::reverse() {
   end_->next = head_;
   end_->prev = tail_;
 }
-template <typename T>
-void list<T>::unique() {
+
+template <typename value_type>
+void list<value_type>::unique() {
   iterator current = begin();
   iterator next(head_->next);
   while (next != end()) {
@@ -372,8 +409,9 @@ void list<T>::unique() {
     }
   }
 }
-template <typename T>
-void list<T>::sort() {
+
+template <typename value_type>
+void list<value_type>::sort() {
   if (!empty()) {
     for (iterator i(head_->next); i != end(); ++i) {
       iterator j(i.current->prev);
@@ -390,5 +428,6 @@ void list<T>::sort() {
     }
   }
 }
+
 }  // namespace s21
 #endif  // CPP2_S21_CONTAINERS_0_SRC_S21_LIST_H
