@@ -5,7 +5,7 @@
 #include "limits"
 
 namespace s21 {
-template <typename T>
+template<typename T, typename... Args>
 class vector {
  public:
   using value_type = T;
@@ -155,7 +155,7 @@ class vector {
       reserve(capacity_ * 2);
     }
     arr_[size_] = value;
-    ++size_;
+    size_++;
   }
 
   //  Удаляет последний элемент контейнера
@@ -166,6 +166,27 @@ class vector {
     std::swap(arr_, other.arr_);
     std::swap(size_, other.size_);
     std::swap(capacity_, other.capacity_);
+  }
+
+  void emplace_back(Args &&... args) {
+    if (size_ == capacity_) {
+      reserve(capacity_ == 0 ? 1 : capacity_ * 2);
+    }
+    for (auto element : {std::forward<Args>(args)...}) {
+      emplace(end(), element);
+    }
+  }
+
+  iterator emplace(const_iterator pos, Args &&... args) {
+    const_iterator it = pos;
+    size_type index = pos - cbegin();
+    if (size_ == capacity_) {
+      reserve(capacity_ == 0 ? 1 : capacity_ * 2);
+    }
+    for (auto element : {std::forward<Args>(args)...}) {
+      insert(it, element);
+    }
+    return it--;
   }
 
  private:
