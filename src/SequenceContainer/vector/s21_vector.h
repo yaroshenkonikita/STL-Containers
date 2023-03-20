@@ -5,9 +5,8 @@
 //#include "limits"
 
 namespace s21 {
-template<typename T>
-class vector {
- public:
+template <typename T> class vector {
+public:
   using value_type = T;
   using reference = value_type &;
   using const_reference = const value_type &;
@@ -20,20 +19,23 @@ class vector {
   vector() : arr_(nullptr), size_(0), capacity_(0) {}
 
   //  Конструктор с размером
-  explicit vector(size_type n) : arr_(new value_type[n]), size_(n), capacity_(n) {}
+  explicit vector(size_type n)
+      : arr_(new value_type[n]), size_(n), capacity_(n) {}
 
   //  Конструктор списка инициализаторов
   vector(std::initializer_list<value_type> const &items)
       : arr_(nullptr), size_(0), capacity_(0) {
     reserve(items.size());
-    for (value_type item : items) push_back(item);
+    for (value_type item : items)
+      push_back(item);
   }
 
   //  Конструктор копирования
   vector(const vector &v) : arr_(nullptr), size_(0), capacity_(0) {
     reserve(v.capacity_);
     size_ = v.size_;
-    for (size_type i = 0; i < size_; i++) arr_[i] = v.arr_[i];
+    for (size_type i = 0; i < size_; i++)
+      arr_[i] = v.arr_[i];
   }
 
   //  Конструктор перемещения
@@ -63,7 +65,8 @@ class vector {
 
   //  Возвращает ссылку на элемент в указанном месте pos с проверкой границ
   reference at(size_type pos) {
-    if (pos >= size_) throw std::out_of_range("Out of range");
+    if (pos >= size_)
+      throw std::out_of_range("Out of range");
     return arr_[pos];
   }
   //  Возвращает ссылку на элемент в указанном месте
@@ -79,10 +82,8 @@ class vector {
   pointer data() noexcept { return arr_; }
 
   // Итерирование
-  iterator begin() noexcept { return arr_; }
-  const_iterator cbegin() const noexcept { return arr_; }
-  iterator end() noexcept { return arr_ + size_; }
-  const_iterator cend() const noexcept { return arr_ + size_; }
+  iterator begin() const noexcept { return arr_; }
+  iterator end() const noexcept { return arr_ + size_; }
 
   //  Проверяет, нет ли в контейнере элементов
   bool empty() const noexcept { return size_ == 0; }
@@ -98,7 +99,8 @@ class vector {
 
   //  Увеличиваем емкость вектора до значения, которое больше или равно size
   void reserve(size_type size) {
-    if (size > max_size()) throw std::length_error("Out of memory");
+    if (size > max_size())
+      throw std::length_error("Out of memory");
     if (size > capacity_) {
       value_type *new_data = new value_type[size];
       std::copy(arr_, arr_ + size_, new_data);
@@ -168,8 +170,8 @@ class vector {
     std::swap(capacity_, other.capacity_);
   }
 
-  template<typename... Args>
-  const_iterator emplace(const_iterator pos, Args &&... args) {
+  template <typename... Args>
+  const_iterator emplace(const_iterator pos, Args &&...args) {
     if (size_ == capacity_) {
       reserve(capacity_ == 0 ? 1 : capacity_ * 2);
     }
@@ -180,19 +182,18 @@ class vector {
     return --pos;
   }
 
-  template<typename... Args>
-  void emplace_back(Args &&... args) {
+  template <typename... Args> void emplace_back(Args &&...args) {
     if (size_ == capacity_) {
       reserve(capacity_ == 0 ? 1 : capacity_ * 2);
     }
-    new(arr_ + size_++) T(std::forward<Args>(args)...);
+    new (arr_ + size_++) T(std::forward<Args>(args)...);
   }
 
- private:
+private:
   pointer arr_;
   size_type size_;
   size_type capacity_;
 };
-}  // namespace s21
+} // namespace s21
 
-#endif  // CPP2_S21_CONTAINERS_0_SRC_S21_VECTOR_H
+#endif // CPP2_S21_CONTAINERS_0_SRC_S21_VECTOR_H

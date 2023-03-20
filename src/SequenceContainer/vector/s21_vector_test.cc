@@ -86,10 +86,10 @@ TEST(vector, begin) {
   EXPECT_EQ(*std.begin(), *vector.begin());
 }
 
-TEST(vector, cbegin) {
+TEST(vector, const_begin) {
   std::vector<int> const std = {1, 2, 3, 4};
   s21::vector<int> const vector = {1, 2, 3, 4};
-  EXPECT_EQ(*std.cbegin(), *vector.cbegin());
+  EXPECT_EQ(*std.begin(), *vector.begin());
 }
 
 TEST(vector, end) {
@@ -98,10 +98,10 @@ TEST(vector, end) {
   EXPECT_EQ(*std.end(), *vector.end());
 }
 
-TEST(vector, cend) {
+TEST(vector, const_end) {
   std::vector<int> const std = {1, 2, 3, 4};
   s21::vector<int> const vector = {1, 2, 3, 4};
-  EXPECT_EQ(*std.cend(), *vector.cend());
+  EXPECT_EQ(*std.end(), *vector.end());
 }
 
 TEST(vector, empty) {
@@ -119,24 +119,17 @@ TEST(vector, maxSize) {
   EXPECT_EQ(vector.max_size(), std.max_size());
 }
 
-TEST(vector, reserve) {
+TEST(vector, reserve_and_shrink_to_fit) {
   s21::vector<int> vector = {1, 2, 3, 4};
   std::vector<int> std = {1, 2, 3, 4};
   vector.reserve(10);
   std.reserve(10);
   vector.reserve(7);
   std.reserve(7);
-  ASSERT_EQ(vector.size(), std.size());
-  ASSERT_EQ(vector.capacity(), std.capacity());
-}
-
-TEST(vector, shrink_to_fit_test) {
-  std::vector<int> std = {1, 2, 3, 4};
-  s21::vector<int> vector = {1, 2, 3, 4};
   vector.shrink_to_fit();
   std.shrink_to_fit();
-  EXPECT_EQ(vector.capacity(), std.capacity());
-  EXPECT_EQ(vector.size(), std.size());
+  ASSERT_EQ(vector.size(), std.size());
+  ASSERT_EQ(vector.capacity(), std.capacity());
 }
 
 TEST(vector, clear) {
