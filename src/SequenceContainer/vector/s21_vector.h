@@ -13,7 +13,7 @@ class vector {
   using const_reference = const value_type &;
   using iterator = T *;
   using const_iterator = const T *;
-  using size_type = size_t;
+  using size_type = std::size_t;
   using pointer = value_type *;
 
   //  Дефолтный конструктор
@@ -174,7 +174,7 @@ class vector {
       reserve(capacity_ == 0 ? 1 : capacity_ * 2);
     }
     for (auto element : {std::forward<Args>(args)...}) {
-      insert((iterator) pos, element);
+      insert((iterator)pos, element);
       pos++;
     }
     return --pos;
