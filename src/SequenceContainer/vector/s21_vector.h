@@ -1,12 +1,13 @@
 #ifndef CPP2_S21_CONTAINERS_0_SRC_S21_VECTOR_H
 #define CPP2_S21_CONTAINERS_0_SRC_S21_VECTOR_H
 
-//#include "iostream"
-//#include "limits"
+#include "iostream"
+#include "limits"
 
 namespace s21 {
-template <typename T> class vector {
-public:
+template <typename T>
+class vector {
+ public:
   using value_type = T;
   using reference = value_type &;
   using const_reference = const value_type &;
@@ -26,16 +27,14 @@ public:
   vector(std::initializer_list<value_type> const &items)
       : arr_(nullptr), size_(0), capacity_(0) {
     reserve(items.size());
-    for (value_type item : items)
-      push_back(item);
+    for (value_type item : items) push_back(item);
   }
 
   //  Конструктор копирования
   vector(const vector &v) : arr_(nullptr), size_(0), capacity_(0) {
     reserve(v.capacity_);
     size_ = v.size_;
-    for (size_type i = 0; i < size_; i++)
-      arr_[i] = v.arr_[i];
+    for (size_type i = 0; i < size_; i++) arr_[i] = v.arr_[i];
   }
 
   //  Конструктор перемещения
@@ -65,8 +64,7 @@ public:
 
   //  Возвращает ссылку на элемент в указанном месте pos с проверкой границ
   reference at(size_type pos) {
-    if (pos >= size_)
-      throw std::out_of_range("Out of range");
+    if (pos >= size_) throw std::out_of_range("Out of range");
     return arr_[pos];
   }
   //  Возвращает ссылку на элемент в указанном месте
@@ -99,8 +97,7 @@ public:
 
   //  Увеличиваем емкость вектора до значения, которое больше или равно size
   void reserve(size_type size) {
-    if (size > max_size())
-      throw std::length_error("Out of memory");
+    if (size > max_size()) throw std::length_error("Out of memory");
     if (size > capacity_) {
       value_type *new_data = new value_type[size];
       std::copy(arr_, arr_ + size_, new_data);
@@ -182,18 +179,19 @@ public:
     return --pos;
   }
 
-  template <typename... Args> void emplace_back(Args &&...args) {
+  template <typename... Args>
+  void emplace_back(Args &&...args) {
     if (size_ == capacity_) {
       reserve(capacity_ == 0 ? 1 : capacity_ * 2);
     }
     new (arr_ + size_++) T(std::forward<Args>(args)...);
   }
 
-private:
+ private:
   pointer arr_;
   size_type size_;
   size_type capacity_;
 };
-} // namespace s21
+}  // namespace s21
 
-#endif // CPP2_S21_CONTAINERS_0_SRC_S21_VECTOR_H
+#endif  // CPP2_S21_CONTAINERS_0_SRC_S21_VECTOR_H
