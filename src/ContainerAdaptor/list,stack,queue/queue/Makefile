@@ -1,0 +1,23 @@
+.PHONY: all clean test $(SOURCENAME).a gcov_report style
+
+CC = g++
+CFLAGS = -Wall -Werror -Wextra -std=c++17
+TFLAGS = -lgtest
+RFLAGS = -fprofile-arcs -ftest-coverage
+SOURCENAME = s21_queue
+
+all: test
+
+test: tests_queue.cc $(SOURCENAME).h
+	@$(CC) $(CFLAGS) tests_queue.cc -o test $(TFLAGS)
+	@./test
+
+clean:
+	@-rm -rf *.o *.a *gcda *gcno *info report test
+
+leaks:
+	leaks -atExit -- ./test
+
+style:
+	@clang-format -style=google -n s21_queue.h tests_queue.cc
+	@clang-format -style=google -i s21_queue.h tests_queue.cc
