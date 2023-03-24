@@ -1,7 +1,7 @@
 #-fsanitize=address
 CC = g++
 CFLAGS = -Wall -Wextra -Werror -std=c++17 -pedantic
-TFLAGS = -lgtest
+TFLAGS = -lgtest -lgtest_main
 CORE = s21_vector
 TEST = s21_vector_test
 COVEREGE = --coverage
@@ -9,8 +9,7 @@ COVEREGE = --coverage
 all: clean gcov_report
 
 test:
-	@echo "Please wait"
-	@$(CC) $(CFLAGS) $(COVEREGE) $(TEST).cc -o test $(TFLAGS)
+	$(CC) $(CFLAGS) Tests/*/*.cc $(TFLAGS) -o test
 	@./test
 
 gcov_report: test

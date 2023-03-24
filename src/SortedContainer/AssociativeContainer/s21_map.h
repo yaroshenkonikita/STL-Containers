@@ -1,5 +1,5 @@
-#ifndef STL_CONTAINERS_MAP_H_
-#define STL_CONTAINERS_MAP_H_
+#ifndef CPP2_S21_CONTAINERS_0_SRC_S21_MAP_H_
+#define CPP2_S21_CONTAINERS_0_SRC_S21_MAP_H_
 
 #include "../BinaryTree.h"
 
@@ -235,11 +235,6 @@ class map : public BinaryTree<std::pair<Key, Value>> {
   }
 };
 
-// template<Pair>
-// BinaryTree<Pair>::value_type &BinaryTree<Pair>::TreeIterator::operator*() {
-//     return
-// }
-
 }  // namespace s21
 
-#endif  // STL_CONTAINERS_MAP_H_
+#endif  // CPP2_S21_CONTAINERS_0_SRC_S21_MAP_H_
