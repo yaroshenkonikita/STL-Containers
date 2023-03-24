@@ -1,8 +1,8 @@
-#include "../s21_containers.h"
-
 #include <gtest/gtest.h>
 
 #include <vector>
+
+#include "../s21_containers.h"
 
 TEST(vector, defaultConstructor) {
   s21::vector<double> vector;
