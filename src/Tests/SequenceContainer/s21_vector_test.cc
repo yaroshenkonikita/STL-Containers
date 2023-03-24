@@ -1,4 +1,4 @@
-#include "s21_vector.h"
+#include "../../SequenceContainer/s21_vector.h"
 
 #include <gtest/gtest.h>
 

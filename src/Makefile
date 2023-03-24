@@ -1,14 +1,23 @@
-.PHONY: test_set test_multiset test_map
-# test:
+#-fsanitize=address
+CC = g++
+CFLAGS = -Wall -Wextra -Werror -std=c++17 -pedantic
+TFLAGS = -lgtest
+CORE = s21_vector
+TEST = s21_vector_test
+COVEREGE = --coverage
 
-test_set:
-	g++ src/Tests/SortedContainer/Set/test_set.cc -lgtest -lgtest_main -o src/test -std=c++17
-	./src/test
+all: clean gcov_report
 
-test_multiset:
-	g++ src/Tests/SortedContainer/Multiset/test_multiset.cc -lgtest -lgtest_main -o src/test -std=c++17
-	./src/test
+test:
+	@echo "Please wait"
+	@$(CC) $(CFLAGS) $(COVEREGE) $(TEST).cc -o test $(TFLAGS)
+	@./test
 
-test_map:
-	g++ src/Tests/SortedContainer/Map/test_map.cc -lgtest -lgtest_main -o src/test -std=c++17
-	./src/test
+gcov_report: test
+	@lcov -t test -o test.info --no-external -c -d .
+	@genhtml -o report test.info
+	@open report/index.html
+
+clean:
+	@-rm -rf *.o *.a test Report/* *.info *.gc* core/*.a report
+
