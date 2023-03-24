@@ -252,8 +252,3 @@ TEST(stack_test, emplace_front2) {
   basic.pop();
   EXPECT_TRUE(basic.empty());
 }
-
-int main(int argc, char *argv[]) {
-  testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}

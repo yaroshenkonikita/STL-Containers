@@ -135,8 +135,3 @@ TEST(queue_tests, swap) {
   EXPECT_EQ(basic2.front(), "hi");
   EXPECT_TRUE(basic.empty());
 }
-
-int main(int argc, char *argv[]) {
-  testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}

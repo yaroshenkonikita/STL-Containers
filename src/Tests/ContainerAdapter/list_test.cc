@@ -770,8 +770,3 @@ TEST(list_test, max_size2) {
   s21::list<char> basic;
   EXPECT_EQ(basic2.max_size(), basic.max_size());
 }
-
-int main(int argc, char *argv[]) {
-  testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
