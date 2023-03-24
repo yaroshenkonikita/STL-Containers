@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "s21_list.h"
+#include "../../ContainerAdaptor/s21_list.h"
 
 TEST(list_test, def_constructor) {
   s21::list<int> basic;

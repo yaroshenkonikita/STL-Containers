@@ -1,5 +1,5 @@
-#ifndef STL_CONTAINERS_SET_H_
-#define STL_CONTAINERS_SET_H_
+#ifndef CPP2_S21_CONTAINERS_0_SRC_S21_SET_H_
+#define CPP2_S21_CONTAINERS_0_SRC_S21_SET_H_
 
 #include "../BinaryTree.h"
 
@@ -108,4 +108,4 @@ class set : public BinaryTree<Key> {
 };
 }  // namespace s21
 
-#endif  // STL_CONTAINERS_SET_H_
+#endif  // CPP2_S21_CONTAINERS_0_SRC_S21_SET_H_

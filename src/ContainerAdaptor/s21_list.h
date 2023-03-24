@@ -1,5 +1,5 @@
-#ifndef CPP2_S21_CONTAINERS_0_SRC_S21_LIST_H
-#define CPP2_S21_CONTAINERS_0_SRC_S21_LIST_H
+#ifndef CPP2_S21_CONTAINERS_0_SRC_S21_LIST_H_
+#define CPP2_S21_CONTAINERS_0_SRC_S21_LIST_H_
 
 #include <functional>
 
@@ -431,4 +431,4 @@ void list<value_type>::sort() {
 }
 
 }  // namespace s21
-#endif  // CPP2_S21_CONTAINERS_0_SRC_S21_LIST_H
+#endif  // CPP2_S21_CONTAINERS_0_SRC_S21_LIST_H_

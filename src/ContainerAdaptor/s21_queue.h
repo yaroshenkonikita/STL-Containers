@@ -1,7 +1,7 @@
-#ifndef CPP2_S21_CONTAINERS_0_SRC_S21_QUEUE_H
-#define CPP2_S21_CONTAINERS_0_SRC_S21_QUEUE_H
+#ifndef CPP2_S21_CONTAINERS_0_SRC_S21_QUEUE_H_
+#define CPP2_S21_CONTAINERS_0_SRC_S21_QUEUE_H_
 
-#include "../list/s21_list.h"
+#include "s21_list.h"
 
 namespace s21 {
 
@@ -38,4 +38,4 @@ class queue : protected s21::list<T> {
 };
 }  // namespace s21
 
-#endif  // CPP2_S21_CONTAINERS_0_SRC_S21_QUEUE_H
+#endif  // CPP2_S21_CONTAINERS_0_SRC_S21_QUEUE_H_

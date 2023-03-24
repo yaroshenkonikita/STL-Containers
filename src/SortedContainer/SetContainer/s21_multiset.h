@@ -1,5 +1,5 @@
-#ifndef STL_CONTAINERS_MULTISET_H_
-#define STL_CONTAINERS_MULTISET_H_
+#ifndef CPP2_S21_CONTAINERS_0_SRC_S21_MULTISET_H_
+#define CPP2_S21_CONTAINERS_0_SRC_S21_MULTISET_H_
 
 #include "../BinaryTree.h"
 
@@ -75,4 +75,4 @@ class multiset : public BinaryTree<Key> {
 
 }  // namespace s21
 
-#endif  // STL_CONTAINERS_MULTISET_H_
+#endif  // CPP2_S21_CONTAINERS_0_SRC_S21_MULTISET_H_
