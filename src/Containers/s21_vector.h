@@ -80,8 +80,8 @@ class vector {
   pointer data() noexcept { return arr_; }
 
   // Итерирование
-  iterator begin() const noexcept { return arr_; }
-  iterator end() const noexcept { return arr_ + size_; }
+  iterator begin() noexcept { return arr_; }
+  iterator end() noexcept { return arr_ + size_; }
 
   //  Проверяет, нет ли в контейнере элементов
   bool empty() const noexcept { return size_ == 0; }

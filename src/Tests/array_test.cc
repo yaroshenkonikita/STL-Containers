@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../../StdContainer/s21_array.h"
+#include "../ContainersPlus/s21_array.h"
 
 TEST(array, defaultConstructor) {
   s21::array<double, 0> arr;
@@ -135,9 +135,4 @@ TEST(array, fill) {
   for (size_t i = 0; i != array.size(); ++i) {
     ASSERT_EQ(array[i], std[i]);
   }
-}
-
-int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
 }

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../../ContainerAdaptor/s21_stack.h"
+#include "../Containers/s21_stack.h"
 #include "stack"
 
 TEST(stack_test, move_constructor) {

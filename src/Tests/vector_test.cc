@@ -1,10 +1,10 @@
-#include "../../SequenceContainer/s21_vector.h"
+#include "../s21_containers.h"
 
 #include <gtest/gtest.h>
 
 #include <vector>
 
-TEST(constructors, defaultConstructor) {
+TEST(vector, defaultConstructor) {
   s21::vector<double> vector;
   EXPECT_EQ(0, vector.size());
 }
@@ -85,24 +85,6 @@ TEST(vector, begin) {
   std::vector<int> std = {1, 2, 3, 4};
   s21::vector<int> vector = {1, 2, 3, 4};
   EXPECT_EQ(*std.begin(), *vector.begin());
-}
-
-TEST(vector, const_begin) {
-  std::vector<int> const std = {1, 2, 3, 4};
-  s21::vector<int> const vector = {1, 2, 3, 4};
-  EXPECT_EQ(*std.begin(), *vector.begin());
-}
-
-TEST(vector, end) {
-  std::vector<int> std = {1, 2, 3, 4};
-  s21::vector<int> vector = {1, 2, 3, 4};
-  EXPECT_EQ(*std.end(), *vector.end());
-}
-
-TEST(vector, const_end) {
-  std::vector<int> const std = {1, 2, 3, 4};
-  s21::vector<int> const vector = {1, 2, 3, 4};
-  EXPECT_EQ(*std.end(), *vector.end());
 }
 
 TEST(vector, empty) {

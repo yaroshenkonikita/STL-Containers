@@ -60,7 +60,7 @@ class array {
   const_reference back() { return arr_[N - 1]; }
 
   //  Возвращает указатель на базовый массив
-  value_type data() noexcept { return arr_; }
+  iterator data() noexcept { return arr_; }
 
   //  Итерирование
   iterator begin() noexcept { return &arr_[0]; }

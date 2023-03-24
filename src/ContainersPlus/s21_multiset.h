@@ -1,7 +1,7 @@
 #ifndef CPP2_S21_CONTAINERS_0_SRC_S21_MULTISET_H_
 #define CPP2_S21_CONTAINERS_0_SRC_S21_MULTISET_H_
 
-#include "../BinaryTree.h"
+#include "../BinaryTree/BinaryTree.h"
 
 namespace s21 {
 

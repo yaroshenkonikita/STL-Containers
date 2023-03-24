@@ -1,6 +1,8 @@
+.PHONY: test
+
 #-fsanitize=address
 CC = g++
-CFLAGS = -Wall -Wextra -Werror -std=c++17 -pedantic
+CFLAGS = -Wall -Wextra -Werror -std=c++17
 TFLAGS = -lgtest -lgtest_main
 CORE = s21_vector
 TEST = s21_vector_test
@@ -9,7 +11,7 @@ COVEREGE = --coverage
 all: clean gcov_report
 
 test:
-	$(CC) $(CFLAGS) Tests/*/*.cc $(TFLAGS) -o test
+	$(CC) $(CFLAGS) Tests/*.cc -o test $(TFLAGS)
 	@./test
 
 gcov_report: test

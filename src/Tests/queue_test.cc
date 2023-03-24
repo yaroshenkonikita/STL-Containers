@@ -2,7 +2,7 @@
 
 #include <queue>
 
-#include "../../ContainerAdaptor/s21_queue.h"
+#include "../s21_containers.h"
 
 TEST(queue_tests, def_constructor) {
   s21::queue<int> basic;
