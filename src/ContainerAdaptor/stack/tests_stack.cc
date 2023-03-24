@@ -21,46 +21,46 @@ TEST(stack_test, move_constructor_std) {
   EXPECT_EQ(basic2.size(), size_t(4));
 }
 
- TEST(stack_test, move_constructor_operator) {
-   s21::stack<int> basic({1, 2, 3, 4});
-   s21::stack<int> basic2;
-   basic2 = std::move(basic);
-   EXPECT_TRUE(basic.empty());
-   EXPECT_EQ(basic2.top(), 4);
-   EXPECT_EQ(basic2.size(), size_t(4));
- }
+TEST(stack_test, move_constructor_operator) {
+  s21::stack<int> basic({1, 2, 3, 4});
+  s21::stack<int> basic2;
+  basic2 = std::move(basic);
+  EXPECT_TRUE(basic.empty());
+  EXPECT_EQ(basic2.top(), 4);
+  EXPECT_EQ(basic2.size(), size_t(4));
+}
 
- TEST(stack_test, move_constructor_operator2) {
-   s21::stack<std::string> basic({"hello","world"});
-   s21::stack<std::string> basic2;
-   basic2 = std::move(basic);
-   EXPECT_TRUE(basic.empty());
-   EXPECT_EQ(basic2.top(), "world");
-   EXPECT_EQ(basic2.size(), size_t(2));
- }
+TEST(stack_test, move_constructor_operator2) {
+  s21::stack<std::string> basic({"hello", "world"});
+  s21::stack<std::string> basic2;
+  basic2 = std::move(basic);
+  EXPECT_TRUE(basic.empty());
+  EXPECT_EQ(basic2.top(), "world");
+  EXPECT_EQ(basic2.size(), size_t(2));
+}
 
- TEST(stack_test, move_constructor_operator3) {
-   s21::stack<std::string> basic({"2","1"});
-   s21::stack<std::string> basic2({"hello","world"});
-   basic2 = std::move(basic);
-   EXPECT_TRUE(basic.empty());
-   EXPECT_EQ(basic2.top(), "1");
-   EXPECT_EQ(basic2.size(), size_t(2));
- }
+TEST(stack_test, move_constructor_operator3) {
+  s21::stack<std::string> basic({"2", "1"});
+  s21::stack<std::string> basic2({"hello", "world"});
+  basic2 = std::move(basic);
+  EXPECT_TRUE(basic.empty());
+  EXPECT_EQ(basic2.top(), "1");
+  EXPECT_EQ(basic2.size(), size_t(2));
+}
 
- TEST(stack_test, copy_constructor) {
-   s21::stack<int> basic({1, 2, 3, 4});
-   s21::stack<int> basic2(basic);
-   EXPECT_EQ(basic2.top(), 4);
-   EXPECT_EQ(basic2.size(), size_t(4));
- }
+TEST(stack_test, copy_constructor) {
+  s21::stack<int> basic({1, 2, 3, 4});
+  s21::stack<int> basic2(basic);
+  EXPECT_EQ(basic2.top(), 4);
+  EXPECT_EQ(basic2.size(), size_t(4));
+}
 //
- TEST(stack_test, copy_constructor2) {
-   s21::stack<std::string> basic({"hello"});
-   s21::stack<std::string> basic2(basic);
-   EXPECT_EQ(basic2.top(), "hello");
-   EXPECT_EQ(basic2.size(), size_t(1));
- }
+TEST(stack_test, copy_constructor2) {
+  s21::stack<std::string> basic({"hello"});
+  s21::stack<std::string> basic2(basic);
+  EXPECT_EQ(basic2.top(), "hello");
+  EXPECT_EQ(basic2.size(), size_t(1));
+}
 
 TEST(stack_test, push1) {
   s21::stack<int> basic;

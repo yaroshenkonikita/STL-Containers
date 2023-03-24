@@ -17,3 +17,7 @@ clean:
 
 leaks:
 	leaks -atExit -- ./test
+
+style:
+	@clang-format -style=google -n s21_queue.h tests_queue.cc
+	@clang-format -style=google -i s21_queue.h tests_queue.cc

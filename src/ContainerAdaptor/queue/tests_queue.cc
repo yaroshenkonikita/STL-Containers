@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "s21_queue.h"
 #include <queue>
+
+#include "s21_queue.h"
 
 TEST(queue_tests, def_constructor) {
   s21::queue<int> basic;
