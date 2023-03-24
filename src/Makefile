@@ -11,13 +11,19 @@ COVERAGE = --coverage
 all: clean gcov_report
 
 test:
-	@echo "Please wait"
-	@$(CC) $(CFLAGS) $(COVERAGE) $(TEST) -o test $(TFLAGS)
-	@./test
+	@echo "Compiling tests binary executor..."
+	@$(CC) $(CFLAGS) $(COVERAGE) $(TEST) -o Tests/test $(TFLAGS)
+	@echo "Executor is done"
+	@echo "Start tests..."
+	@./Tests/test
+	@echo "Test is complete"
 
 gcov_report: test
-	@lcov -t test -o test.info --no-external -c -d .
+	@echo "Compiling coverage files..."
+	@lcov -t Tests/test -o test.info --no-external -c -d Tests -d Containers -d ContainersPlus -d BinaryTree
+	@echo "Compiling report html"
 	@genhtml -o report test.info
+	@echo "Report is done"
 	@open report/index.html
 
 style:
@@ -25,5 +31,5 @@ style:
 
 
 clean:
-	@-rm -rf *.o *.a Report/* *.info *.gc* core/*.a report test
+	@-rm -rf *.o *.a Report/* *.info Tests/*.gc* core/*.a report Tests/test
 

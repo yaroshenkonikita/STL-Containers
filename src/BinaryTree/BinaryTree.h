@@ -6,6 +6,7 @@
 #include <limits>
 #include <stdexcept>
 #include <utility>
+#include "../Containers/s21_vector.h"
 
 namespace s21 {
 
@@ -111,10 +112,6 @@ class BinaryTree<Key>::Node {
     SetRightChild(right_child);
   }
 
-  virtual key_type &GetKey() { return _value; }
-
-  virtual value_type &GetValue() { return _value; }
-
   static pointer Next(pointer current_node) {
     pointer last_position{};
     while (current_node->_right == nullptr ||
@@ -177,8 +174,6 @@ class BinaryTree<Key>::TreeIterator {
         _end(other._end),
         _size(other._size) {}
   virtual ~TreeIterator() = default;
-
-  virtual value_type operator*() const { return current_node->_value; }
 
   virtual value_type operator*() { return current_node->_value; }
 
@@ -472,7 +467,7 @@ template <class Key>
 typename BinaryTree<Key>::pointer BinaryTree<Key>::InsertFromRoot(
     pointer current_node, const_reference &value) {
   if (!current_node) return new Node(value);
-  if (Compare{}(value, current_node->GetKey())) {
+  if (Compare{}(value, current_node->_value)) {
     current_node->_left = InsertFromRoot(current_node->_left, value);
     current_node->_left->_parent = current_node;
     if (current_node == _begin && current_node->_left) {
@@ -666,7 +661,6 @@ template <class Key>
 typename BinaryTree<Key>::size_type BinaryTree<Key>::max_size() const noexcept {
   return std::numeric_limits<size_type>::max() / sizeof(node_type) / 2;
 }
-
 }  // namespace s21
 
 #endif  // STL_CONTAINERS_BINARYTREE_H_

@@ -233,6 +233,12 @@ class map : public BinaryTree<std::pair<Key, Value>> {
     }
     return at(key);
   }
+
+  template <typename... Args>
+  std::vector<std::pair<iterator, bool>> emplace(Args &&...args) {
+    std::vector<std::pair<iterator, bool>> res = {insert(args)...};
+    return res;
+  }
 };
 
 }  // namespace s21

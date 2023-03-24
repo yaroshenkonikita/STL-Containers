@@ -338,3 +338,11 @@ TEST(Multiset, lower_bound_and_upper_bound2) {
   EXPECT_EQ(size, 3);
   EXPECT_EQ(basic1.size(), 8);
 }
+
+TEST(Multiset, erase_reverse) {
+  s21::multiset<int> basic1{8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8};
+  while (!basic1.empty()) {
+    basic1.erase(--basic1.end());
+  }
+  EXPECT_EQ(basic1.size(), 0);
+}

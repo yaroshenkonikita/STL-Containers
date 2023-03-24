@@ -39,12 +39,12 @@ class multiset : public BinaryTree<Key> {
   multiset(const std::initializer_list<key_type> &items)
       : BinaryTree<Key>(items) {}
   multiset(const multiset &ms) : BinaryTree<Key>(ms) {}
-  multiset(multiset &&ms) {
-    this->_size = std::exchange(ms._size, 0);
-    this->_root = ms._root;
-    this->_begin = ms._begin;
-    this->_end = ms._end;
-    ms._begin = ms._end = ms._root = new node_type();
+  multiset(multiset &&ms) : BinaryTree<Key>(std::move(ms)) {
+    //    this->_size = std::exchange(ms._size, 0);
+    //    this->_root = ms._root;
+    //    this->_begin = ms._begin;
+    //    this->_end = ms._end;
+    //    ms._begin = ms._end = ms._root = new node_type();
   }
   ~multiset() = default;
 
@@ -70,6 +70,12 @@ class multiset : public BinaryTree<Key> {
       this->insert(item);
     }
     other.clear();
+  }
+
+  template <typename... Args>
+  std::vector<std::pair<iterator, bool>> emplace(Args &&...args) {
+      std::vector<std::pair<iterator, bool>> res = {std::make_pair(insert(args), true)...};
+    return res;
   }
 };
 

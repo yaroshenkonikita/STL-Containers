@@ -436,3 +436,19 @@ TEST(Map, insert_or_assign_true_check) {
     EXPECT_DOUBLE_EQ(item.second, *b++);
   }
 }
+
+TEST(Map, insert_and_ins_assign_first_insert) {
+  s21::map<int, int> basic;
+  basic.insert(5, 4);
+  s21::map<int, int> basic2;
+  basic2.insert_or_assign(5, 4);
+}
+
+//TEST(Map, emplace_basic) {
+//s21::map<int, int> basic;
+//basic.emplace(std::make_pair(1, 1));
+//basic.emplace(std::make_pair(2, 3));
+//basic.emplace(std::make_pair(4, 4));
+//EXPECT_EQ(basic.at(2), 3);
+//EXPECT_EQ(basic.at(4), 4);
+//}
