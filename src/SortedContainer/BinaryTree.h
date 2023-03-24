@@ -1,232 +1,672 @@
-//
-// Created by 12355 on 24.02.2023.
-//
+#ifndef STL_CONTAINERS_BINARYTREE_H_
+#define STL_CONTAINERS_BINARYTREE_H_
 
-#ifndef CPP2_S21_CONTAINERS_0_BINARYTREE_H
-#define CPP2_S21_CONTAINERS_0_BINARYTREE_H
-
-#include  <iostream>
-
-//#include <memory_resource>
-//#include <functional>
-//#include <limits>
+#include <algorithm>
+#include <initializer_list>
+#include <limits>
+#include <stdexcept>
+#include <utility>
 
 namespace s21 {
-template <class Key, class Compare = std::less<Key>>
+
+template <class Key>
 class BinaryTree {
-public:
-    class TreeIterator;
-    class TreeConstIterator;
-private:
-    // node body ================================================================
-    class Node {
-    public:
-        Node() = default;
-        explicit Node(Key key) : _key(key) {}
-        Node(Key key, Node *node) : _key(key), _parent(node) {}
-        ~Node() { delete _left; delete _right; }
-        Key _key{};
-        Node *_left{}, *_right{}, *_parent{};
-    };
+ protected:
+  class Node;
+  class TreeIterator;
+  class TreeConstIterator;
+  using Compare = std::less<Key>;
 
+ public:
+  using node_type = Node;
+  using pointer = node_type *;
+  using key_type = Key;
+  using value_type = Key;
+  using reference = value_type &;
+  using const_reference = const value_type &;
+  using size_type = std::size_t;
+  using iterator = TreeIterator;
+  using const_iterator = TreeConstIterator;
 
+  BinaryTree();
+  BinaryTree(const std::initializer_list<value_type> &items);
+  BinaryTree(const BinaryTree &other);
+  BinaryTree(BinaryTree &&other) noexcept;
+  ~BinaryTree();
 
-public:
-    // pre-implementation =======================================================
+  iterator insert(const_reference value);
+  void clear();
+  virtual bool contains(const key_type &key);
+  virtual void erase(iterator pos);
+  size_type count(const key_type &key);
+  virtual iterator find(const key_type &key);
+  virtual iterator lower_bound(const key_type &key);
+  virtual iterator upper_bound(const key_type &key);
+  std::pair<iterator, iterator> equal_range(const key_type &key);
+  [[nodiscard]] size_type size() const noexcept;
+  iterator begin() noexcept;
+  iterator begin() const noexcept;
+  iterator end() noexcept;
+  iterator end() const noexcept;
+  const_iterator cbegin() noexcept;
+  const_iterator cend() noexcept;
+  [[nodiscard]] bool empty() const noexcept;
+  [[nodiscard]] size_type max_size() const noexcept;
 
-    // using ====================================================================
-    using key_type = Key;
-    using value_type = Key;
-    using reference = value_type&;
-    using const_reference = const value_type&;
+ protected:
+  pointer FindNodeFromIterator(iterator pos);
+  void DeleteNodeWithoutChild(pointer current);
+  void DeleteNodeWithOneChild(pointer current);
+  pointer CopyAllChild(pointer parent) const;
+  iterator CreateIterator(pointer node) noexcept;
+  virtual pointer FindFirstEqualOrNearPointer(
+      const key_type &key) const noexcept;
+  size_type Height(pointer current_node) const;
+  int BalanceDiff(pointer current_node) const;
+  void FixHeight(pointer current_node);
+  pointer LeftRotate(pointer current_node);
+  pointer RightRotate(pointer current_node);
+  pointer Balance(pointer current_node);
+  pointer InsertFromRoot(pointer current_node, const_reference value);
+  pointer GetMin() const;
+  pointer GetMax() const;
+  pointer _root{}, _begin{}, _end{};
+  size_type _size{};
+};
 
-    using size_type = std::size_t;
-    using difference_type = std::ptrdiff_t;
-    using node_type = Node;
-    using pointer = node_type*;
-    using iterator = TreeIterator;
-    using const_iterator = const TreeIterator;
+template <class Key>
+class BinaryTree<Key>::Node {
+ public:
+  Node() = default;
+  explicit Node(Key value) : _value(value) {}
+  Node(Key value, Node *node) : _value(value), _parent(node) {}
+  virtual ~Node() {
+    delete _left;
+    delete _right;
+  }
+  Key _value{};
+  Node *_left{}, *_right{}, *_parent{};
+  std::size_t _height = 1;
 
+  void SetNewParent(Node *parent) { _parent = parent; }
 
-
-    BinaryTree() {
-        _begin = _root = _end = new Node();
-        _begin->_left = _end;
-        _end->_right = _begin;
+  void SetLeftChild(Node *child) {
+    _left = child;
+    if (child) {
+      child->_parent = this;
     }
-    BinaryTree(const std::initializer_list<value_type>& items) {
-        _begin = _root = _end = new Node();
-        for (value_type item : items) {
-            insert(item);
+  }
+
+  void SetRightChild(Node *child) {
+    _right = child;
+    if (child) {
+      child->_parent = this;
+    }
+  }
+
+  void SetAllNodes(Node *parent = nullptr, Node *left_child = nullptr,
+                   Node *right_child = nullptr) {
+    SetNewParent(parent);
+    SetLeftChild(left_child);
+    SetRightChild(right_child);
+  }
+
+  virtual key_type &GetKey() { return _value; }
+
+  virtual value_type &GetValue() { return _value; }
+
+  static pointer Next(pointer current_node) {
+    pointer last_position{};
+    while (current_node->_right == nullptr ||
+           current_node->_right == last_position) {
+      last_position = current_node;
+      if (!current_node->_parent) {
+        while (current_node->_left) {
+          current_node = current_node->_left;
         }
+        return current_node;
+      }
+      current_node = current_node->_parent;
+      if (current_node->_right != last_position) {
+        return current_node;
+      }
     }
-    ~BinaryTree() {
-        delete _root;
+    current_node = current_node->_right;
+    while (current_node->_left != nullptr) {
+      current_node = current_node->_left;
     }
+    return current_node;
+  }
 
-    void clear() {
-        _begin->_left = _end->_right = nullptr;
-        _end->_parent->_right = nullptr;
-        delete _root;
-        _begin = _root = _end;
-        _size = 0;
-    }
-
-//    iterator lower_bound(const_reference key) {
-//        return TreeIterator(begin()); // недоделка
-//    }
-
-    iterator insert(const_reference key) {
-        if (_begin == _end) {
-            _begin = _root = new Node(key);
-            _begin->_right = _end;
-            _end->_parent = _begin;
-        } else {
-            Node *current_node = _root;
-            while (true) {
-                if (Compare{}(key, current_node->_key)) {
-                    if (current_node->_left != nullptr) {
-                        current_node = current_node->_left;
-                    } else {
-                        current_node->_left = new Node(key, current_node);
-                        if (current_node == _begin) {
-                            _begin = current_node->_left;
-                        }
-                        break;
-                    }
-                } else if (current_node->_right != nullptr && current_node->_right != _end) {
-                    current_node = current_node->_right;
-                } else {
-                    if (current_node->_right == _end) {
-                        _end->_parent = current_node->_right = new Node(key, current_node);
-                    } else {
-                        current_node->_right = new Node(key, current_node);
-                    }
-                    break;
-                }
-            }
+  static pointer Prev(pointer current_node) {
+    if (!current_node->_left) {
+      pointer last_position{};
+      while (current_node->_left == last_position) {
+        last_position = current_node;
+        if (!current_node->_parent) {
+          while (current_node->_right) {
+            current_node = current_node->_right;
+          }
+          return current_node;
         }
-        ++_size;
+        current_node = current_node->_parent;
+      }
+    } else {
+      current_node = current_node->_left;
+      while (current_node->_right) {
+        current_node = current_node->_right;
+      }
     }
-
-    TreeIterator CreateIterator(node_type *node) {
-        return TreeIterator(node, _begin, _end, _size);
-    }
-
-    size_type size() noexcept {
-        return _size;
-    }
-
-    iterator begin() {
-        return CreateIterator(_begin);
-    }
-
-    iterator end() {
-        return CreateIterator(_end);
-    }
-
-//    iterator cbegin() const noexcept {
-//        return TreeIterator(_begin);
-//    }
-//
-//    iterator cend() const noexcept {
-//        return TreeIterator(_end);
-//    }
-
-    bool empty() {
-        return _size == 0;
-    }
-
-    size_type max_size() {
-        return std::numeric_limits<std::size_t>::max() / sizeof(value_type) / 2;
-    }
-private:
-    node_type *_root{}, *_begin{}, *_end{};
-    size_type _size{};
+    return current_node;
+  }
 };
 
 // iterators ================================================================
+template <class Key>
+class BinaryTree<Key>::TreeIterator {
+ public:
+  TreeIterator() = default;
+  TreeIterator(pointer current, pointer &end, std::size_t &size) noexcept
+      : current_node(current), _end(end), _size(size) {}
+  TreeIterator(TreeIterator &other) noexcept
+      : current_node(other.current_node),
+        _end(other._end),
+        _size(other._size) {}
+  TreeIterator(TreeIterator &&other) noexcept
+      : current_node(other.current_node),
+        _end(other._end),
+        _size(other._size) {}
+  virtual ~TreeIterator() = default;
 
-template <class Key, class Compare>
-class BinaryTree<Key, Compare>::TreeIterator {
-public:
-    TreeIterator() = delete;
-    TreeIterator(pointer current, pointer &begin, pointer &end, size_type &size)
-    : current_node(current), _begin(begin), _end(end), _size(size) {}
-    TreeIterator(TreeIterator &other)
-            : current_node(other.current_node), _begin(other._begin), _end(other._end), _size(other._size) {}
-    TreeIterator(TreeIterator &&other)
-            : current_node(other.current_node), _begin(other._begin), _end(other._end), _size(other._size) {}
-    ~TreeIterator() = default;
+  virtual value_type operator*() const { return current_node->_value; }
 
-    Key operator*() {
-        if (current_node == _end) {
-            return _size;
-        } else if (current_node == nullptr) {
-            throw std::out_of_range("Дружище, ты куда собрался?"); // такого случая не должно быть
-        }
-        return current_node->_key;
-    }
+  virtual value_type operator*() { return current_node->_value; }
 
-    TreeIterator operator++() {
-        if (current_node == _end) {
-            current_node = _begin;
-        } else if (current_node->_right != nullptr) {
-            current_node = current_node->_right;
-        } else {
-            node_type *last_position = current_node;
-            current_node = current_node->_parent;
-            if (current_node == nullptr) {
-                throw std::out_of_range("Ты сирота, а ну в детский дом!!"); // такого случая не должно быть
-            }
-            while (current_node->_right == last_position) {
-                last_position = current_node;
-                current_node = current_node->_parent;
-            }
-        }
-        return *this;
-    }
+  TreeIterator operator++() {
+    current_node = current_node->Next(current_node);
+    return *this;
+  }
 
-    TreeIterator operator--() {
-        if (current_node == _begin) {
-            current_node = _end;
-        } else if (current_node->_left != nullptr) {
-            current_node = current_node->_left;
-        } else {
-            node_type *last_position = current_node;
-            current_node = current_node->_parent;
-            if (current_node == nullptr) {
-                throw std::out_of_range("Ты сирота, а ну в детский дом!!"); // такого случая не должно быть
-            }
-            while (current_node->_left == last_position || current_node->_left == nullptr) {
-                last_position = current_node;
-                current_node = current_node->_parent;
-            }
-            current_node = current_node->_left;
-        }
-        return *this;
-    }
+  TreeIterator operator++(int) {
+    iterator it = *this;
+    ++*this;
+    return it;
+  }
 
-    bool operator!=(TreeIterator other) {
-        return other.current_node != current_node;
-    }
+  TreeIterator operator--() {
+    current_node = current_node->Prev(current_node);
+    return *this;
+  }
 
-    bool operator==(TreeIterator other) {
-        return other.current_node == current_node;
-    }
+  TreeIterator operator--(int) {
+    iterator it = *this;
+    --*this;
+    return it;
+  }
 
-private:
-    pointer current_node;
-    pointer &_end;
-    pointer &_begin;
-    size_type &_size;
+  bool operator!=(const TreeIterator other) const noexcept {
+    return other.current_node != current_node;
+  }
+
+  bool operator==(const TreeIterator other) const noexcept {
+    return other.current_node == current_node;
+  }
+
+  friend bool operator==(const TreeIterator &first, const pointer &second) {
+    return first.current_node == second;
+  }
+
+  friend bool operator!=(const TreeIterator &first, const pointer &second) {
+    return first.current_node != second;
+  }
+
+  friend bool operator==(const pointer &second, const TreeIterator &first) {
+    return first.current_node == second;
+  }
+
+  friend bool operator!=(const pointer &second, const TreeIterator &first) {
+    return first.current_node != second;
+  }
+
+ protected:
+  pointer current_node{}, &_end{};
+  std::size_t &_size;
 };
 
-//template <typename Key, typename Compare>
-//class BinaryTree<Key, Compare>::TreeConstIterator {
-//
-//};
+template <class Key>
+class BinaryTree<Key>::TreeConstIterator
+    : public BinaryTree<Key>::TreeIterator {
+ public:
+  TreeConstIterator() = default;
+  TreeConstIterator(pointer current, pointer &begin, pointer &end,
+                    std::size_t &size) noexcept
+      : BinaryTree<Key>::TreeIterator(current, begin, end, size) {}
+  TreeConstIterator(TreeConstIterator &other) noexcept {
+    this->current_node = other.current_node;
+    this->_begin = other._begin;
+    this->_end = other._end;
+    this->_size = other._size;
+  }
+  TreeConstIterator(TreeConstIterator &&other) noexcept {
+    this->current_node = other.current_node;
+    this->_begin = other._begin;
+    this->_end = other._end;
+    this->_size = other._size;
+  }
+  virtual ~TreeConstIterator() = default;
+};
 
-} // namespace s21
+template <class Key>
+typename BinaryTree<Key>::pointer BinaryTree<Key>::CopyAllChild(
+    pointer parent) const {
+  pointer childLeft{}, childRight{};
+  if (parent->_left) childLeft = CopyAllChild(parent->_left);
+  if (parent->_right) childRight = CopyAllChild(parent->_right);
+  pointer tmp_parent;
+  tmp_parent = new Node(parent->_value);
+  tmp_parent->_height = parent->_height;
+  tmp_parent->SetAllNodes(nullptr, childLeft, childRight);
+  return tmp_parent;
+}
 
-#endif //CPP2_S21_CONTAINERS_0_BINARYTREE_H
+template <class Key>
+typename BinaryTree<Key>::pointer BinaryTree<Key>::GetMin() const {
+  pointer tmp_node = _root;
+  while (tmp_node->_left) {
+    tmp_node = tmp_node->_left;
+  }
+  return tmp_node;
+}
+
+template <class Key>
+typename BinaryTree<Key>::pointer BinaryTree<Key>::GetMax() const {
+  pointer tmp_node = _root;
+  while (tmp_node->_right) {
+    tmp_node = tmp_node->_right;
+  }
+  return tmp_node->_parent;
+}
+
+template <class Key>
+BinaryTree<Key>::BinaryTree() {
+  _begin = _root = _end = new Node();
+  _begin->_height = 0;
+}
+
+template <class Key>
+BinaryTree<Key>::BinaryTree(const std::initializer_list<value_type> &items) {
+  _begin = _root = _end = new Node();
+  _begin->_height = 0;
+  for (value_type item : items) {
+    insert(item);
+  }
+}
+
+template <class Key>
+BinaryTree<Key>::BinaryTree(const BinaryTree &other) : _size(other._size) {
+  _root = CopyAllChild(other._root);
+  _begin = GetMin();
+  _end = GetMax();
+}
+
+template <class Key>
+BinaryTree<Key>::BinaryTree(BinaryTree &&other) noexcept {
+  _size = std::exchange(other._size, 0);
+  _root = other._root;
+  _begin = other._begin;
+  _end = other._end;
+  other._begin = other._end = other._root = new Node();
+}
+
+template <class Key>
+BinaryTree<Key>::~BinaryTree() {
+  delete _root;
+}
+
+template <class Key>
+typename BinaryTree<Key>::iterator BinaryTree<Key>::CreateIterator(
+    pointer node) noexcept {
+  return TreeIterator(node, _end, _size);
+}
+
+template <class Key>
+typename BinaryTree<Key>::pointer BinaryTree<Key>::FindFirstEqualOrNearPointer(
+    const key_type &key) const noexcept {
+  pointer current_node = _root;
+  while (current_node != _end) {
+    if (Compare{}(key, current_node->_value)) {
+      if (current_node->_left != nullptr) {
+        current_node = current_node->_left;
+      } else {
+        break;
+      }
+    } else if (key == current_node->_value) {
+      return current_node;
+    } else if (current_node->_right != nullptr &&
+               current_node->_right != _end) {
+      current_node = current_node->_right;
+    } else {
+      break;
+    }
+  }
+  return current_node;
+}
+
+template <class Key>
+void BinaryTree<Key>::DeleteNodeWithoutChild(pointer current) {
+  pointer parent = current->_parent, last_position{};
+  if (parent->_left == current) {
+    parent->_left = nullptr;
+  } else {
+    parent->_right = nullptr;
+  }
+  delete current;
+  do {
+    Balance(parent);
+    last_position = parent;
+    parent = parent->_parent;
+  } while (parent != nullptr);
+  _root = last_position;
+}
+
+template <class Key>
+void BinaryTree<Key>::DeleteNodeWithOneChild(pointer current) {
+  pointer parent = current->_parent,
+          child = current->_left ? current->_left : current->_right,
+          last_position{};
+  current->_left = current->_right = nullptr;
+  child->_parent = parent;
+  if (!parent) {
+    _root = child;
+    _root->_parent = nullptr;
+    delete current;
+  } else {
+    if (parent->_left == current) {
+      parent->_left = child;
+    } else {
+      parent->_right = child;
+    }
+    delete current;
+    do {
+      Balance(parent);
+      last_position = parent;
+      parent = parent->_parent;
+    } while (parent != nullptr);
+    _root = last_position;
+  }
+}
+
+template <class Key>
+typename BinaryTree<Key>::size_type BinaryTree<Key>::Height(
+    pointer current_node) const {
+  return current_node ? current_node->_height : 0;
+}
+
+template <class Key>
+int BinaryTree<Key>::BalanceDiff(pointer current_node) const {
+  return Height(current_node->_right) - Height(current_node->_left);
+}
+
+template <class Key>
+void BinaryTree<Key>::FixHeight(pointer current_node) {
+  current_node->_height =
+      std::max(Height(current_node->_left), Height(current_node->_right)) + 1;
+}
+
+template <class Key>
+typename BinaryTree<Key>::pointer BinaryTree<Key>::LeftRotate(
+    pointer current_node) {
+  pointer second_node = current_node->_right,
+          min_second_node = second_node->_left;
+  second_node->SetAllNodes(current_node->_parent, current_node,
+                           second_node->_right);
+  current_node->SetAllNodes(second_node, current_node->_left, min_second_node);
+  if (second_node->_parent) {
+    if (second_node->_parent->_left == current_node) {
+      second_node->_parent->_left = second_node;
+    } else {
+      second_node->_parent->_right = second_node;
+    }
+  }
+  FixHeight(current_node);
+  FixHeight(second_node);
+  return second_node;
+}
+
+template <class Key>
+typename BinaryTree<Key>::pointer BinaryTree<Key>::RightRotate(
+    pointer current_node) {
+  pointer second_node = current_node->_left,
+          max_second_node = second_node->_right;
+  second_node->SetAllNodes(current_node->_parent, second_node->_left,
+                           current_node);
+  current_node->SetAllNodes(second_node, max_second_node, current_node->_right);
+  if (second_node->_parent) {
+    if (second_node->_parent->_left == current_node) {
+      second_node->_parent->_left = second_node;
+    } else {
+      second_node->_parent->_right = second_node;
+    }
+  }
+  FixHeight(current_node);
+  FixHeight(second_node);
+  return second_node;
+}
+
+template <class Key>
+typename BinaryTree<Key>::pointer BinaryTree<Key>::Balance(
+    pointer current_node) {
+  FixHeight(current_node);
+  if (BalanceDiff(current_node) == 2) {
+    if (BalanceDiff(current_node->_right) < 0)
+      RightRotate(current_node->_right);
+    return LeftRotate(current_node);
+  } else if (BalanceDiff(current_node) == -2) {
+    if (BalanceDiff(current_node->_left) > 0) LeftRotate(current_node->_left);
+    return RightRotate(current_node);
+  }
+  return current_node;
+}
+
+template <class Key>
+typename BinaryTree<Key>::pointer BinaryTree<Key>::InsertFromRoot(
+    pointer current_node, const_reference &value) {
+  if (!current_node) return new Node(value);
+  if (Compare{}(value, current_node->GetKey())) {
+    current_node->_left = InsertFromRoot(current_node->_left, value);
+    current_node->_left->_parent = current_node;
+    if (current_node == _begin && current_node->_left) {
+      _begin = current_node->_left;
+    }
+  } else {
+    if (current_node->_right == _end) {
+      _end->_parent = current_node->_right = new Node(value, current_node);
+      current_node->_right->_right = _end;
+    } else {
+      current_node->_right = InsertFromRoot(current_node->_right, value);
+      current_node->_right->_parent = current_node;
+    }
+  }
+  return Balance(current_node);
+}
+
+template <class Key>
+typename BinaryTree<Key>::iterator BinaryTree<Key>::insert(
+    const_reference value) {
+  if (max_size() == _size) {
+    throw std::overflow_error(
+        "Can't insert new element, because size will over max_size");
+  }
+  if (_begin == _end) {
+    _end->_parent = _begin = _root = new Node(value);
+    _begin->_right = _end;
+  } else {
+    _root = InsertFromRoot(_root, value);
+  }
+  ++_size;
+  iterator current = lower_bound(value);
+  return --current;
+}
+
+template <class Key>
+void BinaryTree<Key>::clear() {
+  _end->_parent = _end->_parent->_right = nullptr;
+  delete _root;
+  _begin = _root = _end;
+  _size = 0;
+}
+
+template <class Key>
+bool BinaryTree<Key>::contains(const key_type &key) {
+  pointer current = FindFirstEqualOrNearPointer(key);
+  return key == (current->_value);
+}
+
+template <class Key>
+typename BinaryTree<Key>::pointer BinaryTree<Key>::FindNodeFromIterator(
+    iterator pos) {
+  pointer current_node = FindFirstEqualOrNearPointer((*pos)),
+          tmp_node = current_node;
+  while ((current_node->_value) == (*pos)) {
+    if (current_node == pos) {
+      return current_node;
+    }
+    current_node = Node::Prev(current_node);
+  }
+  while ((tmp_node->_value) == (*pos)) {
+    if (tmp_node == pos) {
+      return tmp_node;
+    }
+    tmp_node = Node::Next(tmp_node);
+  }
+  throw std::logic_error("haven't node in tree");
+}
+
+template <class Key>
+void BinaryTree<Key>::erase(iterator pos) {
+  if (pos == end()) {
+    throw std::invalid_argument("Invalid pointer: Cannot remove end pointer");
+  }
+  pointer current_node = FindNodeFromIterator(pos);
+  if (current_node->_left && current_node->_right) {
+    pointer tmp_current_node = current_node;
+    current_node = Node::Prev(current_node);
+    tmp_current_node->_value = current_node->_value;
+  }
+  if (!current_node->_left && !current_node->_right) {
+    DeleteNodeWithoutChild(current_node);
+  } else {
+    DeleteNodeWithOneChild(current_node);
+  }
+  _begin = _root;
+  while (_begin->_left) {
+    _begin = _begin->_left;
+  }
+  --_size;
+}
+
+template <class Key>
+typename BinaryTree<Key>::size_type BinaryTree<Key>::count(
+    const key_type &key) {
+  std::pair<iterator, iterator> iter = equal_range(key);
+  size_type size{};
+  while (iter.first != iter.second) {
+    ++iter.first, ++size;
+  }
+  return size;
+}
+
+template <class Key>  // reg in child
+typename BinaryTree<Key>::iterator BinaryTree<Key>::find(const key_type &key) {
+  iterator current = lower_bound(key);
+  if ((*current) == key) {
+    return current;
+  }
+  return CreateIterator(_end);
+}
+
+template <class Key>  // reg in child
+typename BinaryTree<Key>::iterator BinaryTree<Key>::lower_bound(
+    const key_type &key) {
+  pointer current_node = FindFirstEqualOrNearPointer(key);
+  iterator iter = CreateIterator(current_node);
+  while (iter != end()) {
+    if ((*iter) == key) {
+      --iter;
+    } else {
+      break;
+    }
+  }
+  return ++iter;
+}
+
+template <class Key>  // reg in child
+typename BinaryTree<Key>::iterator BinaryTree<Key>::upper_bound(
+    const key_type &key) {
+  pointer current_node = FindFirstEqualOrNearPointer(key);
+  iterator iter = CreateIterator(current_node);
+  while (iter != _end) {
+    if ((*iter) <= key) {
+      ++iter;
+    } else {
+      break;
+    }
+  }
+  return iter;
+}
+
+template <class Key>
+std::pair<typename BinaryTree<Key>::iterator,
+          typename BinaryTree<Key>::iterator>
+BinaryTree<Key>::equal_range(const key_type &key) {
+  return std::pair<iterator, iterator>{lower_bound(key), upper_bound(key)};
+}
+
+template <class Key>
+typename BinaryTree<Key>::size_type BinaryTree<Key>::size() const noexcept {
+  return _size;
+}
+
+template <class Key>
+typename BinaryTree<Key>::iterator BinaryTree<Key>::begin() noexcept {
+  return CreateIterator(_begin);
+}
+
+template <class Key>
+typename BinaryTree<Key>::iterator BinaryTree<Key>::begin() const noexcept {
+  return CreateIterator(_begin);
+}
+
+template <class Key>
+typename BinaryTree<Key>::iterator BinaryTree<Key>::end() noexcept {
+  return CreateIterator(_end);
+}
+
+template <class Key>
+typename BinaryTree<Key>::iterator BinaryTree<Key>::end() const noexcept {
+  return CreateIterator(_end);
+}
+
+template <class Key>
+typename BinaryTree<Key>::const_iterator BinaryTree<Key>::cbegin() noexcept {
+  return CreateIterator(_begin);
+}
+
+template <class Key>
+typename BinaryTree<Key>::const_iterator BinaryTree<Key>::cend() noexcept {
+  return CreateIterator(_end);
+}
+
+template <class Key>
+bool BinaryTree<Key>::empty() const noexcept {
+  return _size == 0;
+}
+
+template <class Key>
+typename BinaryTree<Key>::size_type BinaryTree<Key>::max_size() const noexcept {
+  return std::numeric_limits<size_type>::max() / sizeof(node_type) / 2;
+}
+
+}  // namespace s21
+
+#endif  // STL_CONTAINERS_BINARYTREE_H_

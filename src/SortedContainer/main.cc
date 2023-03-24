@@ -1,24 +1,28 @@
-//
-// Created by 12355 on 05.03.2023.
-//
+#include <iostream>
 
-#include <set>
 #include "BinaryTree.h"
 
 int main() {
-    std::set<int> a {1, 2, 3, 4, 1};
-//    a.clear();
-    auto it = a.begin(), end = a.end();
-    a.clear();
-    a.insert(3);
-    a.insert(1);
-    a.insert(-2);
-//    auto it2 = a.begin();
-//    it = it2;
-    for (; it != end;) {
-        std::cout << "value: " << *it << std::endl;
-        ++it;
-    }
-    std::cout << "size " << *end;
-    return 0;
+  s21::BinaryTree<int> a;
+  a.insert(4);
+  a.insert(6);
+  a.insert(1);
+  a.insert(0);
+  a.insert(2);
+  a.insert(3);
+  a.insert(2);
+  a.insert(2);
+  a.insert(0);
+  a.insert(0);
+  a.insert(3);
+  a.insert(3);
+  auto it = a.begin(), end = a.end();
+  auto b = a.equal_range(2);
+  auto n = a.begin();
+  while (n != end) {
+    std::cout << "erase: " << *n << std::endl;
+    a.erase(n++);
+  }
+  std::cout << "size: " << a.size() << std::endl;
+  return 0;
 }
