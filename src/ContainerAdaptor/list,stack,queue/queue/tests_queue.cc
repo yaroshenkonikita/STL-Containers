@@ -98,11 +98,12 @@ TEST(queue_tests, push_pop2) {
   s21::queue<int> basic;
   int element = 5;
   int element2 = 4;
+  int element3 = 40;
   basic.push(element);
   basic.push(element2);
-  basic.push(element2);
+  basic.push(element3);
   basic.pop();
-  EXPECT_EQ(basic.back(), element2);
+  EXPECT_EQ(basic.back(), element3);
   EXPECT_EQ(basic.front(), element2);
 }
 
@@ -116,6 +117,13 @@ TEST(queue_tests, push_pop3) {
   basic.pop();
   EXPECT_EQ(basic.back(), element2);
   EXPECT_EQ(basic.front(), element2);
+}
+
+TEST(queue_tests, emplace_back) {
+  s21::queue<std::string> basic;
+  basic.emplace_front("hello", "world", "hi", "ho");
+  EXPECT_EQ(basic.front(), "hello");
+  EXPECT_EQ(basic.back(), "ho");
 }
 
 TEST(queue_tests, swap) {

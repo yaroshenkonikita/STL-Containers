@@ -9,7 +9,7 @@ SOURCENAME = s21_queue
 all: test
 
 test: tests_queue.cc $(SOURCENAME).h
-	@$(CC) $(CFLAGS) tests_queue.cc -o test $(TFLAGS)
+	@$(CC) $(CFLAGS) $(RFLAGS) tests_queue.cc -o test $(TFLAGS)
 	@./test
 
 clean:
@@ -17,6 +17,11 @@ clean:
 
 leaks:
 	leaks -atExit -- ./test
+
+gcov_report: test
+	@lcov -t test -o rep.info -c -d . --no-external
+	@genhtml -o report rep.info
+	@open ./report/index.html
 
 style:
 	@clang-format -style=google -n s21_queue.h tests_queue.cc

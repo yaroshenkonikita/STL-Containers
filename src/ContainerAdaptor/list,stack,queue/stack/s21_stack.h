@@ -1,7 +1,7 @@
 #ifndef CPP2_S21_CONTAINERS_0_SRC_S21_QUEUE_H
 #define CPP2_S21_CONTAINERS_0_SRC_S21_QUEUE_H
 
-#include "../../SequenceContainer/list/s21_list.h"
+#include "../list/s21_list.h"
 
 namespace s21 {
 
@@ -28,6 +28,12 @@ class stack : protected s21::list<T> {
   void push(const_reference value) { list::push_back(value); };
   void pop() { list::pop_back(); };
   void swap(stack &other) { list::swap(other); };
+  template <typename... Args>
+  void emplace_front(Args &&...args) {
+    for (auto element : {std::forward<Args>(args)...}) {
+      push(element);
+    }
+  };
 };
 }  // namespace s21
 

@@ -225,6 +225,34 @@ TEST(stack_test, swap5) {
   EXPECT_EQ(basic2.size(), size_t(1));
 }
 
+TEST(stack_test, emplace_front1) {
+  s21::stack<int> basic;
+  basic.emplace_front(1, 2, 3, 4, 5, 6);
+  EXPECT_EQ(basic.top(), 6);
+  basic.pop();
+  EXPECT_EQ(basic.top(), 5);
+  basic.pop();
+  basic.pop();
+  basic.pop();
+  basic.pop();
+  basic.pop();
+  EXPECT_TRUE(basic.empty());
+}
+
+TEST(stack_test, emplace_front2) {
+  s21::stack<std::string> basic;
+  basic.emplace_front("hello", "world", "hi", "ho", "lets", "go!");
+  EXPECT_EQ(basic.top(), "go!");
+  basic.pop();
+  EXPECT_EQ(basic.top(), "lets");
+  basic.pop();
+  basic.pop();
+  basic.pop();
+  basic.pop();
+  basic.pop();
+  EXPECT_TRUE(basic.empty());
+}
+
 int main(int argc, char *argv[]) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
