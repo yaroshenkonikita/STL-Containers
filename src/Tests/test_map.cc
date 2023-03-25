@@ -445,8 +445,9 @@ TEST(Map, insert_and_ins_assign_first_insert) {
 }
 
 TEST(Map, emplace_basic) {
-s21::map<int, int> basic;
-basic.emplace(std::make_pair(1, 2), std::make_pair(3, 2), std::make_pair(4, 1), std::make_pair(2, 1));
-EXPECT_EQ(basic[1], 2);
-EXPECT_EQ(basic[4], 1);
+  s21::map<int, int> basic;
+  basic.emplace(std::make_pair(1, 2), std::make_pair(3, 2),
+                std::make_pair(4, 1), std::make_pair(2, 1));
+  EXPECT_EQ(basic[1], 2);
+  EXPECT_EQ(basic[4], 1);
 }

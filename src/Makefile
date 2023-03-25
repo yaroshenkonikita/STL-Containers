@@ -1,6 +1,5 @@
 .PHONY: test
 
-#-fsanitize=address
 CC = g++
 CFLAGS = -Wall -Wextra -Werror -std=c++17
 TFLAGS = -lgtest -lgtest_main
@@ -16,7 +15,7 @@ test:
 	@echo "Executor is done"
 	@echo "Start tests..."
 	@./Tests/test
-	@echo "Test is complete"
+	@echo "Tests is complete"
 
 gcov_report: test
 	@echo "Compiling coverage files..."
@@ -27,7 +26,7 @@ gcov_report: test
 	@open report/index.html
 
 style:
-	@clang-format -style=google -n $(TEST) $(CORE)
+	@clang-format -style=google -n $(TEST) $(CORE) *.h
 
 
 clean:
