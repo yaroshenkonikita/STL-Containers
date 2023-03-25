@@ -310,3 +310,10 @@ TEST(Set, lower_bound_and_upper_bound2) {
   EXPECT_EQ(size, 3);
   EXPECT_EQ(basic1.size(), 7);
 }
+
+TEST(Set, emplace_basic) {
+s21::set<int> basic;
+basic.emplace(1, 3, 4, 4);
+EXPECT_TRUE(basic.contains(1));
+EXPECT_TRUE(basic.contains(3));
+}

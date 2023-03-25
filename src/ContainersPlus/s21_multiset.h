@@ -74,7 +74,10 @@ class multiset : public BinaryTree<Key> {
 
   template <typename... Args>
   std::vector<std::pair<iterator, bool>> emplace(Args &&...args) {
-      std::vector<std::pair<iterator, bool>> res = {std::make_pair(insert(args), true)...};
+      std::vector<std::pair<iterator, bool>> res;
+      for (auto element : {std::forward<Args>(args)...}) {
+          res.push_back(std::make_pair(insert(element), true));
+      }
     return res;
   }
 };

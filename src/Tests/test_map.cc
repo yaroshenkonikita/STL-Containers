@@ -444,11 +444,9 @@ TEST(Map, insert_and_ins_assign_first_insert) {
   basic2.insert_or_assign(5, 4);
 }
 
-//TEST(Map, emplace_basic) {
-//s21::map<int, int> basic;
-//basic.emplace(std::make_pair(1, 1));
-//basic.emplace(std::make_pair(2, 3));
-//basic.emplace(std::make_pair(4, 4));
-//EXPECT_EQ(basic.at(2), 3);
-//EXPECT_EQ(basic.at(4), 4);
-//}
+TEST(Map, emplace_basic) {
+s21::map<int, int> basic;
+basic.emplace(std::make_pair(1, 2), std::make_pair(3, 2), std::make_pair(4, 1), std::make_pair(2, 1));
+EXPECT_EQ(basic[1], 2);
+EXPECT_EQ(basic[4], 1);
+}

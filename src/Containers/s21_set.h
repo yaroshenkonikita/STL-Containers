@@ -106,11 +106,14 @@ class set : public BinaryTree<Key> {
     }
   }
 
-  template <typename... Args>
-  std::vector<std::pair<iterator, bool>> emplace(Args &&...args) {
-      std::vector<std::pair<iterator, bool>> res = {(insert(args))...};
-    return res;
-  }
+    template <typename... Args>
+    std::vector<std::pair<iterator, bool>> emplace(Args &&...args) {
+        std::vector<std::pair<iterator, bool>> res;
+        for (auto element : {std::forward<Args>(args)...}) {
+            res.push_back(insert(element));
+        }
+        return res;
+    }
 };
 }  // namespace s21
 

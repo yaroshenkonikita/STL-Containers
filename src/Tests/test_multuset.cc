@@ -346,3 +346,11 @@ TEST(Multiset, erase_reverse) {
   }
   EXPECT_EQ(basic1.size(), 0);
 }
+
+TEST(Multiset, emplace_basic) {
+s21::multiset<int> basic;
+basic.emplace(1, 3, 4, 4);
+EXPECT_TRUE(basic.contains(1));
+EXPECT_TRUE(basic.contains(3));
+EXPECT_EQ(basic.count(4), 2);
+}
