@@ -200,8 +200,3 @@ TEST(vector, emplace_back) {
   EXPECT_EQ(vector.capacity(), std.capacity());
   EXPECT_EQ(vector.size(), std.size());
 }
-
-int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
