@@ -312,8 +312,8 @@ TEST(Set, lower_bound_and_upper_bound2) {
 }
 
 TEST(Set, emplace_basic) {
-s21::set<int> basic;
-basic.emplace(1, 3, 4, 4);
-EXPECT_TRUE(basic.contains(1));
-EXPECT_TRUE(basic.contains(3));
+  s21::set<int> basic;
+  basic.emplace(1, 3, 4, 4);
+  EXPECT_TRUE(basic.contains(1));
+  EXPECT_TRUE(basic.contains(3));
 }

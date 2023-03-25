@@ -1,14 +1,11 @@
 #ifndef CPP2_S21_CONTAINERS_0_SRC_S21_MAP_H_
 #define CPP2_S21_CONTAINERS_0_SRC_S21_MAP_H_
 
-#include "../BinaryTree/BinaryTree.h"
+#include "../ContainersDependence/BinaryTree.h"
 
 namespace s21 {
 template <class Key, class Value>
 class map : public BinaryTree<std::pair<Key, Value>> {
-  class MapIterator;
-  class MapConstIterator;
-
  public:
   using key_type = Key;
   using mapped_type = Value;
@@ -24,26 +21,44 @@ class map : public BinaryTree<std::pair<Key, Value>> {
       typename BinaryTree<std::pair<Key, Value>>::const_iterator;
   using Compare = std::less<Key>;
 
- private:
- public:
+  map() : BinaryTree<std::pair<Key, Value>>() {}
+
+  map(const std::initializer_list<value_type> &items) {
+    this->_begin = this->_root = this->_end = new node_type();
+    this->_begin->_height = 0;
+    for (value_type item : items) {
+      insert(item);
+    }
+  }
+
+  map(const map &m) : BinaryTree<std::pair<Key, Value>>(m) {}
+
+  map(map &&m) {
+    this->_size = std::exchange(m._size, 0);
+    this->_root = m._root;
+    this->_begin = m._begin;
+    this->_end = m._end;
+    m._begin = m._end = m._root = new node_type();
+  }
+
+  ~map() = default;
+
+  map &operator=(map &&m) {
+    delete this->_root;
+    this->_begin = m._begin;
+    this->_end = m._end;
+    this->_root = m._root;
+    this->_size = std::exchange(m._size, 0);
+    m._begin = m._end = m._root = new node_type();
+    return *this;
+  }
+
   iterator find(const key_type &key) {
     iterator current = lower_bound(key);
     if ((*current).first == key) {
       return current;
     }
     return this->CreateIterator(this->_end);
-  }
-
-  pointer FindEqualNode(pointer current_node, const key_type &key) {
-    if (current_node == this->_end || current_node == nullptr) {
-      return nullptr;
-    }
-    if (Compare{}(key, current_node->_value.first)) {
-      return FindEqualNode(current_node->_left, key);
-    } else if (current_node->_value.first == key) {
-      return current_node;
-    }
-    return FindEqualNode(current_node->_right, key);
   }
 
   iterator lower_bound(const key_type &key) {
@@ -77,28 +92,6 @@ class map : public BinaryTree<std::pair<Key, Value>> {
     return current;
   }
 
-  pointer FindFirstEqualOrNearPointer(const key_type &key) const noexcept {
-    pointer current_node = this->_root;
-    while (current_node != this->_end) {
-      if (Compare{}(key, current_node->_value.first)) {
-        if (current_node->_left != nullptr) {
-          current_node = current_node->_left;
-        } else {
-          break;
-        }
-      } else if (key == current_node->_value.first) {
-        return current_node;
-      } else if (current_node->_right != nullptr &&
-                 current_node->_right != this->_end) {
-        current_node = current_node->_right;
-      } else {
-        break;
-      }
-    }
-    return current_node;
-  }
-
- public:
   std::pair<iterator, bool> insert(const_reference value) {
     std::pair<pointer, bool> tmp{};
     if (this->max_size() == this->_size) {
@@ -167,45 +160,6 @@ class map : public BinaryTree<std::pair<Key, Value>> {
     return {current, tmp.second};
   }
 
-  map() : BinaryTree<std::pair<Key, Value>>() {}
-
-  map(const std::initializer_list<value_type> &items) {
-    this->_begin = this->_root = this->_end = new node_type();
-    this->_begin->_height = 0;
-    for (value_type item : items) {
-      insert(item);
-    }
-  }
-
-  map(const map &s) : BinaryTree<std::pair<Key, Value>>(s) {}
-
-  map(map &&s) {
-    this->_size = std::exchange(s._size, 0);
-    this->_root = s._root;
-    this->_begin = s._begin;
-    this->_end = s._end;
-    s._begin = s._end = s._root = new node_type();
-  }
-
-  ~map() = default;
-
-  map &operator=(map &&ms) {
-    delete this->_root;
-    this->_begin = ms._begin;
-    this->_end = ms._end;
-    this->_root = ms._root;
-    this->_size = ms._size;
-    ms._begin = ms._end = ms._root = new node_type();
-    ms._size = 0;
-    return *this;
-  }
-
-  void swap(map &other) {
-    map tmp = std::move(other);
-    other = std::move(*this);
-    *this = std::move(tmp);
-  }
-
   void merge(map &other) {
     iterator begin = other.begin(), end = other.end();
     while (begin != end) {
@@ -234,14 +188,48 @@ class map : public BinaryTree<std::pair<Key, Value>> {
     return at(key);
   }
 
-template <typename... Args>
-std::vector<std::pair<iterator, bool>> emplace(Args &&...args) {
+  template <typename... Args>
+  std::vector<std::pair<iterator, bool>> emplace(Args &&...args) {
     std::vector<std::pair<iterator, bool>> res;
     for (auto element : {std::forward<Args>(args)...}) {
-        res.push_back(insert(element));
+      res.push_back(insert(element));
     }
     return res;
-}
+  }
+
+ private:
+  pointer FindEqualNode(pointer current_node, const key_type &key) {
+    if (current_node == this->_end || current_node == nullptr) {
+      return nullptr;
+    }
+    if (Compare{}(key, current_node->_value.first)) {
+      return FindEqualNode(current_node->_left, key);
+    } else if (current_node->_value.first == key) {
+      return current_node;
+    }
+    return FindEqualNode(current_node->_right, key);
+  }
+
+  pointer FindFirstEqualOrNearPointer(const key_type &key) const noexcept {
+    pointer current_node = this->_root;
+    while (current_node != this->_end) {
+      if (Compare{}(key, current_node->_value.first)) {
+        if (current_node->_left != nullptr) {
+          current_node = current_node->_left;
+        } else {
+          break;
+        }
+      } else if (key == current_node->_value.first) {
+        return current_node;
+      } else if (current_node->_right != nullptr &&
+                 current_node->_right != this->_end) {
+        current_node = current_node->_right;
+      } else {
+        break;
+      }
+    }
+    return current_node;
+  }
 };
 
 }  // namespace s21
