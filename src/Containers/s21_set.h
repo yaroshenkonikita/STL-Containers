@@ -1,7 +1,7 @@
 #ifndef CPP2_S21_CONTAINERS_0_SRC_S21_SET_H_
 #define CPP2_S21_CONTAINERS_0_SRC_S21_SET_H_
 
-#include "../BinaryTree/BinaryTree.h"
+#include "../ContainersDependence/BinaryTree.h"
 
 namespace s21 {
 
@@ -20,41 +20,6 @@ class set : public BinaryTree<Key> {
   using const_iterator = typename BinaryTree<Key>::const_iterator;
   using Compare = typename BinaryTree<Key>::Compare;
 
- private:
-  pointer FindEqualNode(pointer current_node, const key_type &key) {
-    if (current_node == this->_end || current_node == nullptr) {
-      return nullptr;
-    }
-    if (Compare{}(key, current_node->_value)) {
-      return FindEqualNode(current_node->_left, key);
-    } else if (current_node->_value == key) {
-      return current_node;
-    } else {
-      return FindEqualNode(current_node->_right, key);
-    }
-  }
-
- public:
-  std::pair<iterator, bool> insert(const_reference value) {
-    std::pair<pointer, bool> tmp{};
-    if (this->max_size() == this->_size) {
-      throw std::overflow_error(
-          "Can't insert new element, because size will over max_size");
-    }
-    if (this->_begin == this->_end) {
-      this->_end->_parent = this->_begin = this->_root = new node_type(value);
-      this->_begin->_right = this->_end;
-      ++this->_size;
-      tmp.second = true;
-    } else if (!FindEqualNode(this->_root, value)) {
-      this->_root = this->InsertFromRoot(this->_root, value);
-      ++this->_size;
-      tmp.second = true;
-    }
-    iterator current = this->lower_bound(value);
-    return {current, tmp.second};
-  }
-
   set() : BinaryTree<Key>() {}
 
   set(const std::initializer_list<key_type> &items) {
@@ -67,13 +32,7 @@ class set : public BinaryTree<Key> {
 
   set(const set &s) : BinaryTree<Key>(s) {}
 
-  set(set &&s) {
-    this->_size = std::exchange(s._size, 0);
-    this->_root = s._root;
-    this->_begin = s._begin;
-    this->_end = s._end;
-    s._begin = s._end = s._root = new node_type();
-  }
+  set(set &&s) : BinaryTree<Key>(std::move(s)) {}
 
   ~set() = default;
 
@@ -88,10 +47,24 @@ class set : public BinaryTree<Key> {
     return *this;
   }
 
-  void swap(set &other) {
-    set tmp = std::move(other);
-    other = std::move(*this);
-    *this = std::move(tmp);
+  std::pair<iterator, bool> insert(const_reference value) {
+    std::pair<pointer, bool> tmp{};
+    if (this->max_size() == this->_size) {
+      throw std::overflow_error(
+          "Can't insert new element, because size will over max_size");
+    }
+    if (this->_begin == this->_end) {
+      this->_end->_parent = this->_begin = this->_root = new node_type(value);
+      this->_begin->_right = this->_end;
+      ++this->_size;
+      tmp.second = true;
+    } else if (!this->FindEqualNode(this->_root, value)) {
+      this->_root = this->InsertFromRoot(this->_root, value);
+      ++this->_size;
+      tmp.second = true;
+    }
+    iterator current = this->lower_bound(value);
+    return {current, tmp.second};
   }
 
   void merge(set &other) {
@@ -106,14 +79,14 @@ class set : public BinaryTree<Key> {
     }
   }
 
-    template <typename... Args>
-    std::vector<std::pair<iterator, bool>> emplace(Args &&...args) {
-        std::vector<std::pair<iterator, bool>> res;
-        for (auto element : {std::forward<Args>(args)...}) {
-            res.push_back(insert(element));
-        }
-        return res;
+  template <typename... Args>
+  std::vector<std::pair<iterator, bool>> emplace(Args &&...args) {
+    std::vector<std::pair<iterator, bool>> res;
+    for (auto element : {std::forward<Args>(args)...}) {
+      res.push_back(insert(element));
     }
+    return res;
+  }
 };
 }  // namespace s21
 
