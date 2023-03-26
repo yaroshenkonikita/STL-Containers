@@ -168,23 +168,30 @@ class vector {
   }
 
   template <typename... Args>
-  const_iterator emplace(const_iterator pos, Args &&...args) {
-    if (size_ == capacity_) {
-      reserve(capacity_ == 0 ? 1 : capacity_ * 2);
-    }
+  iterator emplace(const_iterator pos, Args &&...args) {
+    size_type current_pos = pos - arr_;
     for (auto element : {std::forward<Args>(args)...}) {
-      insert((iterator)pos, element);
-      pos++;
+      iterator current = arr_ + current_pos++;
+      insert(current++, element);
     }
-    return --pos;
+    return arr_ + --current_pos;
   }
+
+  //  template <typename... Args>
+  //  const_iterator emplace(const_iterator pos, Args &&...args) {
+  //    if (size_ == capacity_) {
+  //      reserve(capacity_ == 0 ? 1 : capacity_ * 2);
+  //    }
+  //    for (auto element : {std::forward<Args>(args)...}) {
+  //      insert((iterator)pos, element);
+  //      pos++;
+  //    }
+  //    return --pos;
+  //  }
 
   template <typename... Args>
   void emplace_back(Args &&...args) {
-    if (size_ == capacity_) {
-      reserve(capacity_ == 0 ? 1 : capacity_ * 2);
-    }
-    new (arr_ + size_++) T(std::forward<Args>(args)...);
+    emplace(end(), std::forward<Args>(args)...);
   }
 
  private:
