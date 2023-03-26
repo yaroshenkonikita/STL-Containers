@@ -46,9 +46,7 @@ class BinaryTree {
   std::pair<iterator, iterator> equal_range(const key_type &key);
   [[nodiscard]] size_type size() const noexcept;
   iterator begin() noexcept;
-  iterator begin() const noexcept;
   iterator end() noexcept;
-  iterator end() const noexcept;
   const_iterator cbegin() noexcept;
   const_iterator cend() noexcept;
   [[nodiscard]] bool empty() const noexcept;
@@ -116,14 +114,14 @@ BinaryTree<Key>::~BinaryTree() {
 }
 
 template <class Key>
-BinaryTree<Key> &BinaryTree<Key>::operator=(BinaryTree &&ms) {
+BinaryTree<Key> &BinaryTree<Key>::operator=(BinaryTree &&other) {
   delete this->_root;
-  this->_begin = ms._begin;
-  this->_end = ms._end;
-  this->_root = ms._root;
-  this->_size = ms._size;
-  ms._begin = ms._end = ms._root = new node_type();
-  ms._size = 0;
+  this->_begin = other._begin;
+  this->_end = other._end;
+  this->_root = other._root;
+  this->_size = other._size;
+  other._begin = other._end = other._root = new node_type();
+  other._size = 0;
   return *this;
 }
 
@@ -369,7 +367,7 @@ typename BinaryTree<Key>::size_type BinaryTree<Key>::count(
   return size;
 }
 
-template <class Key>  // reg in child
+template <class Key>
 typename BinaryTree<Key>::iterator BinaryTree<Key>::find(const key_type &key) {
   iterator current = lower_bound(key);
   if ((*current) == key) {
@@ -378,7 +376,7 @@ typename BinaryTree<Key>::iterator BinaryTree<Key>::find(const key_type &key) {
   return CreateIterator(_end);
 }
 
-template <class Key>  // reg in child
+template <class Key>
 typename BinaryTree<Key>::iterator BinaryTree<Key>::lower_bound(
     const key_type &key) {
   pointer current_node = FindFirstEqualOrNearPointer(key);
@@ -393,7 +391,7 @@ typename BinaryTree<Key>::iterator BinaryTree<Key>::lower_bound(
   return ++iter;
 }
 
-template <class Key>  // reg in child
+template <class Key>
 typename BinaryTree<Key>::iterator BinaryTree<Key>::upper_bound(
     const key_type &key) {
   pointer current_node = FindFirstEqualOrNearPointer(key);
@@ -426,17 +424,7 @@ typename BinaryTree<Key>::iterator BinaryTree<Key>::begin() noexcept {
 }
 
 template <class Key>
-typename BinaryTree<Key>::iterator BinaryTree<Key>::begin() const noexcept {
-  return CreateIterator(_begin);
-}
-
-template <class Key>
 typename BinaryTree<Key>::iterator BinaryTree<Key>::end() noexcept {
-  return CreateIterator(_end);
-}
-
-template <class Key>
-typename BinaryTree<Key>::iterator BinaryTree<Key>::end() const noexcept {
   return CreateIterator(_end);
 }
 

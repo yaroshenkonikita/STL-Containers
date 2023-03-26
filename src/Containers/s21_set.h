@@ -28,20 +28,20 @@ class set : public BinaryTree<Key> {
     }
   }
 
-  set(const set &s) : BinaryTree<Key>(s) {}
+  set(const set &other) : BinaryTree<Key>(other) {}
 
-  set(set &&s) : BinaryTree<Key>(std::move(s)) {}
+  set(set &&other) : BinaryTree<Key>(std::move(other)) {}
 
   ~set() = default;
 
-  set &operator=(set &&ms) {
+  set &operator=(set &&other) {
     delete this->_root;
-    this->_begin = ms._begin;
-    this->_end = ms._end;
-    this->_root = ms._root;
-    this->_size = ms._size;
-    ms._begin = ms._end = ms._root = new node_type();
-    ms._size = 0;
+    this->_begin = other._begin;
+    this->_end = other._end;
+    this->_root = other._root;
+    this->_size = other._size;
+    other._begin = other._end = other._root = new node_type();
+    other._size = 0;
     return *this;
   }
 

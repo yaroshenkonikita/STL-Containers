@@ -22,8 +22,8 @@ class multiset : public BinaryTree<Key> {
   multiset() : BinaryTree<Key>() {}
   multiset(const std::initializer_list<key_type> &items)
       : BinaryTree<Key>(items) {}
-  multiset(const multiset &ms) : BinaryTree<Key>(ms) {}
-  multiset(multiset &&ms) : BinaryTree<Key>(std::move(ms)) {}
+  multiset(const multiset &other) : BinaryTree<Key>(other) {}
+  multiset(multiset &&other) : BinaryTree<Key>(std::move(other)) {}
   ~multiset() = default;
 
   template <typename... Args>
