@@ -189,13 +189,10 @@ class vector {
 //    return --pos;
 //  }
 
-//  template <typename... Args>
-//  void emplace_back(Args &&...args) {
-//    if (size_ == capacity_) {
-//      reserve(capacity_ == 0 ? 1 : capacity_ * 2);
-//    }
-//    new (arr_ + size_++) T(std::forward<Args>(args)...);
-//  }
+  template <typename... Args>
+  void emplace_back(Args &&...args) {
+    emplace(end(), std::forward<Args>(args)...);
+  }
 
  private:
   pointer arr_;
