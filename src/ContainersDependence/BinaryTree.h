@@ -502,7 +502,7 @@ typename BinaryTree<Key>::pointer BinaryTree<Key>::FindNodeFromIterator(
     }
     tmp_node = Node::Next(tmp_node);
   }
-  throw std::logic_error("haven't node in tree");
+  throw std::logic_error("Haven't node in tree");
 }
 
 template <class Key>
