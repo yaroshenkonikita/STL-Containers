@@ -38,7 +38,7 @@ class BinaryTree {
   iterator insert(const_reference value);
   void clear();
   virtual bool contains(const key_type &key);
-  virtual void erase(iterator pos);
+  void erase(iterator pos);
   size_type count(const key_type &key);
   virtual iterator find(const key_type &key);
   virtual iterator lower_bound(const key_type &key);
