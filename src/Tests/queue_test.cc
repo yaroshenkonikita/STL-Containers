@@ -1,7 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <queue>
-
 #include "../s21_containers.h"
 
 TEST(queue_tests, def_constructor) {

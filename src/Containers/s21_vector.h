@@ -1,7 +1,6 @@
 #ifndef CPP2_S21_CONTAINERS_0_SRC_S21_VECTOR_H_
 #define CPP2_S21_CONTAINERS_0_SRC_S21_VECTOR_H_
 
-#include "iostream"
 #include "limits"
 
 namespace s21 {
