@@ -24,8 +24,6 @@ class map : public BinaryTree<std::pair<Key, Value>> {
   map() : BinaryTree<std::pair<Key, Value>>() {}
 
   map(const std::initializer_list<value_type> &items) {
-    this->_begin = this->_root = this->_end = new node_type();
-    this->_begin->_height = 0;
     for (value_type item : items) {
       insert(item);
     }
@@ -34,6 +32,7 @@ class map : public BinaryTree<std::pair<Key, Value>> {
   map(const map &m) : BinaryTree<std::pair<Key, Value>>(m) {}
 
   map(map &&m) {
+    delete this->_root;
     this->_size = std::exchange(m._size, 0);
     this->_root = m._root;
     this->_begin = m._begin;

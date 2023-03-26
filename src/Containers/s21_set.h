@@ -23,8 +23,6 @@ class set : public BinaryTree<Key> {
   set() : BinaryTree<Key>() {}
 
   set(const std::initializer_list<key_type> &items) {
-    this->_begin = this->_root = this->_end = new node_type();
-    this->_begin->_height = 0;
     for (value_type item : items) {
       insert(item);
     }
