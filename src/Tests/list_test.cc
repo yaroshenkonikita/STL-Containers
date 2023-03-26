@@ -653,12 +653,12 @@ TEST(list_test, splice2) {
 }
 
 TEST(list_test, splice3) {
-  s21::list<std::string> basic = {"hello", "world"};
-  s21::list<std::string> basic2 = {"lets", "go!"};
-  auto it = basic.end();
-  basic.splice(it, basic2);
-  EXPECT_EQ(basic.front(), "hello");
-  EXPECT_EQ(basic.back(), "go!");
+s21::list<std::string> basic = {"hello", "world"};
+s21::list<std::string> basic2 = {"lets", "go!"};
+s21::list<std::string>::const_iterator it = basic.end();
+basic.splice(it, basic2);
+EXPECT_EQ(basic.front(), "hello");
+EXPECT_EQ(basic.back(), "go!");
 }
 
 TEST(list_test, reverse) {
