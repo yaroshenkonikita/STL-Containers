@@ -19,7 +19,7 @@ test:
 
 gcov_report: test
 	@echo "Compiling coverage files..."
-	@lcov -t Tests/test -o test.info --no-external -c -d Tests -d Containers -d ContainersPlus -d BinaryTree
+	@lcov -t Tests/test -o test.info --no-external -c -d Tests -d Containers -d ContainersPlus -d ContainersDependence
 	@echo "Compiling report html"
 	@genhtml -o report test.info
 	@echo "Report is done"
