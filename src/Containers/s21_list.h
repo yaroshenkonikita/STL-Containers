@@ -203,6 +203,7 @@ class list {
     }
     size_list_ += other.size_list_;
     other.head_ = other.tail_ = other.end_;
+    other.end_->prev = nullptr;
     other.size_list_ = 0;
   }
   void merge(list &other) {
