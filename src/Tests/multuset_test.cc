@@ -235,14 +235,6 @@ TEST(Multiset, count_double) {
   EXPECT_DOUBLE_EQ(basic1.count(-9), 1);
 }
 
-// TEST(Multiset, iterator_find) { // не уверен
-//     s21::multiset<double> basic1;
-//     auto iter_11 = basic1.begin();
-//     auto iter_22 = basic1.end();
-//     EXPECT_TRUE(iter_11 == nullptr);
-//     EXPECT_EQ(*iter_22, 0);
-// }
-
 TEST(Multiset, iterator_find) {
   s21::multiset<double> basic1{78, 23, -9, 22, 22, 22, 23};
   EXPECT_EQ(basic1.size(), 7);
@@ -252,6 +244,7 @@ TEST(Multiset, iterator_find) {
   EXPECT_DOUBLE_EQ(*++iter_22, 22);
   EXPECT_DOUBLE_EQ(*++iter_22, 23);
   EXPECT_DOUBLE_EQ(*++iter_22, 23);
+  EXPECT_TRUE(basic1.end() == basic1.find(99));
 }
 
 TEST(Multiset, iterator_find2) {
