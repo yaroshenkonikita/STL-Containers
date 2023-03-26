@@ -32,12 +32,11 @@ class map : public BinaryTree<std::pair<Key, Value>> {
   map(const map &m) : BinaryTree<std::pair<Key, Value>>(m) {}
 
   map(map &&m) {
-    delete this->_root;
+    pointer base_ctor_node = this->_root;
     this->_size = std::exchange(m._size, 0);
-    this->_root = m._root;
-    this->_begin = m._begin;
-    this->_end = m._end;
-    m._begin = m._end = m._root = new node_type();
+    this->_root = std::exchange(m._root, base_ctor_node);
+    this->_begin = std::exchange(m._begin, base_ctor_node);
+    this->_end = std::exchange(m._end, base_ctor_node);
   }
 
   ~map() = default;
