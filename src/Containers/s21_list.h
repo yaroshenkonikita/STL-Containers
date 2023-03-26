@@ -189,7 +189,8 @@ class list {
     } else if (pos == end()) {
       tail_->next = other.head_;
       other.head_->prev = tail_;
-      tail_ = other.tail_;
+      end_->prev = tail_ = other.tail_;
+      tail_->next = end_;
     } else {
       iterator tmp(pos);
       iterator prev(pos.current->prev);
@@ -201,7 +202,7 @@ class list {
       other.tail_->next = tmp.current;
     }
     size_list_ += other.size_list_;
-    other.head_ = other.tail_ = other.end_ = new node;
+    other.head_ = other.tail_ = other.end_;
     other.size_list_ = 0;
   }
   void merge(list &other) {
