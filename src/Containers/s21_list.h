@@ -253,6 +253,7 @@ list<value_type> &list<value_type>::operator=(
     list<value_type> &&other) noexcept {
   if (this != &other) {
     clear();
+    delete end_;
     size_list_ = std::exchange(other.size_list_, 0);
     head_ = std::exchange(other.head_, nullptr);
     tail_ = std::exchange(other.tail_, nullptr);
