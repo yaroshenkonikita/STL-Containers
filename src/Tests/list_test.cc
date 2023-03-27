@@ -1,5 +1,7 @@
-#include <gtest/gtest.h>
 #include "list"
+
+#include <gtest/gtest.h>
+
 #include "../s21_containers.h"
 
 TEST(list_test, def_constructor) {
