@@ -40,7 +40,7 @@ class array {
 
   //  Перегрузка оператора для перемещения объекта
   array &operator=(array &&arr) noexcept {
-    std::move(arr.begin(), array.end(), begin());
+    std::move(arr.begin(), arr.end(), begin());
     return *this;
   }
 
