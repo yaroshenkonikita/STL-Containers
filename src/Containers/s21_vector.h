@@ -19,8 +19,8 @@ class vector {
   vector() : arr_(nullptr), size_(0), capacity_(0) {}
 
   //  Конструктор с размером
-  explicit vector(size_type n)
-      : arr_(new value_type[n]), size_(n), capacity_(n) {}
+  explicit vector(size_type size)
+      : arr_(new value_type[size]), size_(size), capacity_(size) {}
 
   //  Конструктор списка инициализаторов
   vector(std::initializer_list<value_type> const &items)
@@ -30,33 +30,33 @@ class vector {
   }
 
   //  Конструктор копирования
-  vector(const vector &v) : arr_(nullptr), size_(0), capacity_(0) {
-    reserve(v.capacity_);
-    size_ = v.size_;
-    for (size_type i = 0; i < size_; i++) arr_[i] = v.arr_[i];
+  vector(const vector &vector) : arr_(nullptr), size_(0), capacity_(0) {
+    reserve(vector.capacity_);
+    size_ = vector.size_;
+    for (size_type i = 0; i < size_; i++) arr_[i] = vector.arr_[i];
   }
 
   //  Конструктор перемещения
-  vector(vector &&v) noexcept
-      : arr_(v.arr_), size_(v.size_), capacity_(v.capacity_) {
-    v.arr_ = nullptr;
-    v.size_ = 0;
-    v.capacity_ = 0;
+  vector(vector &&vector) noexcept
+      : arr_(vector.arr_), size_(vector.size_), capacity_(vector.capacity_) {
+    vector.arr_ = nullptr;
+    vector.size_ = 0;
+    vector.capacity_ = 0;
   }
 
   //  Деструктор
   ~vector() { delete[] arr_; }
 
   //  Перегрузка оператора для перемещения объекта
-  vector &operator=(vector &&v) noexcept {
-    if (this != &v) {
+  vector &operator=(vector &&vector) noexcept {
+    if (this != &vector) {
       delete[] arr_;
-      arr_ = v.arr_;
-      capacity_ = v.capacity_;
-      size_ = v.size_;
-      v.arr_ = nullptr;
-      v.capacity_ = 0;
-      v.size_ = 0;
+      arr_ = vector.arr_;
+      capacity_ = vector.capacity_;
+      size_ = vector.size_;
+      vector.arr_ = nullptr;
+      vector.capacity_ = 0;
+      vector.size_ = 0;
     }
     return *this;
   }
@@ -175,18 +175,6 @@ class vector {
     }
     return arr_ + --current_pos;
   }
-
-  //  template <typename... Args>
-  //  const_iterator emplace(const_iterator pos, Args &&...args) {
-  //    if (size_ == capacity_) {
-  //      reserve(capacity_ == 0 ? 1 : capacity_ * 2);
-  //    }
-  //    for (auto element : {std::forward<Args>(args)...}) {
-  //      insert((iterator)pos, element);
-  //      pos++;
-  //    }
-  //    return --pos;
-  //  }
 
   template <typename... Args>
   void emplace_back(Args &&...args) {

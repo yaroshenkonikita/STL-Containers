@@ -28,19 +28,19 @@ class array {
   }
 
   //  Конструктор копирования
-  array(const array &a) {
-    for (size_type i = 0; i < N; i++) arr_[i] = a.arr_[i];
+  array(const array &arr) {
+    for (size_type i = 0; i < N; i++) arr_[i] = arr.arr_[i];
   }
 
   //  Конструктор перемещения
-  array(array &&a) noexcept { std::move(a.begin(), a.end(), begin()); }
+  array(array &&arr) noexcept { std::move(arr.begin(), arr.end(), begin()); }
 
   //  Деструктор
   ~array() = default;
 
   //  Перегрузка оператора для перемещения объекта
-  array &operator=(array &&a) noexcept {
-    std::move(a.begin(), a.end(), begin());
+  array &operator=(array &&arr) noexcept {
+    std::move(arr.begin(), array.end(), begin());
     return *this;
   }
 
