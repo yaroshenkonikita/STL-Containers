@@ -33,7 +33,7 @@ class BinaryTree {
   BinaryTree(const BinaryTree &other);
   BinaryTree(BinaryTree &&other) noexcept;
   ~BinaryTree();
-  BinaryTree &operator=(BinaryTree &&ms);
+  BinaryTree &operator=(BinaryTree &&other);
 
   iterator insert(const_reference value);
   void clear();
@@ -47,8 +47,6 @@ class BinaryTree {
   [[nodiscard]] size_type size() const noexcept;
   iterator begin() noexcept;
   iterator end() noexcept;
-  const_iterator cbegin() noexcept;
-  const_iterator cend() noexcept;
   [[nodiscard]] bool empty() const noexcept;
   [[nodiscard]] size_type max_size() const noexcept;
   void swap(BinaryTree &other);
@@ -60,7 +58,6 @@ class BinaryTree {
   void DeleteNodeWithoutChild(pointer current);
   void DeleteNodeWithOneChild(pointer current);
   pointer CopyAllChild(pointer parent) const;
-  iterator CreateIterator(pointer node) noexcept;
   virtual pointer FindFirstEqualOrNearPointer(
       const key_type &key) const noexcept;
   size_type Height(pointer current_node) const;
@@ -213,16 +210,11 @@ template <class Key>
 class BinaryTree<Key>::TreeIterator {
  public:
   TreeIterator() = default;
-  TreeIterator(pointer current, pointer &end, std::size_t &size) noexcept
-      : current_node(current), _end(end), _size(size) {}
+  TreeIterator(pointer current) noexcept : current_node(current) {}
   TreeIterator(TreeIterator &other) noexcept
-      : current_node(other.current_node),
-        _end(other._end),
-        _size(other._size) {}
+      : current_node(other.current_node) {}
   TreeIterator(TreeIterator &&other) noexcept
-      : current_node(other.current_node),
-        _end(other._end),
-        _size(other._size) {}
+      : current_node(other.current_node) {}
   virtual ~TreeIterator() = default;
 
   virtual value_type operator*() { return current_node->_value; }
@@ -274,8 +266,7 @@ class BinaryTree<Key>::TreeIterator {
   }
 
  protected:
-  pointer current_node{}, &_end{};
-  std::size_t &_size;
+  pointer current_node{};
 };
 
 template <class Key>
@@ -283,22 +274,15 @@ class BinaryTree<Key>::TreeConstIterator
     : public BinaryTree<Key>::TreeIterator {
  public:
   TreeConstIterator() = default;
-  TreeConstIterator(pointer current, pointer &begin, pointer &end,
-                    std::size_t &size) noexcept
-      : BinaryTree<Key>::TreeIterator(current, begin, end, size) {}
+  TreeConstIterator(pointer current) noexcept
+      : BinaryTree<Key>::TreeIterator(current) {}
   TreeConstIterator(TreeConstIterator &other) noexcept {
     this->current_node = other.current_node;
-    this->_begin = other._begin;
-    this->_end = other._end;
-    this->_size = other._size;
   }
   TreeConstIterator(TreeConstIterator &&other) noexcept {
     this->current_node = other.current_node;
-    this->_begin = other._begin;
-    this->_end = other._end;
-    this->_size = other._size;
   }
-  virtual ~TreeConstIterator() = default;
+  ~TreeConstIterator() = default;
 };
 
 template <class Key>
@@ -373,14 +357,14 @@ typename BinaryTree<Key>::iterator BinaryTree<Key>::find(const key_type &key) {
   if ((*current) == key) {
     return current;
   }
-  return CreateIterator(_end);
+  return TreeIterator(_end);
 }
 
 template <class Key>
 typename BinaryTree<Key>::iterator BinaryTree<Key>::lower_bound(
     const key_type &key) {
   pointer current_node = FindFirstEqualOrNearPointer(key);
-  iterator iter = CreateIterator(current_node);
+  iterator iter = TreeIterator(current_node);
   while (iter != end()) {
     if ((*iter) == key) {
       --iter;
@@ -395,7 +379,7 @@ template <class Key>
 typename BinaryTree<Key>::iterator BinaryTree<Key>::upper_bound(
     const key_type &key) {
   pointer current_node = FindFirstEqualOrNearPointer(key);
-  iterator iter = CreateIterator(current_node);
+  iterator iter = TreeIterator(current_node);
   while (iter != _end) {
     if ((*iter) <= key) {
       ++iter;
@@ -420,22 +404,12 @@ typename BinaryTree<Key>::size_type BinaryTree<Key>::size() const noexcept {
 
 template <class Key>
 typename BinaryTree<Key>::iterator BinaryTree<Key>::begin() noexcept {
-  return CreateIterator(_begin);
+  return TreeIterator(_begin);
 }
 
 template <class Key>
 typename BinaryTree<Key>::iterator BinaryTree<Key>::end() noexcept {
-  return CreateIterator(_end);
-}
-
-template <class Key>
-typename BinaryTree<Key>::const_iterator BinaryTree<Key>::cbegin() noexcept {
-  return CreateIterator(_begin);
-}
-
-template <class Key>
-typename BinaryTree<Key>::const_iterator BinaryTree<Key>::cend() noexcept {
-  return CreateIterator(_end);
+  return TreeIterator(_end);
 }
 
 template <class Key>
@@ -503,12 +477,6 @@ typename BinaryTree<Key>::pointer BinaryTree<Key>::FindNodeFromIterator(
     tmp_node = Node::Next(tmp_node);
   }
   throw std::logic_error("Haven't node in tree");
-}
-
-template <class Key>
-typename BinaryTree<Key>::iterator BinaryTree<Key>::CreateIterator(
-    pointer node) noexcept {
-  return TreeIterator(node, _end, _size);
 }
 
 template <class Key>

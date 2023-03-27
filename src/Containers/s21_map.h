@@ -56,12 +56,12 @@ class map : public BinaryTree<std::pair<Key, Value>> {
     if ((*current).first == key) {
       return current;
     }
-    return this->CreateIterator(this->_end);
+    return iterator(this->_end);
   }
 
   iterator lower_bound(const key_type &key) {
     pointer current_node = this->FindFirstEqualOrNearPointer(key);
-    iterator iter = this->CreateIterator(current_node);
+    iterator iter = iterator(current_node);
     while (iter != this->_end) {
       if ((*iter).first == key) {
         --iter;
@@ -74,7 +74,7 @@ class map : public BinaryTree<std::pair<Key, Value>> {
 
   iterator upper_bound(const key_type &key) {
     pointer current_node = this->FindFirstEqualOrNearPointer(key);
-    iterator iter = this->CreateIterator(current_node);
+    iterator iter = iterator(current_node);
     while (iter != this->_end) {
       if ((*iter).first <= key) {
         ++iter;
