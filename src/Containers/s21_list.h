@@ -230,6 +230,12 @@ class list {
     }
   }
 
+  void clear() {
+    while (!empty()) {
+      pop_front();
+    }
+  }
+
  private:
   node *head_;
   node *tail_;
@@ -240,7 +246,6 @@ class list {
       throw std::length_error("list is empty");
     }
   }
-  void clear();
 };
 
 template <typename value_type>
@@ -274,14 +279,6 @@ void list<value_type>::swap(list &other) {
   std::swap(head_, other.head_);
   std::swap(tail_, other.tail_);
   std::swap(end_, other.end_);
-}
-
-template <typename value_type>
-void list<value_type>::clear() {
-  while (!empty()) {
-    pop_front();
-  }
-  delete end_;
 }
 
 template <typename value_type>
@@ -355,6 +352,7 @@ list<value_type>::list(list<value_type> &&other) noexcept {
 template <typename value_type>
 list<value_type>::~list() {
   clear();
+  delete end_;
 }
 
 template <typename value_type>
