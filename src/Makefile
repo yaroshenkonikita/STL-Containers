@@ -11,11 +11,11 @@ all: clean gcov_report
 
 test:
 	@echo "Compiling tests binary executor..."
-	@$(CC) $(CFLAGS) $(COVERAGE) $(TEST) -o Tests/test $(TFLAGS)
+	@$(CC) $(CFLAGS) $(COVERAGE) $(TEST) -o test $(TFLAGS)
 	@echo "Executor is done"
 	@echo "Start tests..."
+	@./test
 	@mv *.gc* Tests
-	@./Tests/test
 	@echo "Tests is complete"
 
 gcov_report: test
@@ -31,5 +31,5 @@ style:
 
 
 clean:
-	@-rm -rf *.o *.a Report/* *.info Tests/*.gc* core/*.a report Tests/test *.gc*
+	@-rm -rf *.o *.a Report/* *.info Tests/*.gc* core/*.a report test *.gc*
 
