@@ -14,6 +14,7 @@ test:
 	@$(CC) $(CFLAGS) $(COVERAGE) $(TEST) -o Tests/test $(TFLAGS)
 	@echo "Executor is done"
 	@echo "Start tests..."
+	@mv *.gc* Tests
 	@./Tests/test
 	@echo "Tests is complete"
 
@@ -30,5 +31,5 @@ style:
 
 
 clean:
-	@-rm -rf *.o *.a Report/* *.info Tests/*.gc* core/*.a report Tests/test
+	@-rm -rf *.o *.a Report/* *.info Tests/*.gc* core/*.a report Tests/test *.gc*
 
