@@ -128,7 +128,7 @@ class BinaryTree<Key>::Node {
   Node() = default;
   explicit Node(Key value) : _value(value) {}
   Node(Key value, Node *node) : _value(value), _parent(node) {}
-  virtual ~Node() {
+  ~Node() {
     delete _left;
     delete _right;
   }
@@ -215,9 +215,9 @@ class BinaryTree<Key>::TreeIterator {
       : current_node(other.current_node) {}
   TreeIterator(TreeIterator &&other) noexcept
       : current_node(other.current_node) {}
-  virtual ~TreeIterator() = default;
+  ~TreeIterator() = default;
 
-  virtual value_type operator*() { return current_node->_value; }
+  value_type operator*() { return current_node->_value; }
 
   TreeIterator operator++() {
     current_node = current_node->Next(current_node);
@@ -305,10 +305,12 @@ typename BinaryTree<Key>::iterator BinaryTree<Key>::insert(
 
 template <class Key>
 void BinaryTree<Key>::clear() {
-  _end->_parent = _end->_parent->_right = nullptr;
-  delete _root;
-  _begin = _root = _end;
-  _size = 0;
+  if (!empty()) {
+    _end->_parent = _end->_parent->_right = nullptr;
+    delete _root;
+    _begin = _root = _end;
+    _size = 0;
+  }
 }
 
 template <class Key>
