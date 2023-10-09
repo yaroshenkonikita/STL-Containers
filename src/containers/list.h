@@ -1,11 +1,9 @@
-#ifndef CPP2_S21_CONTAINERS_0_SRC_S21_LIST_H_
-#define CPP2_S21_CONTAINERS_0_SRC_S21_LIST_H_
+#ifndef STL_CONTAINERS_LIST_H_
+#define STL_CONTAINERS_LIST_H_ 1
 
-#include <functional>
-
-#include "initializer_list"
-#include "limits"
-#include "utility"
+#include <exception>
+#include <limits>
+#include <utility>
 
 namespace s21 {
 
@@ -23,7 +21,7 @@ class list {
   using value_type = T;
   using reference = T &;
   using const_reference = const T &;
-  using size_type = size_t;
+  using size_type = std::size_t;
   /*__________________________________________________________________*/
   /* CONSTRUCTORS AND DESTRUCTOR */
   /*__________________________________________________________________*/
@@ -430,4 +428,4 @@ void list<value_type>::sort() {
 }
 
 }  // namespace s21
-#endif  // CPP2_S21_CONTAINERS_0_SRC_S21_LIST_H_
+#endif  // STL_CONTAINERS_LIST_H_

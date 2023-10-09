@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "../s21_containersplus.h"
+#include "containers_plus.h"
 
-TEST(Multiset, default_constructor) {
+TEST(multiset, default_constructor) {
   s21::multiset<int> basic;
   basic.insert(5);
   basic.insert(20);
@@ -14,7 +14,7 @@ TEST(Multiset, default_constructor) {
   }
 }
 
-TEST(Multiset, initializator_oper_constructor_int) {
+TEST(multiset, initializator_oper_constructor_int) {
   s21::multiset<int> basic = {6, 4, 2, 8, 0, -228};
   int s[6] = {-228, 0, 2, 4, 6, 8};
   int *a = s;
@@ -23,7 +23,7 @@ TEST(Multiset, initializator_oper_constructor_int) {
   }
 }
 
-TEST(Multiset, initializator_constructor_int) {
+TEST(multiset, initializator_constructor_int) {
   s21::multiset<int> basic{6, 4, 2, 8, 0, -228};
   int s[6] = {-228, 0, 2, 4, 6, 8};
   int *a = s;
@@ -32,7 +32,7 @@ TEST(Multiset, initializator_constructor_int) {
   }
 }
 
-TEST(Multiset, initializator_constructor_double) {
+TEST(multiset, initializator_constructor_double) {
   s21::multiset<double> basic = {999, 6, 3, 2, 90, 0, -1};
   double s[7] = {-1, 0, 2, 3, 6, 90, 999};
   double *a = s;
@@ -41,7 +41,7 @@ TEST(Multiset, initializator_constructor_double) {
   }
 }
 
-TEST(Multiset, initializator_constructor_char) {
+TEST(multiset, initializator_constructor_char) {
   s21::multiset<char> basic = {'c', 'd', 'a', 'b'};
   char s[4] = {'a', 'b', 'c', 'd'};
   char *a = s;
@@ -50,7 +50,7 @@ TEST(Multiset, initializator_constructor_char) {
   }
 }
 
-TEST(Multiset, copy_constructor_int) {
+TEST(multiset, copy_constructor_int) {
   s21::multiset<int> basic = {6, 4, 2, 8, 0, -228};
   s21::multiset<int> copy{basic};
   int s[6] = {-228, 0, 2, 4, 6, 8};
@@ -61,7 +61,7 @@ TEST(Multiset, copy_constructor_int) {
   EXPECT_EQ(basic.size(), copy.size());
 }
 
-TEST(Multiset, move_constructor_int) {
+TEST(multiset, move_constructor_int) {
   s21::multiset<int> basic = {6, 4, 2, 8, 0, -228};
   s21::multiset<int> move{std::move(basic)};
   int s[6] = {-228, 0, 2, 4, 6, 8};
@@ -73,7 +73,7 @@ TEST(Multiset, move_constructor_int) {
   EXPECT_EQ(move.size(), 6);
 }
 
-TEST(Multiset, move_operator_int) {
+TEST(multiset, move_operator_int) {
   s21::multiset<int> basic = {6, 4, 2, 8, 0, -228};
   s21::multiset<int> move = std::move(basic);
   int s[6] = {-228, 0, 2, 4, 6, 8};
@@ -85,7 +85,7 @@ TEST(Multiset, move_operator_int) {
   EXPECT_EQ(move.size(), 6);
 }
 
-TEST(Multiset, iterator_begin_end) {
+TEST(multiset, iterator_begin_end) {
   s21::multiset<int> basic = {6, 4, 2, 8, 0, -228};
   auto iter = basic.begin();
   auto iter_end = basic.end();
@@ -97,7 +97,7 @@ TEST(Multiset, iterator_begin_end) {
   EXPECT_EQ(basic.size(), 6);
 }
 
-TEST(Multiset, empty_size) {
+TEST(multiset, empty_size) {
   s21::multiset<int> basic;
   EXPECT_TRUE(basic.empty());
   EXPECT_EQ(basic.size(), 0);
@@ -106,7 +106,7 @@ TEST(Multiset, empty_size) {
   EXPECT_FALSE(basic.empty());
 }
 
-TEST(Multiset, empty_erase) {
+TEST(multiset, empty_erase) {
   s21::multiset<int> basic;
   EXPECT_TRUE(basic.empty());
   basic.insert(4);
@@ -115,7 +115,7 @@ TEST(Multiset, empty_erase) {
   EXPECT_TRUE(basic.empty());
 }
 
-TEST(Multiset, empty_clear) {
+TEST(multiset, empty_clear) {
   s21::multiset<int> basic;
   EXPECT_TRUE(basic.empty());
   basic.insert(4);
@@ -124,7 +124,7 @@ TEST(Multiset, empty_clear) {
   EXPECT_TRUE(basic.empty());
 }
 
-TEST(Multiset, size_clear) {
+TEST(multiset, size_clear) {
   s21::multiset<int> basic{1, 2, 3, 4, 5, 6};
   EXPECT_EQ(basic.size(), 6);
   basic.insert(4);
@@ -133,16 +133,16 @@ TEST(Multiset, size_clear) {
   EXPECT_EQ(basic.size(), 0);
 }
 
-TEST(Multiset, max_size) {
+TEST(multiset, max_size) {
   s21::multiset<double> basic1{1, 2, 3};
   s21::multiset<__int128> basic2{1, 2, 3, 4};
   s21::multiset<char> basic3;
-  EXPECT_EQ(basic1.max_size(), 192153584101141162);
-  EXPECT_EQ(basic2.max_size(), 144115188075855871);
-  EXPECT_EQ(basic3.max_size(), 192153584101141162);
+  EXPECT_EQ(basic1.max_size(), 230584300921369395);
+  EXPECT_EQ(basic2.max_size(), 192153584101141162);
+  EXPECT_EQ(basic3.max_size(), 230584300921369395);
 }
 
-TEST(Multiset, swap_int) {
+TEST(multiset, swap_int) {
   s21::multiset<int> basic1{1, 2, 3};
   s21::multiset<int> basic2{1, 2, 3, 4};
   EXPECT_EQ(basic1.size(), 3);
@@ -169,7 +169,7 @@ TEST(Multiset, swap_int) {
     EXPECT_EQ(item, *a++);
   }
 }
-TEST(Multiset, swap_double) {
+TEST(multiset, swap_double) {
   s21::multiset<double> basic1{78, 23, -9};
   s21::multiset<double> basic2{55, 22, -8, -0.5};
   EXPECT_EQ(basic1.size(), 3);
@@ -197,7 +197,7 @@ TEST(Multiset, swap_double) {
   }
 }
 
-TEST(Multiset, merge_int) {
+TEST(multiset, merge_int) {
   s21::multiset<double> basic1{78, 23, -9};
   s21::multiset<double> basic2{55, 22, -8, -0.5};
   EXPECT_EQ(basic1.size(), 3);
@@ -212,7 +212,7 @@ TEST(Multiset, merge_int) {
   EXPECT_EQ(basic2.size(), 0);
 }
 
-TEST(Multiset, merge_char) {
+TEST(multiset, merge_char) {
   s21::multiset<char> basic1{78, 23, -9};
   s21::multiset<char> basic2{55, 22, -8, 0};
   EXPECT_EQ(basic1.size(), 3);
@@ -227,7 +227,7 @@ TEST(Multiset, merge_char) {
   EXPECT_EQ(basic2.size(), 0);
 }
 
-TEST(Multiset, count_double) {
+TEST(multiset, count_double) {
   s21::multiset<double> basic1{78, 23, -9, 22, 22, 22, 23};
   EXPECT_EQ(basic1.size(), 7);
   EXPECT_DOUBLE_EQ(basic1.count(22), 3);
@@ -235,19 +235,19 @@ TEST(Multiset, count_double) {
   EXPECT_DOUBLE_EQ(basic1.count(-9), 1);
 }
 
-TEST(Multiset, iterator_find) {
+TEST(multiset, iterator_find) {
   s21::multiset<double> basic1{78, 23, -9, 22, 22, 22, 23};
   EXPECT_EQ(basic1.size(), 7);
   auto iter_22 = basic1.find(22);
+  auto iter_23 = basic1.find(23);
+  auto iter_m9 = basic1.find(-9);
   EXPECT_DOUBLE_EQ(*iter_22, 22);
-  EXPECT_DOUBLE_EQ(*++iter_22, 22);
-  EXPECT_DOUBLE_EQ(*++iter_22, 22);
-  EXPECT_DOUBLE_EQ(*++iter_22, 23);
-  EXPECT_DOUBLE_EQ(*++iter_22, 23);
+  EXPECT_DOUBLE_EQ(*iter_23, 23);
+  EXPECT_DOUBLE_EQ(*iter_m9, -9);
   EXPECT_TRUE(basic1.end() == basic1.find(99));
 }
 
-TEST(Multiset, iterator_find2) {
+TEST(multiset, iterator_find2) {
   s21::multiset<double> basic1{78, 7.75, -9, -999, -8, 0.5, 2.88};
   EXPECT_EQ(basic1.size(), 7);
   auto iter_22 = basic1.find(-9);
@@ -258,7 +258,7 @@ TEST(Multiset, iterator_find2) {
   EXPECT_DOUBLE_EQ(*++iter_22, 7.75);
 }
 
-TEST(Multiset, contains_int) {
+TEST(multiset, contains_int) {
   s21::multiset<int> basic1{78, 7, -9, -999, -8, 0, 2};
   EXPECT_EQ(basic1.size(), 7);
   EXPECT_TRUE(basic1.contains(-9));
@@ -269,7 +269,7 @@ TEST(Multiset, contains_int) {
   EXPECT_FALSE(basic1.contains(-98));
 }
 
-TEST(Multiset, equal_range_int) {
+TEST(multiset, equal_range_int) {
   s21::multiset<int> basic1{78, 7, -9, -999, -8, 7, 2};
   EXPECT_EQ(basic1.size(), 7);
   auto pair = basic1.equal_range(7);
@@ -283,7 +283,7 @@ TEST(Multiset, equal_range_int) {
   EXPECT_EQ(basic1.size(), 7);
 }
 
-TEST(Multiset, equal_range_int2) {
+TEST(multiset, equal_range_int2) {
   s21::multiset<int> basic1{78, 7, -9, -999, -8, 7, 2};
   EXPECT_EQ(basic1.size(), 7);
   auto pair = basic1.equal_range(-9);
@@ -297,7 +297,7 @@ TEST(Multiset, equal_range_int2) {
   EXPECT_EQ(basic1.size(), 7);
 }
 
-TEST(Multiset, lower_bound_and_upper_bound) {
+TEST(multiset, lower_bound_and_upper_bound) {
   s21::multiset<int> basic1{782, 7, -9, -999, -8, 7, 2, 32};
   EXPECT_EQ(basic1.size(), 8);
   std::pair<s21::multiset<int>::iterator, s21::multiset<int>::iterator> pair = {
@@ -314,7 +314,7 @@ TEST(Multiset, lower_bound_and_upper_bound) {
   EXPECT_EQ(basic1.size(), 8);
 }
 
-TEST(Multiset, lower_bound_and_upper_bound2) {
+TEST(multiset, lower_bound_and_upper_bound2) {
   s21::multiset<int> basic1{782, 7, -9, -999, -8, 7, 2, 32};
   EXPECT_EQ(basic1.size(), 8);
   std::pair<s21::multiset<int>::iterator, s21::multiset<int>::iterator> pair = {
@@ -332,7 +332,7 @@ TEST(Multiset, lower_bound_and_upper_bound2) {
   EXPECT_EQ(basic1.size(), 8);
 }
 
-TEST(Multiset, erase_reverse) {
+TEST(multiset, erase_reverse) {
   s21::multiset<int> basic1{8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8};
   while (!basic1.empty()) {
     basic1.erase(--basic1.end());
@@ -340,10 +340,19 @@ TEST(Multiset, erase_reverse) {
   EXPECT_EQ(basic1.size(), 0);
 }
 
-TEST(Multiset, emplace_basic) {
+TEST(multiset, emplace_basic) {
   s21::multiset<int> basic;
   basic.emplace(1, 3, 4, 4);
   EXPECT_TRUE(basic.contains(1));
   EXPECT_TRUE(basic.contains(3));
   EXPECT_EQ(basic.count(4), 2);
+}
+
+TEST(multiset, clear2) {
+  s21::multiset<int> multiset = {1, 2, 3, 4};
+  multiset.clear();
+  multiset.clear();
+  s21::multiset<int> multiset2;
+  multiset2.clear();
+  multiset2.clear();
 }
