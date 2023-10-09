@@ -1,10 +1,9 @@
 #ifndef STL_CONTAINERS_LIST_H_
 #define STL_CONTAINERS_LIST_H_ 1
 
+#include <exception>
 #include <limits>
 #include <utility>
-#include <exception>
-
 
 namespace s21 {
 

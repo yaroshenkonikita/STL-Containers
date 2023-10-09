@@ -14,8 +14,8 @@ class matrix {
  public:
   using size_type = uint64_t;
   using value_type = T;
-  using pointer = T*;
-  using reference = T&;
+  using pointer = T *;
+  using reference = T &;
 
   matrix();
   matrix(size_type rows, size_type columns);
@@ -33,7 +33,7 @@ class matrix {
   ~matrix();
 
   T &operator()(size_type rows, size_type columns) const;
-  T* operator[](size_type rows) const;
+  T *operator[](size_type rows) const;
 
   size_type GetColumns() const noexcept;
   size_type GetRows() const noexcept;
@@ -57,7 +57,7 @@ class matrix {
   matrix InverseMatrix() const;
 
   std::string Serialize() const;
-  void Deserialize(const std::string&);
+  void Deserialize(const std::string &);
 
  private:
   void CheckEqSize(const matrix &other) const;
@@ -68,8 +68,7 @@ class matrix {
 };
 
 template <class T>
-matrix<T>::matrix() : rows_(0), columns_(0), matrix_(nullptr) {
-}
+matrix<T>::matrix() : rows_(0), columns_(0), matrix_(nullptr) {}
 
 template <class T>
 matrix<T>::matrix(const size_type rows, const size_type columns)
@@ -88,8 +87,7 @@ template <class T>
 matrix<T>::matrix(matrix<T> &&other)
     : rows_(std::exchange(other.rows_, 0)),
       columns_(std::exchange(other.columns_, 0)),
-      matrix_(std::exchange(other.matrix_, nullptr)) {
-}
+      matrix_(std::exchange(other.matrix_, nullptr)) {}
 
 template <class T>
 matrix<T>::~matrix() {
@@ -118,8 +116,7 @@ template <class T>
 void matrix<T>::Set(const size_type rows, const size_type columns) {
   matrix<T> temp(rows, columns);
   for (size_type row = 0; row < std::min(rows_, rows); ++row) {
-    for (size_type column = 0; column < std::min(columns_, columns);
-         ++column) {
+    for (size_type column = 0; column < std::min(columns_, columns); ++column) {
       temp.matrix_[row][column] = matrix_[row][column];
     }
   }
@@ -137,8 +134,7 @@ void matrix<T>::SetColumns(const size_type columns) {
 }
 
 template <class T>
-T &matrix<T>::operator()(const size_type rows,
-                         const size_type columns) const {
+T &matrix<T>::operator()(const size_type rows, const size_type columns) const {
   if (rows >= rows_ || columns >= columns_) {
     throw std::out_of_range("Index out of range");
   }
@@ -146,7 +142,7 @@ T &matrix<T>::operator()(const size_type rows,
 }
 
 template <class T>
-T* matrix<T>::operator[](const size_type rows) const {
+T *matrix<T>::operator[](const size_type rows) const {
   return matrix_[rows];
 }
 
@@ -196,7 +192,8 @@ bool matrix<T>::EqMatrix(const matrix<T> &other) const {
   if (rows_ != other.rows_ || columns_ != other.columns_) {
     return false;
   }
-  for (typename matrix<T>::size_type i = 0, max_index = Size(); i < max_index; ++i) {
+  for (typename matrix<T>::size_type i = 0, max_index = Size(); i < max_index;
+       ++i) {
     if (matrix_[0][i] != other.matrix_[0][i]) {
       return false;
     }
@@ -207,12 +204,15 @@ bool matrix<T>::EqMatrix(const matrix<T> &other) const {
 template <class T>
 void matrix<T>::SumMatrix(const matrix<T> &other) {
   CheckEqSize(other);
-  for (typename matrix<T>::size_type i = 0, max_index = Size(); i < max_index; ++i) {
-    if (matrix_[0][i] != matrix_[0][i] || other.matrix_[0][i] != other.matrix_[0][i]) {
+  for (typename matrix<T>::size_type i = 0, max_index = Size(); i < max_index;
+       ++i) {
+    if (matrix_[0][i] != matrix_[0][i] ||
+        other.matrix_[0][i] != other.matrix_[0][i]) {
       (void)2;
     }
     matrix_[0][i] += other.matrix_[0][i];
-    if (matrix_[0][i] != matrix_[0][i] || other.matrix_[0][i] != other.matrix_[0][i]) {
+    if (matrix_[0][i] != matrix_[0][i] ||
+        other.matrix_[0][i] != other.matrix_[0][i]) {
       (void)2;
     }
   }
@@ -221,14 +221,16 @@ void matrix<T>::SumMatrix(const matrix<T> &other) {
 template <class T>
 void matrix<T>::SubMatrix(const matrix<T> &other) {
   CheckEqSize(other);
-  for (typename matrix<T>::size_type i = 0, max_index = Size(); i < max_index; ++i) {
+  for (typename matrix<T>::size_type i = 0, max_index = Size(); i < max_index;
+       ++i) {
     matrix_[0][i] -= other.matrix_[0][i];
   }
 }
 
 template <class T>
 void matrix<T>::MulNumber(const T value) {
-  for (typename matrix<T>::size_type i = 0, max_index = Size(); i < max_index; ++i) {
+  for (typename matrix<T>::size_type i = 0, max_index = Size(); i < max_index;
+       ++i) {
     matrix_[0][i] *= value;
   }
 }
@@ -264,8 +266,9 @@ void matrix<T>::MulMatrix(const matrix<T> &other) {
       result(i, j) = -row_factor[i] - column_factor[j];
       for (size_type k = 0; k < half; ++k) {
         const size_type shift = (k << 1);
-        result.matrix_[i][j] += (matrix_[i][shift] + other.matrix_[shift + 1][j]) *
-                                (matrix_[i][shift + 1] + other.matrix_[shift][j]);
+        result.matrix_[i][j] +=
+            (matrix_[i][shift] + other.matrix_[shift + 1][j]) *
+            (matrix_[i][shift + 1] + other.matrix_[shift][j]);
       }
     }
   }
@@ -383,8 +386,8 @@ std::string matrix<T>::Serialize() const {
   std::string data;
   data.reserve((Size() * sizeof(T)) + (sizeof(size_type) * 2));
   data.resize(data.capacity());
-  *reinterpret_cast<size_type*>(data.data()) = rows_;
-  *reinterpret_cast<size_type*>(data.data() + sizeof(size_type)) = columns_;
+  *reinterpret_cast<size_type *>(data.data()) = rows_;
+  *reinterpret_cast<size_type *>(data.data() + sizeof(size_type)) = columns_;
   memcpy(data.data() + (sizeof(size_type) * 2), matrix_[0], Size() * sizeof(T));
   return data;
 }
@@ -392,10 +395,12 @@ std::string matrix<T>::Serialize() const {
 template <class T>
 void matrix<T>::Deserialize(const std::string &data) {
   if (data.size() < (sizeof(size_type) * 2)) {
-    throw std::invalid_argument("matrix: Deserialize: String too short for matrix size.");
+    throw std::invalid_argument(
+        "matrix: Deserialize: String too short for matrix size.");
   }
-  rows_ = *reinterpret_cast<const size_type*>(data.data());
-  columns_ = *reinterpret_cast<const size_type*>(data.data() + sizeof(size_type));
+  rows_ = *reinterpret_cast<const size_type *>(data.data());
+  columns_ =
+      *reinterpret_cast<const size_type *>(data.data() + sizeof(size_type));
   const size_type pull_without_size = data.size() - (sizeof(size_type) * 2);
   const bool is_mod = (pull_without_size % sizeof(T)) != 0;
   if (is_mod || ((pull_without_size / sizeof(T)) != Size())) {
@@ -447,7 +452,8 @@ std::ostream &operator<<(std::ostream &out, const matrix<T> matrix) {
   }
   out << matrix.GetRows() << ' ' << matrix.GetColumns() << '\n';
   for (typename ::s21::matrix<T>::size_type i = 0; i < matrix.GetRows(); ++i) {
-    for (typename ::s21::matrix<T>::size_type j = 0; j < matrix.GetColumns(); ++j) {
+    for (typename ::s21::matrix<T>::size_type j = 0; j < matrix.GetColumns();
+         ++j) {
       out << matrix[i][j] << ' ';
     }
     out << '\n';

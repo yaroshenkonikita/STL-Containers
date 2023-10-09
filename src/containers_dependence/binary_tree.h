@@ -72,12 +72,15 @@ class BinaryTree {
 };
 
 template <typename Key, typename Compare>
-BinaryTree<Key, Compare>::BinaryTree() noexcept : _end(), _root(&_end), _begin(&_end), _size(0), _comparator() {
+BinaryTree<Key, Compare>::BinaryTree() noexcept
+    : _end(), _root(&_end), _begin(&_end), _size(0), _comparator() {
   _end._height = 0;
 }
 
 template <typename Key, typename Compare>
-BinaryTree<Key, Compare>::BinaryTree(const std::initializer_list<value_type> &items) : BinaryTree() {
+BinaryTree<Key, Compare>::BinaryTree(
+    const std::initializer_list<value_type> &items)
+    : BinaryTree() {
   for (const_reference item : items) {
     insert(item);
   }
@@ -98,7 +101,8 @@ BinaryTree<Key, Compare>::BinaryTree(const BinaryTree &other) : BinaryTree() {
 }
 
 template <typename Key, typename Compare>
-BinaryTree<Key, Compare>::BinaryTree(BinaryTree &&other) noexcept : BinaryTree() {
+BinaryTree<Key, Compare>::BinaryTree(BinaryTree &&other) noexcept
+    : BinaryTree() {
   if (other._root == &other._end) {
     return;
   }
@@ -119,7 +123,8 @@ BinaryTree<Key, Compare>::~BinaryTree() {
 }
 
 template <typename Key, typename Compare>
-BinaryTree<Key, Compare> &BinaryTree<Key, Compare>::operator=(const BinaryTree &other) noexcept {
+BinaryTree<Key, Compare> &BinaryTree<Key, Compare>::operator=(
+    const BinaryTree &other) noexcept {
   if (this == &other) {
     return *this;
   }
@@ -136,7 +141,8 @@ BinaryTree<Key, Compare> &BinaryTree<Key, Compare>::operator=(const BinaryTree &
 }
 
 template <typename Key, typename Compare>
-BinaryTree<Key, Compare> &BinaryTree<Key, Compare>::operator=(BinaryTree &&other) noexcept {
+BinaryTree<Key, Compare> &BinaryTree<Key, Compare>::operator=(
+    BinaryTree &&other) noexcept {
   if (this == &other) {
     return *this;
   }
@@ -165,9 +171,7 @@ class BinaryTree<Key, Compare>::Node {
   BinaryTree<Key, Compare>::pointer _left{}, _right{}, _parent{};
   uint8_t _height = 1;
 
-  void SetNewParent(Node *parent) noexcept {
-    _parent = parent;
-  }
+  void SetNewParent(Node *parent) noexcept { _parent = parent; }
 
   void SetLeftChild(Node *child) noexcept {
     _left = child;
@@ -242,19 +246,21 @@ class BinaryTree<Key, Compare>::Node {
 template <typename Key, typename Compare>
 class BinaryTree<Key, Compare>::TreeIterator {
   friend class BinaryTree<Key, Compare>;
+
  public:
   TreeIterator() noexcept = default;
   TreeIterator(const pointer &current) noexcept : current_node(current) {}
-  TreeIterator(pointer &&current) noexcept : current_node(std::exchange(current, nullptr)) {}
+  TreeIterator(pointer &&current) noexcept
+      : current_node(std::exchange(current, nullptr)) {}
   TreeIterator(const TreeIterator &other) noexcept
       : current_node(other.current_node) {}
   TreeIterator(TreeIterator &&other) noexcept
       : current_node(std::exchange(other.current_node, nullptr)) {}
-  TreeIterator& operator=(const TreeIterator& other) {
+  TreeIterator &operator=(const TreeIterator &other) {
     current_node = other.current_node;
     return *this;
   }
-  TreeIterator& operator=(TreeIterator&& other) {
+  TreeIterator &operator=(TreeIterator &&other) {
     current_node = std::exchange(other.current_node, nullptr);
     return *this;
   }
@@ -297,7 +303,8 @@ class BinaryTree<Key, Compare>::TreeIterator {
 };
 
 template <typename Key, typename Compare>
-void BinaryTree<Key, Compare>::InsertFromNode(pointer current_node, pointer new_object) {
+void BinaryTree<Key, Compare>::InsertFromNode(pointer current_node,
+                                              pointer new_object) {
   bool isLeft;
   for (;;) {
     isLeft = _comparator(new_object->_value, current_node->_value);
@@ -366,7 +373,8 @@ void BinaryTree<Key, Compare>::erase(iterator pos) {
   pointer current_node = pos.current_node;
   if (current_node->_left == nullptr && current_node->_right == nullptr) {
     DeleteNodeWithoutChild(current_node);
-  } else if (current_node->_left == nullptr || current_node->_right == nullptr) {
+  } else if (current_node->_left == nullptr ||
+             current_node->_right == nullptr) {
     DeleteNodeWithOneChild(current_node);
   } else {
     pointer prev_node = node_type::Prev(current_node);
@@ -410,13 +418,14 @@ typename BinaryTree<Key, Compare>::size_type BinaryTree<Key, Compare>::count(
 }
 
 template <typename Key, typename Compare>
-typename BinaryTree<Key, Compare>::iterator BinaryTree<Key, Compare>::find(const_reference key) const noexcept {
+typename BinaryTree<Key, Compare>::iterator BinaryTree<Key, Compare>::find(
+    const_reference key) const noexcept {
   return iterator{FindEqualNode(key)};
 }
 
 template <typename Key, typename Compare>
-typename BinaryTree<Key, Compare>::iterator BinaryTree<Key, Compare>::lower_bound(
-    const_reference &key) const noexcept {
+typename BinaryTree<Key, Compare>::iterator
+BinaryTree<Key, Compare>::lower_bound(const_reference &key) const noexcept {
   if (_root == &_end) {
     return end();
   }
@@ -439,8 +448,8 @@ typename BinaryTree<Key, Compare>::iterator BinaryTree<Key, Compare>::lower_boun
 }
 
 template <typename Key, typename Compare>
-typename BinaryTree<Key, Compare>::iterator BinaryTree<Key, Compare>::upper_bound(
-    const_reference key) const noexcept {
+typename BinaryTree<Key, Compare>::iterator
+BinaryTree<Key, Compare>::upper_bound(const_reference key) const noexcept {
   if (_root == &_end) {
     return end();
   }
@@ -470,17 +479,20 @@ BinaryTree<Key, Compare>::equal_range(const_reference key) const noexcept {
 }
 
 template <typename Key, typename Compare>
-typename BinaryTree<Key, Compare>::size_type BinaryTree<Key, Compare>::size() const noexcept {
+typename BinaryTree<Key, Compare>::size_type BinaryTree<Key, Compare>::size()
+    const noexcept {
   return _size;
 }
 
 template <typename Key, typename Compare>
-typename BinaryTree<Key, Compare>::iterator BinaryTree<Key, Compare>::begin() const noexcept {
+typename BinaryTree<Key, Compare>::iterator BinaryTree<Key, Compare>::begin()
+    const noexcept {
   return TreeIterator(_begin);
 }
 
 template <typename Key, typename Compare>
-typename BinaryTree<Key, Compare>::iterator BinaryTree<Key, Compare>::end() const noexcept {
+typename BinaryTree<Key, Compare>::iterator BinaryTree<Key, Compare>::end()
+    const noexcept {
   return TreeIterator(const_cast<const pointer>(&_end));
 }
 
@@ -490,7 +502,8 @@ bool BinaryTree<Key, Compare>::empty() const noexcept {
 }
 
 template <typename Key, typename Compare>
-constexpr typename BinaryTree<Key, Compare>::size_type BinaryTree<Key, Compare>::max_size() const noexcept {
+constexpr typename BinaryTree<Key, Compare>::size_type
+BinaryTree<Key, Compare>::max_size() const noexcept {
   return std::numeric_limits<size_type>::max() / sizeof(node_type) / 2;
 }
 
@@ -510,8 +523,8 @@ void BinaryTree<Key, Compare>::merge(BinaryTree &other) {
 }
 
 template <typename Key, typename Compare>
-typename BinaryTree<Key, Compare>::pointer BinaryTree<Key, Compare>::FindEqualNode(
-    const_reference key) const noexcept {
+typename BinaryTree<Key, Compare>::pointer
+BinaryTree<Key, Compare>::FindEqualNode(const_reference key) const noexcept {
   pointer current_node = _root;
   for (;;) {
     const bool isLeft = _comparator(key, current_node->_value);
@@ -600,8 +613,8 @@ typename BinaryTree<Key, Compare>::pointer BinaryTree<Key, Compare>::LeftRotate(
 }
 
 template <typename Key, typename Compare>
-typename BinaryTree<Key, Compare>::pointer BinaryTree<Key, Compare>::RightRotate(
-    pointer current_node) {
+typename BinaryTree<Key, Compare>::pointer
+BinaryTree<Key, Compare>::RightRotate(pointer current_node) {
   pointer second_node = current_node->_left,
           max_second_node = second_node->_right;
   second_node->SetAllNodes(current_node->_parent, second_node->_left,
@@ -639,14 +652,15 @@ typename BinaryTree<Key, Compare>::pointer BinaryTree<Key, Compare>::Balance(
 
 template <typename Key, typename Compare>
 void BinaryTree<Key, Compare>::BalanceFromNode(pointer current_node) {
-  for (pointer to_root = current_node; to_root != nullptr; to_root = to_root->_parent) {
+  for (pointer to_root = current_node; to_root != nullptr;
+       to_root = to_root->_parent) {
     _root = Balance(to_root);
   }
 }
 
 template <typename Key, typename Compare>
-typename BinaryTree<Key, Compare>::pointer BinaryTree<Key, Compare>::CopyAllChild(
-    pointer current_node) const {
+typename BinaryTree<Key, Compare>::pointer
+BinaryTree<Key, Compare>::CopyAllChild(pointer current_node) const {
   pointer childLeft{}, childRight{};
   if (current_node->_left) {
     childLeft = CopyAllChild(current_node->_left);
@@ -661,7 +675,8 @@ typename BinaryTree<Key, Compare>::pointer BinaryTree<Key, Compare>::CopyAllChil
 }
 
 template <typename Key, typename Compare>
-typename BinaryTree<Key, Compare>::pointer BinaryTree<Key, Compare>::GetMin() const {
+typename BinaryTree<Key, Compare>::pointer BinaryTree<Key, Compare>::GetMin()
+    const {
   pointer tmp_node = _root;
   while (tmp_node->_left) {
     tmp_node = tmp_node->_left;
@@ -670,7 +685,8 @@ typename BinaryTree<Key, Compare>::pointer BinaryTree<Key, Compare>::GetMin() co
 }
 
 template <typename Key, typename Compare>
-typename BinaryTree<Key, Compare>::pointer BinaryTree<Key, Compare>::GetMax() const {
+typename BinaryTree<Key, Compare>::pointer BinaryTree<Key, Compare>::GetMax()
+    const {
   pointer tmp_node = _root;
   while (tmp_node->_right) {
     tmp_node = tmp_node->_right;
