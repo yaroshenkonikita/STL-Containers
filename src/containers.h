@@ -1,5 +1,5 @@
-#ifndef STL_CONTAINERS_CONTAINERS_H_
-#define STL_CONTAINERS_CONTAINERS_H_ 1
+#ifndef STL_CONTAINERS_H_
+#define STL_CONTAINERS_H_ 1
 
 #include "containers/list.h"
 #include "containers/map.h"
@@ -8,4 +8,4 @@
 #include "containers/stack.h"
 #include "containers/vector.h"
 
-#endif  // STL_CONTAINERS_CONTAINERS_H_
+#endif  // STL_CONTAINERS_H_
