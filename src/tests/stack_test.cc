@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include "../Containers/s21_stack.h"
+#include "containers.h"
 
 TEST(stack, move_constructor) {
   s21::stack<int> basic({1, 2, 3, 4});

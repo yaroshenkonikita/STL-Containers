@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../s21_containers.h"
+#include "containers.h"
 
 TEST(vector, defaultConstructor) {
   s21::vector<double> vector;

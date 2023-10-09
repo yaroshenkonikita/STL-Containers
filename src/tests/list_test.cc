@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include "../s21_containers.h"
+#include "containers.h"
 
 TEST(list, def_constructor) {
   s21::list<int> basic;
