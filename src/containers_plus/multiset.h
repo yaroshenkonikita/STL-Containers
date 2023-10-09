@@ -1,12 +1,12 @@
-#ifndef CPP2_S21_CONTAINERS_0_SRC_S21_MULTISET_H_
-#define CPP2_S21_CONTAINERS_0_SRC_S21_MULTISET_H_
+#ifndef STL_CONTAINERS_MULTISET_H_
+#define STL_CONTAINERS_MULTISET_H_ 1
 
-#include "../ContainersDependence/BinaryTree.h"
+#include "containers_dependence/binary_tree.h"
 
 namespace s21 {
 
-template <class Key>
-class multiset : public BinaryTree<Key> {
+template <typename Key, typename Compare = std::less<Key> >
+class multiset : public BinaryTree<Key, Compare> {
  public:
   using key_type = Key;
   using value_type = Key;
@@ -27,8 +27,8 @@ class multiset : public BinaryTree<Key> {
   ~multiset() = default;
 
   template <typename... Args>
-  std::vector<std::pair<iterator, bool>> emplace(Args &&...args) {
-    std::vector<std::pair<iterator, bool>> res;
+  std::vector<std::pair<iterator, bool> > emplace(Args &&...args) {
+    std::vector<std::pair<iterator, bool> > res;
     for (auto element : {std::forward<Args>(args)...}) {
       res.push_back(std::make_pair(this->insert(element), true));
     }
@@ -38,4 +38,4 @@ class multiset : public BinaryTree<Key> {
 
 }  // namespace s21
 
-#endif  // CPP2_S21_CONTAINERS_0_SRC_S21_MULTISET_H_
+#endif  // STL_CONTAINERS_MULTISET_H_

@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../s21_containers.h"
+#include "containers.h"
 
 TEST(vector, defaultConstructor) {
   s21::vector<double> vector;
@@ -208,4 +208,13 @@ TEST(vector, emplace_back) {
   EXPECT_EQ(vector[6], 5);
   EXPECT_EQ(vector[7], 5);
   EXPECT_EQ(vector.size(), 8);
+}
+
+TEST(vector, clear2) {
+  s21::vector<int> vector = {1, 2, 3, 4};
+  vector.clear();
+  vector.clear();
+  s21::vector<int> vector2;
+  vector2.clear();
+  vector2.clear();
 }

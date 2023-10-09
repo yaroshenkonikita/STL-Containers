@@ -1,15 +1,15 @@
 #include <gtest/gtest.h>
 
-#include "../s21_containers.h"
+#include "containers.h"
 
-TEST(queue_tests, def_constructor) {
+TEST(queue, def_constructor) {
   s21::queue<int> basic;
   EXPECT_ANY_THROW(basic.front());
   EXPECT_ANY_THROW(basic.back());
   EXPECT_TRUE(basic.empty());
 }
 
-TEST(queue_tests, parametr_constructor) {
+TEST(queue, parametr_constructor) {
   s21::queue<int> basic(12);
   EXPECT_EQ(basic.front(), int());
   EXPECT_EQ(basic.back(), int());
@@ -17,7 +17,7 @@ TEST(queue_tests, parametr_constructor) {
   EXPECT_FALSE(basic.empty());
 }
 
-TEST(queue_tests, parametr_constructor2) {
+TEST(queue, parametr_constructor2) {
   s21::queue<std::string> basic(12);
   EXPECT_EQ(basic.front(), std::string());
   EXPECT_EQ(basic.back(), std::string());
@@ -25,7 +25,7 @@ TEST(queue_tests, parametr_constructor2) {
   EXPECT_FALSE(basic.empty());
 }
 
-TEST(queue_tests, initializer_list_constructor) {
+TEST(queue, initializer_list_constructor) {
   s21::queue<int> basic({1, 2, 3, 4, 5});
   EXPECT_EQ(basic.front(), 1);
   EXPECT_EQ(basic.back(), 5);
@@ -33,14 +33,14 @@ TEST(queue_tests, initializer_list_constructor) {
   EXPECT_FALSE(basic.empty());
 }
 
-TEST(queue_tests, initializer_list_constructor2) {
+TEST(queue, initializer_list_constructor2) {
   s21::queue<std::string> basic({"hello", "world"});
   EXPECT_TRUE(basic.size() == 2);
   EXPECT_EQ(basic.back(), "world");
   EXPECT_EQ(basic.front(), "hello");
 }
 
-TEST(queue_tests, initializer_list_constructor3) {
+TEST(queue, initializer_list_constructor3) {
   std::string element = "hello";
   std::string element2 = "world";
   std::string element3 = "!!!";
@@ -51,7 +51,7 @@ TEST(queue_tests, initializer_list_constructor3) {
   EXPECT_EQ(basic.front(), element);
 }
 
-TEST(queue_tests, copy_constructor) {
+TEST(queue, copy_constructor) {
   std::string element = "hello";
   std::string element2 = "world";
   std::string element3 = "!!!";
@@ -63,13 +63,13 @@ TEST(queue_tests, copy_constructor) {
   EXPECT_EQ(basic2.front(), element);
 }
 
-TEST(queue_tests, copy_constructor2) {
+TEST(queue, copy_constructor2) {
   s21::queue<std::string> basic;
   s21::queue<std::string> basic2(basic);
   EXPECT_TRUE(basic2.empty());
 }
 
-TEST(queue_tests, push1) {
+TEST(queue, push1) {
   s21::queue<int> basic;
   int element = 5;
   int element2 = 4;
@@ -80,7 +80,7 @@ TEST(queue_tests, push1) {
   EXPECT_EQ(basic.front(), element);
 }
 
-TEST(queue_tests, push_pop) {
+TEST(queue, push_pop) {
   s21::queue<int> basic;
   int element = 5;
   int element2 = 4;
@@ -92,7 +92,7 @@ TEST(queue_tests, push_pop) {
   EXPECT_EQ(basic.front(), element2);
 }
 
-TEST(queue_tests, push_pop2) {
+TEST(queue, push_pop2) {
   s21::queue<int> basic;
   int element = 5;
   int element2 = 4;
@@ -105,7 +105,7 @@ TEST(queue_tests, push_pop2) {
   EXPECT_EQ(basic.front(), element2);
 }
 
-TEST(queue_tests, push_pop3) {
+TEST(queue, push_pop3) {
   s21::queue<std::string> basic;
   std::string element = "hello";
   std::string element2 = "world";
@@ -117,14 +117,14 @@ TEST(queue_tests, push_pop3) {
   EXPECT_EQ(basic.front(), element2);
 }
 
-TEST(queue_tests, emplace_back) {
+TEST(queue, emplace_back) {
   s21::queue<std::string> basic;
   basic.emplace_front("hello", "world", "hi", "ho");
   EXPECT_EQ(basic.front(), "hello");
   EXPECT_EQ(basic.back(), "ho");
 }
 
-TEST(queue_tests, swap) {
+TEST(queue, swap) {
   s21::queue<std::string> basic({"hi", "ho"});
   EXPECT_TRUE(!basic.empty());
   s21::queue<std::string> basic2;
@@ -132,4 +132,13 @@ TEST(queue_tests, swap) {
   EXPECT_EQ(basic2.back(), "ho");
   EXPECT_EQ(basic2.front(), "hi");
   EXPECT_TRUE(basic.empty());
+}
+
+TEST(queue, clear2) {
+  s21::queue<int> queue = {1, 2, 3, 4};
+  queue.pop();
+  queue.pop();
+  queue.pop();
+  queue.pop();
+  EXPECT_ANY_THROW(queue.pop(););
 }

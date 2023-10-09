@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../s21_containersplus.h"
+#include "containers_plus.h"
 
 TEST(array, defaultConstructor) {
   s21::array<double, 0> arr;

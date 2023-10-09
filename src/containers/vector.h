@@ -1,7 +1,7 @@
-#ifndef CPP2_S21_CONTAINERS_0_SRC_S21_VECTOR_H_
-#define CPP2_S21_CONTAINERS_0_SRC_S21_VECTOR_H_
+#ifndef STL_CONTAINERS_VECTOR_H_
+#define STL_CONTAINERS_VECTOR_H_ 1
 
-#include "limits"
+#include <limits>
 
 namespace s21 {
 template <typename T>
@@ -188,4 +188,4 @@ class vector {
 };
 }  // namespace s21
 
-#endif  // CPP2_S21_CONTAINERS_0_SRC_S21_VECTOR_H_
+#endif  // STL_CONTAINERS_VECTOR_H_
