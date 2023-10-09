@@ -30,7 +30,5 @@ gcov_report: test
 style:
 	@clang-format -style=google -n $(TEST) $(CORE) *.h
 
-
 clean:
 	@-rm -rf *.o *.a report/ *.info `find . -name "*.gc*"` test coverage
-
