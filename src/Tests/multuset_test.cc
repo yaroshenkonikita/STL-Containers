@@ -347,3 +347,12 @@ TEST(Multiset, emplace_basic) {
   EXPECT_TRUE(basic.contains(3));
   EXPECT_EQ(basic.count(4), 2);
 }
+
+TEST(multiset, clear2) {
+  s21::multiset<int> multiset = {1, 2, 3, 4};
+  multiset.clear();
+  multiset.clear();
+  s21::multiset<int> multiset2;
+  multiset2.clear();
+  multiset2.clear();
+}

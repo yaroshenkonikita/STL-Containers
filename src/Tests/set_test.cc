@@ -317,3 +317,12 @@ TEST(Set, emplace_basic) {
   EXPECT_TRUE(basic.contains(1));
   EXPECT_TRUE(basic.contains(3));
 }
+
+TEST(set, clear2) {
+  s21::set<int> set = {1, 2, 3, 4};
+  set.clear();
+  set.clear();
+  s21::set<int> set2;
+  set2.clear();
+  set2.clear();
+}

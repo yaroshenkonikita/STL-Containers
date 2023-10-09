@@ -133,3 +133,12 @@ TEST(queue_tests, swap) {
   EXPECT_EQ(basic2.front(), "hi");
   EXPECT_TRUE(basic.empty());
 }
+
+TEST(queue, clear2) {
+  s21::queue<int> queue = {1, 2, 3, 4};
+  queue.pop();
+  queue.pop();
+  queue.pop();
+  queue.pop();
+  EXPECT_ANY_THROW(queue.pop(););
+}

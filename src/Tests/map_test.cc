@@ -451,3 +451,12 @@ TEST(Map, emplace_basic) {
   EXPECT_EQ(basic[1], 2);
   EXPECT_EQ(basic[4], 1);
 }
+
+TEST(map, clear2) {
+  s21::map<int, int> map = {{1, 1}, {2, 2}, {3, 3}, {4, 4}};
+  map.clear();
+  map.clear();
+  s21::map<int, int> map2;
+  map2.clear();
+  map2.clear();
+}

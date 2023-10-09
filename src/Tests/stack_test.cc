@@ -253,3 +253,12 @@ TEST(stack_test, emplace_front2) {
   basic.pop();
   EXPECT_TRUE(basic.empty());
 }
+
+TEST(stack, clear2) {
+  s21::stack<int> stack = {1, 2, 3, 4};
+  stack.pop();
+  stack.pop();
+  stack.pop();
+  stack.pop();
+  EXPECT_ANY_THROW(stack.pop(););
+}

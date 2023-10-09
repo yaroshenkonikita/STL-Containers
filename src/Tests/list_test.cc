@@ -772,3 +772,12 @@ TEST(list_test, max_size2) {
   s21::list<char> basic;
   EXPECT_EQ(basic2.max_size(), basic.max_size());
 }
+
+TEST(list, clear2) {
+  s21::list<int> list = {1, 2, 3, 4};
+  list.pop_back();
+  list.pop_back();
+  list.pop_back();
+  list.pop_back();
+  EXPECT_ANY_THROW(list.pop_back(););
+}
