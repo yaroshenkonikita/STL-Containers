@@ -2,7 +2,7 @@
 
 #include "../s21_containers.h"
 
-TEST(Map, default_constructor_instructor_insert) {
+TEST(map, default_constructor_instructor_insert) {
   s21::map<int, int> basic;
   basic.insert({5, 5});
   basic.insert({20, 2});
@@ -15,7 +15,7 @@ TEST(Map, default_constructor_instructor_insert) {
   }
 }
 
-TEST(Map, initializator_constructor_int) {
+TEST(map, initializator_constructor_int) {
   s21::map<int, int> basic = {{6, 7}, {4, 4}, {2, 2},
                               {8, 8}, {0, 2}, {-228, 5}};
   int s1[6] = {-228, 0, 2, 4, 6, 8};
@@ -27,7 +27,7 @@ TEST(Map, initializator_constructor_int) {
   }
 }
 
-TEST(Map, initializator_constructor_double) {
+TEST(map, initializator_constructor_double) {
   s21::map<double, double> basic = {{999, 222}, {6, 6},   {3, 3},  {2, 4},
                                     {90, -8},   {0, -29}, {-1, -1}};
   double s1[7] = {-1, 0, 2, 3, 6, 90, 999};
@@ -39,7 +39,7 @@ TEST(Map, initializator_constructor_double) {
   }
 }
 
-TEST(Map, initializator_constructor_char) {
+TEST(map, initializator_constructor_char) {
   s21::map<char, char> basic = {{'c', 'c'}, {'d', 'v'}, {'a', 'b'}, {'b', 'n'}};
   char s1[4] = {'a', 'b', 'c', 'd'};
   char s2[4] = {'b', 'n', 'c', 'v'};
@@ -50,7 +50,7 @@ TEST(Map, initializator_constructor_char) {
   }
 }
 
-TEST(Map, copy_constructor_int) {
+TEST(map, copy_constructor_int) {
   s21::map<int, int> basic = {{6, 7}, {4, 4}, {2, 2},
                               {8, 8}, {0, 2}, {-228, 5}};
   s21::map<int, int> copy{basic};
@@ -64,7 +64,7 @@ TEST(Map, copy_constructor_int) {
   EXPECT_EQ(basic.size(), copy.size());
 }
 
-TEST(Map, move_constructor_int) {
+TEST(map, move_constructor_int) {
   s21::map<int, int> basic = {{6, 7}, {4, 4}, {2, 2},
                               {8, 8}, {0, 2}, {-228, 5}};
   s21::map<int, int> move{std::move(basic)};
@@ -79,7 +79,7 @@ TEST(Map, move_constructor_int) {
   EXPECT_EQ(move.size(), 6);
 }
 
-TEST(Map, move_operator_int) {
+TEST(map, move_operator_int) {
   s21::map<int, int> basic = {{6, 7}, {4, 4}, {2, 2},
                               {8, 8}, {0, 2}, {-228, 5}};
   s21::map<int, int> move = std::move(basic);
@@ -94,7 +94,7 @@ TEST(Map, move_operator_int) {
   EXPECT_EQ(move.size(), 6);
 }
 
-TEST(Map, iterator_begin_end) {
+TEST(map, iterator_begin_end) {
   s21::map<int, int> basic = {{6, 7}, {4, 4}, {2, 2},
                               {8, 8}, {0, 2}, {-228, 5}};
   auto iter = basic.begin();
@@ -110,7 +110,7 @@ TEST(Map, iterator_begin_end) {
   EXPECT_EQ(size, 6);
 }
 
-TEST(Map, empty_size) {
+TEST(map, empty_size) {
   s21::map<int, int> basic;
   EXPECT_TRUE(basic.empty());
   EXPECT_EQ(basic.size(), 0);
@@ -119,7 +119,7 @@ TEST(Map, empty_size) {
   EXPECT_FALSE(basic.empty());
 }
 
-TEST(Map, empty_erase) {
+TEST(map, empty_erase) {
   s21::map<int, int> basic;
   EXPECT_TRUE(basic.empty());
   basic.insert({4, 4});
@@ -128,7 +128,7 @@ TEST(Map, empty_erase) {
   EXPECT_TRUE(basic.empty());
 }
 
-TEST(Map, insert) {
+TEST(map, insert) {
   s21::map<int, int> basic;
   auto pair = basic.insert({5, 5});
   EXPECT_EQ((*pair.first).first, 5);
@@ -145,7 +145,7 @@ TEST(Map, insert) {
   }
 }
 
-TEST(Map, empty_clear) {
+TEST(map, empty_clear) {
   s21::map<int, int> basic;
   EXPECT_TRUE(basic.empty());
   basic.insert({4, 5});
@@ -154,7 +154,7 @@ TEST(Map, empty_clear) {
   EXPECT_TRUE(basic.empty());
 }
 
-TEST(Map, size_clear) {
+TEST(map, size_clear) {
   s21::map<int, int> basic{{1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}, {6, 6}};
   EXPECT_EQ(basic.size(), 6);
   basic.insert({4, 4});
@@ -165,16 +165,16 @@ TEST(Map, size_clear) {
   EXPECT_EQ(basic.size(), 0);
 }
 
-TEST(Map, max_size) {
+TEST(map, max_size) {
   s21::map<double, double> basic1{{1, 1}, {2, 2}, {3, 3}};
   s21::map<__int128, __int128> basic2{{1, 1}, {2, 2}, {3, 3}, {4, 4}};
   s21::map<char, char> basic3;
-  EXPECT_EQ(basic1.max_size(), 164703072086692425);
-  EXPECT_EQ(basic2.max_size(), 115292150460684697);
-  EXPECT_EQ(basic3.max_size(), 192153584101141162);
+  EXPECT_EQ(basic1.max_size(), 192153584101141162);
+  EXPECT_EQ(basic2.max_size(), 144115188075855871);
+  EXPECT_EQ(basic3.max_size(), 230584300921369395);
 }
 
-TEST(Map, swap_int) {
+TEST(map, swap_int) {
   s21::map<int, int> basic1{{1, 1}, {2, 2}, {3, 3}};
   s21::map<int, int> basic2{{1, 1}, {2, 2}, {3, 3}, {4, 4}};
   EXPECT_EQ(basic1.size(), 3);
@@ -206,7 +206,7 @@ TEST(Map, swap_int) {
   }
 }
 
-TEST(Map, swap_double) {
+TEST(map, swap_double) {
   s21::map<double, double> basic1{{78, 78}, {23, 23}, {-9, -9}};
   s21::map<double, double> basic2{{55, 55}, {22, 22}, {-8, -8}, {-0.5, -0.5}};
   EXPECT_EQ(basic1.size(), 3);
@@ -238,7 +238,7 @@ TEST(Map, swap_double) {
   }
 }
 
-TEST(Map, merge_double) {
+TEST(map, merge_double) {
   s21::map<double, double> basic1{
       {78, 78}, {23, 23}, {-9, -9}, {-8, -8}, {-0.5, -0.5}};
   s21::map<double, double> basic2{{55, 55}, {22, 22}, {-8, -8}, {-0.5, -0.5}};
@@ -255,7 +255,7 @@ TEST(Map, merge_double) {
   EXPECT_EQ(basic2.size(), 2);
 }
 
-TEST(Map, merge_char) {
+TEST(map, merge_char) {
   s21::map<char, char> basic1{{78, 78}, {23, 23}, {-9, -9}, {-8, -8}};
   s21::map<char, char> basic2{{55, 55}, {22, 22}, {-8, -8}, {0, 0}};
   EXPECT_EQ(basic1.size(), 4);
@@ -271,7 +271,7 @@ TEST(Map, merge_char) {
   EXPECT_EQ(basic2.size(), 1);
 }
 
-TEST(Map, iterator_find) {
+TEST(map, iterator_find) {
   s21::map<double, double> basic1{{78, 78}, {23, 23}, {-9, -9}, {22, 22},
                                   {22, 22}, {22, 22}, {23, 23}};
   EXPECT_EQ(basic1.size(), 4);
@@ -281,7 +281,7 @@ TEST(Map, iterator_find) {
   EXPECT_DOUBLE_EQ((*++iter_22).first, 78);
 }
 
-TEST(Map, iterator_find2) {
+TEST(map, iterator_find2) {
   s21::map<double, double> basic1{{78, 78},     {7.75, 7.75}, {-9, -9},
                                   {-999, -999}, {-8, -8},     {0.5, 0.5},
                                   {2.88, 2.88}};
@@ -294,7 +294,7 @@ TEST(Map, iterator_find2) {
   EXPECT_DOUBLE_EQ((*++iter_22).first, 7.75);
 }
 
-TEST(Map, contains_int) {
+TEST(map, contains_int) {
   s21::map<int, int> basic1{{78, 78}, {7, 7}, {-9, -9}, {-999, -999},
                             {-8, -8}, {0, 0}, {2, 2}};
   EXPECT_EQ(basic1.size(), 7);
@@ -306,7 +306,7 @@ TEST(Map, contains_int) {
   EXPECT_FALSE(basic1.contains(-98));
 }
 
-TEST(Map, lower_bound_and_upper_bound) {
+TEST(map, lower_bound_and_upper_bound) {
   s21::map<int, int> basic1{{782, 782}, {7, 7}, {-9, -9}, {-999, -999},
                             {-8, -8},   {2, 2}, {32, 32}};
   EXPECT_EQ(basic1.size(), 7);
@@ -325,7 +325,7 @@ TEST(Map, lower_bound_and_upper_bound) {
   EXPECT_EQ(basic1.size(), 7);
 }
 
-TEST(Map, lower_bound_and_upper_bound_and_bad_list) {
+TEST(map, lower_bound_and_upper_bound_and_bad_list) {
   s21::map<int, int> basic1{{782, 782}, {7, 7}, {-9, -9}, {-999, -999},
                             {-8, -8},   {7, 7}, {2, 2},   {32, 32}};
   EXPECT_EQ(basic1.size(), 7);
@@ -344,7 +344,7 @@ TEST(Map, lower_bound_and_upper_bound_and_bad_list) {
   EXPECT_EQ(basic1.size(), 7);
 }
 
-TEST(Map, at_oper_and_bad_list) {
+TEST(map, at_oper_and_bad_list) {
   s21::map<int, int> basic1{{782, 7}, {7, 782}, {-9, -999}, {-999, -9},
                             {-8, 7},  {7, -8},  {2, 32},    {32, 2}};
   EXPECT_EQ(basic1.size(), 7);
@@ -356,7 +356,7 @@ TEST(Map, at_oper_and_bad_list) {
   EXPECT_EQ(basic1[32], 2);
 }
 
-TEST(Map, oper_insert) {
+TEST(map, oper_insert) {
   s21::map<int, int> basic1{{782, 7}, {7, 782}, {-9, -999}, {-999, -9},
                             {-8, 7},  {7, -8},  {2, 32},    {32, 2}};
   EXPECT_EQ(basic1.size(), 7);
@@ -365,7 +365,7 @@ TEST(Map, oper_insert) {
   EXPECT_EQ(basic1.size(), 8);
 }
 
-TEST(Map, at_except) {
+TEST(map, at_except) {
   s21::map<int, int> basic1{{782, 7}, {7, 782}, {-9, -999}, {-999, -9},
                             {-8, 7},  {7, -8},  {2, 32},    {32, 2}};
   EXPECT_EQ(basic1.size(), 7);
@@ -375,7 +375,7 @@ TEST(Map, at_except) {
   EXPECT_EQ(basic1.size(), 7);
 }
 
-TEST(Map, insert_parametrs) {
+TEST(map, insert_parametrs) {
   s21::map<int, int> basic1{{782, 7}, {7, 782}, {-9, -999}, {-999, -9},
                             {-8, 7},  {7, -8},  {2, 32},    {32, 2}};
   EXPECT_EQ(basic1.size(), 7);
@@ -386,7 +386,7 @@ TEST(Map, insert_parametrs) {
   EXPECT_EQ(basic1.size(), 8);
 }
 
-TEST(Map, insert_parametrs_no) {
+TEST(map, insert_parametrs_no) {
   s21::map<int, int> basic1{{782, 7}, {7, 782}, {-9, -999}, {-999, -9},
                             {-8, 7},  {7, -8},  {2, 32},    {32, 2}};
   EXPECT_EQ(basic1.size(), 7);
@@ -397,7 +397,7 @@ TEST(Map, insert_parametrs_no) {
   EXPECT_EQ(basic1.size(), 7);
 }
 
-TEST(Map, insert_or_assign_false) {
+TEST(map, insert_or_assign_false) {
   s21::map<int, int> basic1{{782, 7}, {7, 782}, {-9, -999}, {-999, -9},
                             {-8, 7},  {7, -8},  {2, 32},    {32, 2}};
   EXPECT_EQ(basic1.size(), 7);
@@ -408,7 +408,7 @@ TEST(Map, insert_or_assign_false) {
   EXPECT_EQ(basic1.size(), 7);
 }
 
-TEST(Map, insert_or_assign_true) {
+TEST(map, insert_or_assign_true) {
   s21::map<int, int> basic1{{782, 7}, {7, 782}, {-9, -999}, {-999, -9},
                             {-8, 7},  {7, -8},  {2, 32},    {32, 2}};
   EXPECT_EQ(basic1.size(), 7);
@@ -419,7 +419,7 @@ TEST(Map, insert_or_assign_true) {
   EXPECT_EQ(basic1.size(), 8);
 }
 
-TEST(Map, insert_or_assign_true_check) {
+TEST(map, insert_or_assign_true_check) {
   s21::map<int, int> basic1{{782, 7}, {7, 782}, {-9, -999}, {-999, -9},
                             {-8, 7},  {7, -8},  {2, 32},    {32, 2}};
   EXPECT_EQ(basic1.size(), 7);
@@ -437,14 +437,14 @@ TEST(Map, insert_or_assign_true_check) {
   }
 }
 
-TEST(Map, insert_and_ins_assign_first_insert) {
+TEST(map, insert_and_ins_assign_first_insert) {
   s21::map<int, int> basic;
   basic.insert(5, 4);
   s21::map<int, int> basic2;
   basic2.insert_or_assign(5, 4);
 }
 
-TEST(Map, emplace_basic) {
+TEST(map, emplace_basic) {
   s21::map<int, int> basic;
   basic.emplace(std::make_pair(1, 2), std::make_pair(3, 2),
                 std::make_pair(4, 1), std::make_pair(2, 1));

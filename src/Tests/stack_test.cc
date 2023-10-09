@@ -4,7 +4,7 @@
 
 #include "../Containers/s21_stack.h"
 
-TEST(stack_test, move_constructor) {
+TEST(stack, move_constructor) {
   s21::stack<int> basic({1, 2, 3, 4});
   s21::stack<int> basic2(std::move(basic));
   EXPECT_TRUE(basic.empty());
@@ -13,7 +13,7 @@ TEST(stack_test, move_constructor) {
   EXPECT_EQ(basic2.size(), size_t(4));
 }
 
-TEST(stack_test, move_constructor_std) {
+TEST(stack, move_constructor_std) {
   std::stack<int> basic({1, 2, 3, 4});
   std::stack<int> basic2(std::move(basic));
   EXPECT_TRUE(basic.empty());
@@ -22,7 +22,7 @@ TEST(stack_test, move_constructor_std) {
   EXPECT_EQ(basic2.size(), size_t(4));
 }
 
-TEST(stack_test, move_constructor_operator) {
+TEST(stack, move_constructor_operator) {
   s21::stack<int> basic({1, 2, 3, 4});
   s21::stack<int> basic2;
   basic2 = std::move(basic);
@@ -31,7 +31,7 @@ TEST(stack_test, move_constructor_operator) {
   EXPECT_EQ(basic2.size(), size_t(4));
 }
 
-TEST(stack_test, move_constructor_operator2) {
+TEST(stack, move_constructor_operator2) {
   s21::stack<std::string> basic({"hello", "world"});
   s21::stack<std::string> basic2;
   basic2 = std::move(basic);
@@ -40,7 +40,7 @@ TEST(stack_test, move_constructor_operator2) {
   EXPECT_EQ(basic2.size(), size_t(2));
 }
 
-TEST(stack_test, move_constructor_operator3) {
+TEST(stack, move_constructor_operator3) {
   s21::stack<std::string> basic({"2", "1"});
   s21::stack<std::string> basic2({"hello", "world"});
   basic2 = std::move(basic);
@@ -49,28 +49,28 @@ TEST(stack_test, move_constructor_operator3) {
   EXPECT_EQ(basic2.size(), size_t(2));
 }
 
-TEST(stack_test, copy_constructor) {
+TEST(stack, copy_constructor) {
   s21::stack<int> basic({1, 2, 3, 4});
   s21::stack<int> basic2(basic);
   EXPECT_EQ(basic2.top(), 4);
   EXPECT_EQ(basic2.size(), size_t(4));
 }
 //
-TEST(stack_test, copy_constructor2) {
+TEST(stack, copy_constructor2) {
   s21::stack<std::string> basic({"hello"});
   s21::stack<std::string> basic2(basic);
   EXPECT_EQ(basic2.top(), "hello");
   EXPECT_EQ(basic2.size(), size_t(1));
 }
 
-TEST(stack_test, push1) {
+TEST(stack, push1) {
   s21::stack<int> basic;
   int element = 5;
   basic.push(element);
   EXPECT_EQ(basic.top(), element);
 }
 
-TEST(stack_test, push2) {
+TEST(stack, push2) {
   s21::stack<int> basic;
   int a = 5;
   int b = 10;
@@ -81,19 +81,19 @@ TEST(stack_test, push2) {
   EXPECT_EQ(basic.top(), c);
 }
 
-TEST(stack_test, push3) {
+TEST(stack, push3) {
   s21::stack<int> basic;
   EXPECT_ANY_THROW(basic.top());
 }
 
-TEST(stack_test, push5) {
+TEST(stack, push5) {
   s21::stack<std::string> basic;
   std::string element = "hello";
   basic.push(element);
   EXPECT_TRUE(!basic.empty());
 }
 
-TEST(stack_test, pop) {
+TEST(stack, pop) {
   s21::stack<int> basic;
   int a = 5;
   int b = 10;
@@ -105,7 +105,7 @@ TEST(stack_test, pop) {
   EXPECT_EQ(basic.top(), b);
 }
 
-TEST(stack_test, pop2) {
+TEST(stack, pop2) {
   s21::stack<int> basic;
   int a = 5;
   int b = 10;
@@ -118,21 +118,21 @@ TEST(stack_test, pop2) {
   EXPECT_EQ(basic.top(), a);
 }
 
-TEST(stack_test, typename_test1) {
+TEST(stack, typename_test1) {
   s21::stack<double> basic2;
   double element = 1.123123123;
   basic2.push(element);
   EXPECT_EQ(basic2.top(), element);
 }
 
-TEST(stack_test, typename_test2) {
+TEST(stack, typename_test2) {
   s21::stack<float> basic3;
   float element = 0.123;
   basic3.push(element);
   EXPECT_EQ(basic3.top(), element);
 }
 
-TEST(stack_test, size) {
+TEST(stack, size) {
   s21::stack<int> basic;
   int element = 100500;
   basic.push(element);
@@ -140,7 +140,7 @@ TEST(stack_test, size) {
   EXPECT_EQ(basic.top(), element);
 }
 
-TEST(stack_test, size2) {
+TEST(stack, size2) {
   s21::stack<int> basic;
   int element = 100500;
   int element2 = -100500;
@@ -152,7 +152,7 @@ TEST(stack_test, size2) {
   EXPECT_EQ(basic.top(), element3);
 }
 
-TEST(stack_test, size3) {
+TEST(stack, size3) {
   s21::stack<int> basic;
   int element = 0;
   for (; element < 100; ++element) {
@@ -162,19 +162,19 @@ TEST(stack_test, size3) {
   EXPECT_EQ(basic.top(), element - 1);
 }
 
-TEST(stack_test, initializer_list) {
+TEST(stack, initializer_list) {
   s21::stack<int> basic({1, 2, 3});
   EXPECT_EQ(basic.size(), size_t(3));
   EXPECT_EQ(basic.top(), 3);
 }
 
-TEST(stack_test, initializer_list2) {
+TEST(stack, initializer_list2) {
   s21::stack<double> basic({1.123, 2.123, 12321.23, -3.000003123});
   EXPECT_EQ(basic.size(), size_t(4));
   EXPECT_EQ(basic.top(), -3.000003123);
 }
 
-TEST(stack_test, swap) {
+TEST(stack, swap) {
   s21::stack<double> basic({1.123, 2.123, 12321.23, -3.000003123});
   s21::stack<double> basic2({1, 2, 3});
   basic.swap(basic2);
@@ -184,7 +184,7 @@ TEST(stack_test, swap) {
   EXPECT_EQ(basic2.top(), -3.000003123);
 }
 
-TEST(stack_test, swap2) {
+TEST(stack, swap2) {
   s21::stack<double> basic({1.123, 2.123, 12321.23, -3.000003123});
   s21::stack<double> basic2;
   basic.swap(basic2);
@@ -194,7 +194,7 @@ TEST(stack_test, swap2) {
   EXPECT_EQ(basic2.top(), -3.000003123);
 }
 
-TEST(stack_test, swap3) {
+TEST(stack, swap3) {
   s21::stack<double> basic;
   s21::stack<double> basic2({1.123, 2.123, 12321.23, -3.000003123});
   basic.swap(basic2);
@@ -204,7 +204,7 @@ TEST(stack_test, swap3) {
   EXPECT_EQ(basic.top(), -3.000003123);
 }
 
-TEST(stack_test, swap4) {
+TEST(stack, swap4) {
   s21::stack<double> basic;
   s21::stack<double> basic2;
   basic.swap(basic2);
@@ -214,7 +214,7 @@ TEST(stack_test, swap4) {
   EXPECT_EQ(basic2.size(), size_t(0));
 }
 
-TEST(stack_test, swap5) {
+TEST(stack, swap5) {
   s21::stack<std::string> basic;
   s21::stack<std::string> basic2;
   std::string element = "hello";
@@ -226,7 +226,7 @@ TEST(stack_test, swap5) {
   EXPECT_EQ(basic2.size(), size_t(1));
 }
 
-TEST(stack_test, emplace_front1) {
+TEST(stack, emplace_front1) {
   s21::stack<int> basic;
   basic.emplace_front(1, 2, 3, 4, 5, 6);
   EXPECT_EQ(basic.top(), 6);
@@ -240,7 +240,7 @@ TEST(stack_test, emplace_front1) {
   EXPECT_TRUE(basic.empty());
 }
 
-TEST(stack_test, emplace_front2) {
+TEST(stack, emplace_front2) {
   s21::stack<std::string> basic;
   basic.emplace_front("hello", "world", "hi", "ho", "lets", "go!");
   EXPECT_EQ(basic.top(), "go!");

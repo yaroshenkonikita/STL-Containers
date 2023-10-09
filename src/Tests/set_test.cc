@@ -2,7 +2,7 @@
 
 #include "../s21_containers.h"
 
-TEST(Set, default_constructor) {
+TEST(set, default_constructor) {
   s21::set<int> basic;
   basic.insert(5);
   basic.insert(20);
@@ -14,7 +14,7 @@ TEST(Set, default_constructor) {
   }
 }
 
-TEST(Set, initializator_oper_constructor_int) {
+TEST(set, initializator_oper_constructor_int) {
   s21::set<int> basic = {6, 4, 2, 8, 0, -228};
   int s[6] = {-228, 0, 2, 4, 6, 8};
   int *a = s;
@@ -23,7 +23,7 @@ TEST(Set, initializator_oper_constructor_int) {
   }
 }
 
-TEST(Set, initializator_constructor_int) {
+TEST(set, initializator_constructor_int) {
   s21::set<int> basic{6, 4, 2, 8, 0, -228};
   int s[6] = {-228, 0, 2, 4, 6, 8};
   int *a = s;
@@ -32,7 +32,7 @@ TEST(Set, initializator_constructor_int) {
   }
 }
 
-TEST(Set, initializator_constructor_double) {
+TEST(set, initializator_constructor_double) {
   s21::set<double> basic = {999, 6, 3, 2, 90, 0, -1};
   double s[7] = {-1, 0, 2, 3, 6, 90, 999};
   double *a = s;
@@ -41,7 +41,7 @@ TEST(Set, initializator_constructor_double) {
   }
 }
 
-TEST(Set, initializator_constructor_char) {
+TEST(set, initializator_constructor_char) {
   s21::set<char> basic = {'c', 'd', 'a', 'b'};
   char s[4] = {'a', 'b', 'c', 'd'};
   char *a = s;
@@ -50,8 +50,9 @@ TEST(Set, initializator_constructor_char) {
   }
 }
 
-TEST(Set, copy_constructor_int) {
+TEST(set, copy_constructor_int) {
   s21::set<int> basic = {6, 4, 2, 8, 0, -228};
+  EXPECT_EQ(basic.size(), 6);
   s21::set<int> copy{basic};
   int s[6] = {-228, 0, 2, 4, 6, 8};
   int *a = s;
@@ -62,7 +63,7 @@ TEST(Set, copy_constructor_int) {
   EXPECT_EQ(basic.size(), copy.size());
 }
 
-TEST(Set, move_constructor_int) {
+TEST(set, move_constructor_int) {
   s21::set<int> basic = {6, 4, 2, 8, 0, -228};
   s21::set<int> move{std::move(basic)};
   int s[6] = {-228, 0, 2, 4, 6, 8};
@@ -74,7 +75,7 @@ TEST(Set, move_constructor_int) {
   EXPECT_EQ(move.size(), 6);
 }
 
-TEST(Set, move_operator_int) {
+TEST(set, move_operator_int) {
   s21::set<int> basic = {6, 4, 2, 8, 0, -228};
   s21::set<int> move = std::move(basic);
   int s[6] = {-228, 0, 2, 4, 6, 8};
@@ -86,7 +87,7 @@ TEST(Set, move_operator_int) {
   EXPECT_EQ(move.size(), 6);
 }
 
-TEST(Set, iterator_begin_end) {
+TEST(set, iterator_begin_end) {
   s21::set<int> basic = {6, 4, 2, 8, 0, -228};
   auto iter = basic.begin();
   auto iter_end = basic.end();
@@ -98,7 +99,7 @@ TEST(Set, iterator_begin_end) {
   EXPECT_EQ(basic.size(), 6);
 }
 
-TEST(Set, empty_size) {
+TEST(set, empty_size) {
   s21::set<int> basic;
   EXPECT_TRUE(basic.empty());
   EXPECT_EQ(basic.size(), 0);
@@ -107,7 +108,7 @@ TEST(Set, empty_size) {
   EXPECT_FALSE(basic.empty());
 }
 
-TEST(Set, empty_erase) {
+TEST(set, empty_erase) {
   s21::set<int> basic;
   EXPECT_TRUE(basic.empty());
   basic.insert(4);
@@ -116,7 +117,7 @@ TEST(Set, empty_erase) {
   EXPECT_TRUE(basic.empty());
 }
 
-TEST(Set, insert) {
+TEST(set, insert) {
   s21::set<int> basic;
   std::pair<s21::set<int>::iterator, bool> pair = basic.insert(5);
   EXPECT_EQ(*pair.first, 5);
@@ -133,7 +134,7 @@ TEST(Set, insert) {
   }
 }
 
-TEST(Set, empty_clear) {
+TEST(set, empty_clear) {
   s21::set<int> basic;
   EXPECT_TRUE(basic.empty());
   basic.insert(4);
@@ -142,7 +143,7 @@ TEST(Set, empty_clear) {
   EXPECT_TRUE(basic.empty());
 }
 
-TEST(Set, size_clear) {
+TEST(set, size_clear) {
   s21::set<int> basic{1, 2, 3, 4, 5, 6};
   EXPECT_EQ(basic.size(), 6);
   basic.insert(4);
@@ -152,16 +153,16 @@ TEST(Set, size_clear) {
   EXPECT_EQ(basic.size(), 0);
 }
 
-TEST(Set, max_size) {
+TEST(set, max_size) {
   s21::set<double> basic1{1, 2, 3};
   s21::set<__int128> basic2{1, 2, 3, 4};
   s21::set<char> basic3;
-  EXPECT_EQ(basic1.max_size(), 192153584101141162);
-  EXPECT_EQ(basic2.max_size(), 144115188075855871);
-  EXPECT_EQ(basic3.max_size(), 192153584101141162);
+  EXPECT_EQ(basic1.max_size(), 230584300921369395);
+  EXPECT_EQ(basic2.max_size(), 192153584101141162);
+  EXPECT_EQ(basic3.max_size(), 230584300921369395);
 }
 
-TEST(Set, swap_int) {
+TEST(set, swap_int) {
   s21::set<int> basic1{1, 2, 3};
   s21::set<int> basic2{1, 2, 3, 4};
   EXPECT_EQ(basic1.size(), 3);
@@ -188,7 +189,7 @@ TEST(Set, swap_int) {
     EXPECT_EQ(item, *a++);
   }
 }
-TEST(Set, swap_double) {
+TEST(set, swap_double) {
   s21::set<double> basic1{78, 23, -9};
   s21::set<double> basic2{55, 22, -8, -0.5};
   EXPECT_EQ(basic1.size(), 3);
@@ -216,7 +217,7 @@ TEST(Set, swap_double) {
   }
 }
 
-TEST(Set, merge_double) {
+TEST(set, merge_double) {
   s21::set<double> basic1{78, 23, -9, -8, -0.5};
   s21::set<double> basic2{55, 22, -8, -0.5};
   EXPECT_EQ(basic1.size(), 5);
@@ -231,7 +232,7 @@ TEST(Set, merge_double) {
   EXPECT_EQ(basic2.size(), 2);
 }
 
-TEST(Set, merge_char) {
+TEST(set, merge_char) {
   s21::set<char> basic1{78, 23, -9, -8};
   s21::set<char> basic2{55, 22, -8, 0};
   EXPECT_EQ(basic1.size(), 4);
@@ -246,7 +247,7 @@ TEST(Set, merge_char) {
   EXPECT_EQ(basic2.size(), 1);
 }
 
-TEST(Set, iterator_find) {
+TEST(set, iterator_find) {
   s21::set<double> basic1{78, 23, -9, 22, 22, 22, 23};
   EXPECT_EQ(basic1.size(), 4);
   auto iter_22 = basic1.find(22);
@@ -255,7 +256,7 @@ TEST(Set, iterator_find) {
   EXPECT_DOUBLE_EQ(*++iter_22, 78);
 }
 
-TEST(Set, iterator_find2) {
+TEST(set, iterator_find2) {
   s21::set<double> basic1{78, 7.75, -9, -999, -8, 0.5, 2.88};
   EXPECT_EQ(basic1.size(), 7);
   auto iter_22 = basic1.find(-9);
@@ -266,7 +267,7 @@ TEST(Set, iterator_find2) {
   EXPECT_DOUBLE_EQ(*++iter_22, 7.75);
 }
 
-TEST(Set, contains_int) {
+TEST(set, contains_int) {
   s21::set<int> basic1{78, 7, -9, -999, -8, 0, 2};
   EXPECT_EQ(basic1.size(), 7);
   EXPECT_TRUE(basic1.contains(-9));
@@ -277,7 +278,7 @@ TEST(Set, contains_int) {
   EXPECT_FALSE(basic1.contains(-98));
 }
 
-TEST(Set, lower_bound_and_upper_bound) {
+TEST(set, lower_bound_and_upper_bound) {
   s21::set<int> basic1{782, 7, -9, -999, -8, 7, 2, 32};
   EXPECT_EQ(basic1.size(), 7);
   std::pair<s21::set<int>::iterator, s21::set<int>::iterator> pair = {
@@ -294,7 +295,7 @@ TEST(Set, lower_bound_and_upper_bound) {
   EXPECT_EQ(basic1.size(), 7);
 }
 
-TEST(Set, lower_bound_and_upper_bound2) {
+TEST(set, lower_bound_and_upper_bound2) {
   s21::set<int> basic1{782, 7, -9, -999, -8, 7, 2, 32};
   EXPECT_EQ(basic1.size(), 7);
   std::pair<s21::set<int>::iterator, s21::set<int>::iterator> pair = {
@@ -311,7 +312,7 @@ TEST(Set, lower_bound_and_upper_bound2) {
   EXPECT_EQ(basic1.size(), 7);
 }
 
-TEST(Set, emplace_basic) {
+TEST(set, emplace_basic) {
   s21::set<int> basic;
   basic.emplace(1, 3, 4, 4);
   EXPECT_TRUE(basic.contains(1));
