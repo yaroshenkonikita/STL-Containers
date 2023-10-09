@@ -1,5 +1,5 @@
-#ifndef CPP2_S21_CONTAINERS_0_SRC_S21_ARRAY_H_
-#define CPP2_S21_CONTAINERS_0_SRC_S21_ARRAY_H_
+#ifndef STL_CONTAINERS_ARRAY_H_
+#define STL_CONTAINERS_ARRAY_H_ 1
 
 #include <algorithm>         // для std::swap
 #include <cstddef>           // для std::size_t
@@ -91,4 +91,4 @@ class array {
 };
 }  // namespace s21
 
-#endif  // CPP2_S21_CONTAINERS_0_SRC_S21_ARRAY_H_
+#endif  // STL_CONTAINERS_ARRAY_H_
